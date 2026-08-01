@@ -1,0 +1,3922 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Intelijen — KN Muna</title>
+<link rel="icon" type="image/png"
+  href="https://raw.githubusercontent.com/ungumanggis199-svg/dataintelijen/main/Logo-Kejaksaan2.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Brand -->
+    <div class="sb-brand">
+      <img
+        src="https://raw.githubusercontent.com/ungumanggis199-svg/dataintelijen/main/Logo-Kejaksaan2.png"
+        alt="Logo Kejaksaan"
+        class="sb-logo"
+        onerror="this.style.display='none'">
+      <div class="sb-brand-text">
+        <div class="sb-inst">Kejaksaan RI</div>
+        <div class="sb-name">Kejaksaan Negeri Muna</div>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sb-nav">
+      <p class="sb-section-label">Menu Utama</p>
+      <ul class="nav-list">
+
+        <li class="nav-item active" data-page="capaian">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+          Capaian Kinerja
+        </li>
+
+        <li class="nav-item" data-page="aplikasi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/>
+          </svg>
+          Aplikasi Intelijen
+          <span class="nav-badge">4</span>
+        </li>
+
+        <li class="nav-item" data-page="peralatan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+          </svg>
+          Peralatan Intelijen
+        </li>
+
+        <li class="nav-item" data-page="pelaporan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          Pelaporan Intelijen
+        </li>
+
+        <li class="nav-item" data-page="datapeta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+            <line x1="8" y1="2" x2="8" y2="18"/>
+            <line x1="16" y1="6" x2="16" y2="22"/>
+          </svg>
+          Data Peta Intelijen
+          <span class="nav-badge" style="background:#2E9A6B;">GIS</span>
+        </li>
+
+        <li class="nav-item" data-page="perkara">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2 2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+          Data Perkara
+          <span class="nav-badge" style="background:#D94A4A;">SPDP</span>
+        </li>
+
+        <li class="nav-item" data-page="penkum">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          Penerangan Hukum
+          <span class="nav-badge" style="background:#4A90D9;">D.IN</span>
+        </li>
+
+      </ul>
+
+      <p class="sb-section-label">Lainnya</p>
+      <ul class="nav-list">
+
+        <li class="nav-item" data-page="kalender">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          Kalender Kegiatan
+        </li>
+
+        <li class="nav-item" data-page="pengaturan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          Pengaturan
+        </li>
+
+      </ul>
+    </nav>
+
+    <!-- Footer -->
+    <div class="sb-footer">
+      <div class="berakhlak-card">
+        <div class="bak-tag">Trapsila Adhyaksa</div>
+        <div class="bak-title">BerAKHLAK</div>
+        <div class="bak-desc">Berorientasi Pelayanan, Akuntabel, Kompeten, Harmonis, Loyal, Adaptif, Kolaboratif</div>
+      </div>
+      <div class="sb-online">
+        <span class="online-dot"></span>
+        Sistem aktif
+      </div>
+      <a href="index.html" class="sb-logout" id="logoutBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Keluar dari sistem
+      </a>
+    </div>
+
+  </aside>
+  <!-- /SIDEBAR -->
+
+
+  <!-- ============ MAIN AREA ============ -->
+  <div class="main-area">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img
+          src="https://raw.githubusercontent.com/ungumanggis199-svg/dataintelijen/main/Logo-Kejaksaan2.png"
+          alt="" style="width:28px;opacity:.7;"
+          onerror="this.style.display='none'">
+      </div>
+      <div class="topbar-hero">
+        <div class="th-eyebrow">Sistem Informasi</div>
+        <h1>Intelijen &nbsp;·&nbsp; Kejaksaan Negeri Muna</h1>
+      </div>
+      <div class="topbar-right">
+        <button class="notif-btn" title="Notifikasi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="notif-dot"></span>
+        </button>
+        <div class="user-chip" id="userChip">
+          <div class="user-av" id="userAv">AD</div>
+          <div>
+            <div class="user-chip-name" id="userChipName">Admin</div>
+            <div class="user-chip-role" id="userChipRole">Intelijen</div>
+          </div>
+          <div class="user-chip-caret">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- SCROLLABLE CONTENT -->
+    <div class="content">
+
+      <!-- ==================
+           PAGE: CAPAIAN KINERJA
+           ================== -->
+      <section class="page active" id="page-capaian">
+
+        <!-- Loading Overlay -->
+        <div id="capaianLoading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:14px;">
+          <div style="width:36px;height:36px;border:3px solid rgba(11,61,46,0.15);border-top-color:#0B3D2E;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+          <div style="color:#8a9490;font-size:13px;">Memuat data dari Google Sheets...</div>
+        </div>
+
+        <!-- Main content (hidden until data loaded) -->
+        <div id="capaianContent" style="display:none;">
+
+        <!-- Hero Banner -->
+        <div class="hero-banner">
+          <div class="hb-left">
+            <div class="hb-eyebrow">Dashboard · Capaian Kinerja</div>
+            <div class="hb-title">Monitoring Intelijen<br>Kejaksaan Negeri Muna</div>
+            <div class="hb-sub">Profesional · Responsif · Integritas · Melayani</div>
+          </div>
+          <div class="hb-right">
+            <div class="hb-stat">
+              <div class="hb-stat-val" id="statCapaian">—</div>
+              <div class="hb-stat-label">Capaian Keseluruhan</div>
+            </div>
+            <div class="hb-stat">
+              <div class="hb-stat-val" id="statTotalTarget">—</div>
+              <div class="hb-stat-label">Total Target</div>
+            </div>
+            <div class="hb-stat">
+              <div class="hb-stat-val" id="statTotalTerlaksana">—</div>
+              <div class="hb-stat-label">Total Terlaksana</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI Grid -->
+        <div class="kpi-grid">
+
+          <div class="kpi-card">
+            <div class="kpi-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div class="kpi-body">
+              <div class="kpi-label">Total Jenis Kegiatan</div>
+              <div class="kpi-value" id="kpiJenisKegiatan">—</div>
+              <div class="kpi-delta up" id="kpiJenisKegiatanSub">Data dari Google Sheets</div>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="kpi-body">
+              <div class="kpi-label">Total Target Kegiatan</div>
+              <div class="kpi-value" id="kpiTotalTarget">—</div>
+              <div class="kpi-delta up">Akumulasi semua kegiatan</div>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <div class="kpi-body">
+              <div class="kpi-label">Total Terlaksana</div>
+              <div class="kpi-value" id="kpiTotalTerlaksana">—</div>
+              <div class="kpi-delta up" id="kpiTerlaksanaDelta">Kegiatan selesai dilaksanakan</div>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon gold-bg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+            </div>
+            <div class="kpi-body">
+              <div class="kpi-label">Persentase Capaian</div>
+              <div class="kpi-value" id="kpiPersenCapaian" style="color:var(--gold);">—</div>
+              <div class="kpi-delta" id="kpiCapaianDelta">Terlaksana / Target × 100</div>
+            </div>
+          </div>
+
+        </div>
+        <!-- /KPI Grid -->
+
+        <!-- Panel Grid: Bar Chart + Tabel -->
+        <div class="panel-grid">
+
+          <!-- Bar Chart Capaian per Kegiatan -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="ph-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"/>
+                  <line x1="12" y1="20" x2="12" y2="4"/>
+                  <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+                <h3>Capaian per Kegiatan</h3>
+              </div>
+              <span class="panel-tag" id="lastUpdatedTag">—</span>
+            </div>
+            <div class="chart-wrap" style="height:260px;">
+              <canvas id="barChart"></canvas>
+            </div>
+            <div class="chart-summary" id="chartSummary">
+              <!-- diisi dinamis -->
+            </div>
+          </div>
+
+          <!-- Right column: Donut + Tabel -->
+          <div style="display:flex;flex-direction:column;gap:14px;">
+
+            <!-- Donut Chart -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="ph-left">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 2a10 10 0 0 1 10 10"/>
+                  </svg>
+                  <h3>Distribusi Kegiatan</h3>
+                </div>
+                <span class="panel-tag" id="donutTotalTag">Total —</span>
+              </div>
+              <div class="donut-wrap">
+                <div class="donut-canvas-wrap">
+                  <canvas id="donutChart" width="128" height="128"></canvas>
+                  <div class="donut-center">
+                    <div class="dc-num" id="donutCenterNum">—</div>
+                    <div class="dc-label">Terlaksana</div>
+                  </div>
+                </div>
+                <div class="donut-legend" id="donutLegend">
+                  <!-- diisi dinamis -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabel Detail -->
+            <div class="panel" style="flex:1;">
+              <div class="panel-head">
+                <div class="ph-left">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                  </svg>
+                  <h3>Rincian Kegiatan</h3>
+                </div>
+                <a href="https://docs.google.com/spreadsheets/d/1MCpf11JdwMze8iGfX1FkLnB7vatgwzmVuwtX2mjEWiY/edit" target="_blank" class="see-all-link">Buka Sheet ↗</a>
+              </div>
+              <div id="tabelKegiatan" style="overflow-x:auto;">
+                <!-- diisi dinamis -->
+              </div>
+            </div>
+
+          </div>
+          <!-- /right column -->
+
+        </div>
+        <!-- /Panel Grid -->
+
+        <!-- Quick Access -->
+        <div class="qa-section">
+          <div class="qa-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+            Akses Cepat
+          </div>
+          <div class="qa-grid">
+
+            <div class="qa-card" data-page="capaian">
+              <div class="qa-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"/>
+                  <line x1="12" y1="20" x2="12" y2="4"/>
+                  <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+              </div>
+              <div class="qa-card-title">Capaian Kinerja</div>
+              <div class="qa-card-sub">
+                Lihat Statistik
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="qa-card" data-page="aplikasi">
+              <div class="qa-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="7" height="7" rx="1"/>
+                  <rect x="14" y="3" width="7" height="7" rx="1"/>
+                  <rect x="3" y="14" width="7" height="7" rx="1"/>
+                  <rect x="14" y="14" width="7" height="7" rx="1"/>
+                </svg>
+              </div>
+              <div class="qa-card-title">Aplikasi Intelijen</div>
+              <div class="qa-card-sub">
+                Kelola Aplikasi
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="qa-card" data-page="peralatan">
+              <div class="qa-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                </svg>
+              </div>
+              <div class="qa-card-title">Peralatan Intelijen</div>
+              <div class="qa-card-sub">
+                Data & Inventaris
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="qa-card" data-page="pelaporan">
+              <div class="qa-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+              </div>
+              <div class="qa-card-title">Pelaporan Intelijen</div>
+              <div class="qa-card-sub">
+                Buat Laporan
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        </div><!-- /capaianContent -->
+
+      </section>
+      <!-- /PAGE CAPAIAN -->
+
+
+      <!-- ==================
+           PAGE: APLIKASI INTELIJEN
+           ================== -->
+      <section class="page" id="page-aplikasi">
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/>
+          </svg>
+          <h3>Aplikasi Intelijen</h3>
+          <p>Halaman ini menampilkan daftar aplikasi intelijen yang terdaftar dan aktif digunakan oleh Kejaksaan Negeri Muna.</p>
+        </div>
+      </section>
+
+
+      <!-- ==================
+           PAGE: PERALATAN
+           ================== -->
+      <section class="page" id="page-peralatan">
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+          </svg>
+          <h3>Peralatan Intelijen</h3>
+          <p>Data inventaris dan peralatan intelijen Kejaksaan Negeri Muna akan ditampilkan di sini.</p>
+        </div>
+      </section>
+
+
+      <!-- ==================
+           PAGE: PELAPORAN
+           ================== -->
+      <section class="page" id="page-pelaporan">
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <h3>Pelaporan Intelijen</h3>
+          <p>Buat dan kelola laporan kegiatan intelijen Kejaksaan Negeri Muna secara terstruktur.</p>
+        </div>
+      </section>
+
+
+      <!-- ==================
+           PAGE: DATA PETA GIS
+           ================== -->
+      <section class="page" id="page-datapeta">
+
+        <!-- Header -->
+        <div class="hero-banner" style="margin-bottom:14px;">
+          <div class="hb-left">
+            <div class="hb-eyebrow">Dashboard · Data Peta Intelijen</div>
+            <div class="hb-title">Peta Bidang Intelijen<br>Wilayah Muna &amp; Buton</div>
+            <div class="hb-sub">Visualisasi GIS Kejaksaan Negeri Muna</div>
+          </div>
+          <div class="hb-right">
+            <div class="hb-stat">
+              <div class="hb-stat-val" id="gisStatTotal">—</div>
+              <div class="hb-stat-label">Total Kejadian</div>
+            </div>
+            <div class="hb-stat">
+              <div class="hb-stat-val" id="gisStatBidang">—</div>
+              <div class="hb-stat-label">Bidang Aktif</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center;">
+          <select id="gisFilterBidang" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+            <option value="">Semua Bidang</option>
+            <option value="IDEOLOGI POLITIK PERTAHANAN DAN KEAMANAN">Ipolhankam</option>
+            <option value="SOSIAL BUDAYA DAN KEMASYARAKATAN">Sosbud</option>
+            <option value="EKONOMI DAN KEUANGAN">Ekonomi &amp; Keuangan</option>
+            <option value="PENGAMANAN PEMBANGUNAN STRATEGIS">Pembangunan Strategis</option>
+            <option value="TEKNOLOGI INFORMASI DAN PRODUKSI INTELIJEN">TI &amp; Produksi Intelijen</option>
+          </select>
+          <button id="gisRefreshBtn" onclick="loadGisData()" style="padding:8px 16px;background:#0B3D2E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:6px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+            </svg>
+            Refresh Data
+          </button>
+          <span id="gisLastUpdate" style="font-size:12px;color:#8a9490;margin-left:4px;"></span>
+        </div>
+
+        <!-- Map + Sidebar Layout -->
+        <div style="display:grid;grid-template-columns:1fr 300px;gap:14px;align-items:start;">
+
+          <!-- Leaflet Map -->
+          <div class="panel" style="padding:0;overflow:hidden;border-radius:14px;">
+            <div id="gisLoadingMap" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:480px;gap:12px;background:#f8faf9;">
+              <div style="width:36px;height:36px;border:3px solid rgba(11,61,46,0.15);border-top-color:#0B3D2E;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+              <div style="color:#8a9490;font-size:13px;">Memuat peta dan data kejadian...</div>
+            </div>
+            <div id="gisMap" style="height:480px;display:none;border-radius:14px;"></div>
+          </div>
+
+          <!-- Sidebar: Legend + Table -->
+          <div style="display:flex;flex-direction:column;gap:12px;">
+
+            <!-- Legenda Bidang -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="ph-left">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+                  </svg>
+                  <h3>Legenda Bidang</h3>
+                </div>
+              </div>
+              <div id="gisLegend" style="font-size:12px;line-height:1.6;">
+                <!-- diisi dinamis -->
+              </div>
+            </div>
+
+            <!-- Tabel Data -->
+            <div class="panel" style="flex:1;">
+              <div class="panel-head">
+                <div class="ph-left">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+                    <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+                    <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+                  </svg>
+                  <h3>Daftar Kejadian</h3>
+                </div>
+                <span id="gisDataCount" class="panel-tag">0 data</span>
+              </div>
+              <div id="gisTabel" style="max-height:320px;overflow-y:auto;font-size:12px;">
+                <div style="color:#aaa;text-align:center;padding:20px;">Memuat data...</div>
+              </div>
+            </div>
+
+          </div>
+          <!-- /sidebar -->
+
+        </div>
+        <!-- /map layout -->
+
+      </section>
+      <!-- /PAGE DATA PETA GIS -->
+
+
+      <!-- ==================
+           PAGE: DATA PERKARA (SPDP)
+           ================== -->
+      <section class="page" id="page-perkara">
+
+        <!-- Header -->
+        <div class="hero-banner" style="margin-bottom:14px;">
+          <div class="hb-left">
+            <div class="hb-eyebrow">Dashboard · Data Perkara</div>
+            <div class="hb-title">Peta Sebaran Perkara<br>SPDP Wilayah Muna &amp; Buton Utara</div>
+            <div class="hb-sub">Rekap Surat Pemberitahuan Dimulainya Penyidikan (SPDP)</div>
+          </div>
+          <div class="hb-right">
+            <div class="hb-stat">
+              <div class="hb-stat-val" id="prkStatTotal">—</div>
+              <div class="hb-stat-label">Total Perkara</div>
+            </div>
+            <div class="hb-stat">
+              <div class="hb-stat-val" id="prkStatTahap2">—</div>
+              <div class="hb-stat-label">Menjadi Berkas (Tahap 2)</div>
+            </div>
+            <div class="hb-stat">
+              <div class="hb-stat-val" id="prkStatSp3">—</div>
+              <div class="hb-stat-label">Dihentikan (SP-3)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center;">
+          <select id="prkFilterKabupaten" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+            <option value="">Semua Kabupaten</option>
+            <option value="MUNA">Kab. Muna</option>
+            <option value="MUNA BARAT">Kab. Muna Barat</option>
+            <option value="BUTON UTARA">Kab. Buton Utara</option>
+          </select>
+          <select id="prkFilterStatus" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+            <option value="">Semua Status Laporan</option>
+            <option value="TAHAP 1">Tahap 1</option>
+            <option value="TAHAP 2">Tahap 2</option>
+            <option value="PENGEMBALIAN SPDP">Pengembalian SPDP</option>
+            <option value="DIHENTIKAN (SP-3)">Dihentikan (SP-3)</option>
+          </select>
+          <select id="prkFilterPidana" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;max-width:220px;">
+            <option value="">Semua Jenis Pidana</option>
+          </select>
+          <select id="prkFilterBulan" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+            <option value="">Semua Bulan</option>
+            <option value="1">Januari</option>
+            <option value="2">Februari</option>
+            <option value="3">Maret</option>
+            <option value="4">April</option>
+            <option value="5">Mei</option>
+            <option value="6">Juni</option>
+            <option value="7">Juli</option>
+            <option value="8">Agustus</option>
+            <option value="9">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Desember</option>
+          </select>
+          <select id="prkFilterTahun" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+            <option value="">Semua Tahun</option>
+          </select>
+          <input id="prkSearch" type="text" placeholder="Cari nama tersangka / kecamatan / no. SPDP..." style="flex:1;min-width:200px;padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;outline:none;">
+          <button id="prkRefreshBtn" onclick="loadPrkData()" style="padding:8px 16px;background:#0B3D2E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:6px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+            </svg>
+            Refresh Data
+          </button>
+          <span id="prkLastUpdate" style="font-size:12px;color:#8a9490;margin-left:4px;"></span>
+        </div>
+
+        <!-- Map + Sidebar Layout -->
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:14px;align-items:start;">
+
+          <!-- Leaflet Map -->
+          <div class="panel" style="padding:0;overflow:hidden;border-radius:14px;">
+            <div id="prkLoadingMap" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:520px;gap:12px;background:#f8faf9;">
+              <div style="width:36px;height:36px;border:3px solid rgba(11,61,46,0.15);border-top-color:#0B3D2E;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+              <div style="color:#8a9490;font-size:13px;">Memuat peta dan data perkara...</div>
+            </div>
+            <div id="prkMap" style="height:520px;display:none;border-radius:14px;"></div>
+          </div>
+
+          <!-- Sidebar: Legend + Table -->
+          <div style="display:flex;flex-direction:column;gap:12px;">
+
+            <!-- Legenda Status -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="ph-left">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+                  </svg>
+                  <h3>Legenda Status Laporan</h3>
+                </div>
+              </div>
+              <div id="prkLegend" style="font-size:12px;line-height:1.6;">
+                <!-- diisi dinamis -->
+              </div>
+            </div>
+
+            <!-- Tabel Data -->
+            <div class="panel" style="flex:1;">
+              <div class="panel-head">
+                <div class="ph-left">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+                    <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+                    <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+                  </svg>
+                  <h3>Daftar Perkara</h3>
+                </div>
+                <span id="prkDataCount" class="panel-tag">0 data</span>
+              </div>
+              <div id="prkTabel" style="font-size:12px;">
+                <div style="color:#aaa;text-align:center;padding:20px;">Memuat data...</div>
+              </div>
+            </div>
+
+          </div>
+          <!-- /sidebar -->
+
+        </div>
+        <!-- /map layout -->
+
+        <!-- ==== Ekspor Infografis ==== -->
+        <div class="panel" style="margin-top:14px;">
+          <div class="panel-head">
+            <div class="ph-left">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              <h3>Ekspor Infografis Data Perkara</h3>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:4px 2px 8px;">
+            <select id="expFilterBulan" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+              <option value="">Semua Bulan</option>
+              <option value="1">Januari</option><option value="2">Februari</option><option value="3">Maret</option>
+              <option value="4">April</option><option value="5">Mei</option><option value="6">Juni</option>
+              <option value="7">Juli</option><option value="8">Agustus</option><option value="9">September</option>
+              <option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option>
+            </select>
+            <select id="expFilterTahun" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+              <option value="">Semua Tahun</option>
+            </select>
+            <select id="expFilterKabupaten" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+              <option value="">Semua Kabupaten</option>
+              <option value="MUNA">Kab. Muna</option>
+              <option value="MUNA BARAT">Kab. Muna Barat</option>
+              <option value="BUTON UTARA">Kab. Buton Utara</option>
+            </select>
+            <button id="expDownloadBtn" onclick="prkDownloadInfografis()" style="padding:8px 18px;background:#B8902E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Unduh Infografis (PNG)
+            </button>
+            <span style="font-size:11.5px;color:#8a9490;">Ringkasan visual periode terpilih — tanpa narasi panjang</span>
+          </div>
+        </div>
+        <!-- /Ekspor Infografis -->
+
+        <!-- ==== Statistik & Analisis ==== -->
+        <div class="panel" style="margin-top:14px;">
+          <div class="panel-head">
+            <div class="ph-left">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+                <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+              </svg>
+              <h3>Statistik &amp; Analisis Data Perkara</h3>
+            </div>
+            <span style="font-size:11.5px;color:#8a9490;">Mengikuti filter aktif di atas</span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:4px 2px 8px;">
+
+            <!-- Top 10 Kecamatan -->
+            <div style="background:#f8faf9;border-radius:12px;padding:14px;">
+              <div style="font-size:12.5px;font-weight:700;color:#1a2e22;margin-bottom:8px;">🏘️ 10 Kecamatan Perkara Terbanyak</div>
+              <div style="position:relative;height:280px;">
+                <canvas id="prkChartKecamatan"></canvas>
+              </div>
+            </div>
+
+            <!-- Top 10 Jenis Pidana -->
+            <div style="background:#f8faf9;border-radius:12px;padding:14px;">
+              <div style="font-size:12.5px;font-weight:700;color:#1a2e22;margin-bottom:8px;">⚖️ 10 Jenis Pidana Terbanyak</div>
+              <div style="position:relative;height:280px;">
+                <canvas id="prkChartPidana"></canvas>
+              </div>
+            </div>
+
+            <!-- Distribusi Status Laporan -->
+            <div style="background:#f8faf9;border-radius:12px;padding:14px;">
+              <div style="font-size:12.5px;font-weight:700;color:#1a2e22;margin-bottom:8px;">📌 Distribusi Status Laporan</div>
+              <div style="position:relative;height:260px;display:flex;align-items:center;justify-content:center;">
+                <canvas id="prkChartStatus"></canvas>
+              </div>
+            </div>
+
+            <!-- Tren per Bulan -->
+            <div style="background:#f8faf9;border-radius:12px;padding:14px;">
+              <div style="font-size:12.5px;font-weight:700;color:#1a2e22;margin-bottom:8px;">📈 Tren Perkara per Bulan</div>
+              <div style="position:relative;height:260px;">
+                <canvas id="prkChartTren"></canvas>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- /Statistik & Analisis -->
+
+      </section>
+      <!-- /PAGE DATA PERKARA -->
+
+
+      <!-- ==================
+           PAGE: PENERANGAN HUKUM (D.IN.7 / D.IN.8 / D.IN.9)
+           ================== -->
+      <section class="page" id="page-penkum">
+
+        <!-- Hero Banner -->
+        <div class="hero-banner" style="margin-bottom:14px;">
+          <div class="hb-left">
+            <div class="hb-eyebrow">Dashboard · Penerangan Hukum</div>
+            <div class="hb-title">Kegiatan Penerangan &amp;<br>Penyuluhan Hukum</div>
+            <div class="hb-sub">Kejaksaan Negeri Muna — Kab. Muna · Kab. Muna Barat · Kab. Buton Utara</div>
+          </div>
+          <div class="hb-right">
+            <div class="hb-stat"><div class="hb-stat-val" id="pkStatPenkum">—</div><div class="hb-stat-label">Total Penerangan Hukum</div></div>
+            <div class="hb-stat"><div class="hb-stat-val" id="pkStatLuhkum">—</div><div class="hb-stat-label">Total Penyuluhan Hukum</div></div>
+            <div class="hb-stat"><div class="hb-stat-val" id="pkStatPeserta">—</div><div class="hb-stat-label">Total Peserta</div></div>
+          </div>
+        </div>
+
+        <!-- Tab & Filter Bar -->
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+          <!-- Sub-menu Tab -->
+          <div style="display:flex;gap:4px;background:rgba(11,61,46,0.06);padding:4px;border-radius:10px;">
+            <button class="pk-tab active" data-tab="din7" onclick="pkSwitchTab('din7')"
+              style="padding:7px 16px;border:none;border-radius:7px;cursor:pointer;font-size:12.5px;font-weight:600;transition:.15s;">
+              D.IN.7 — Pelaksanaan
+            </button>
+            <button class="pk-tab" data-tab="din8" onclick="pkSwitchTab('din8')"
+              style="padding:7px 16px;border:none;border-radius:7px;cursor:pointer;font-size:12.5px;font-weight:600;transition:.15s;">
+              D.IN.8 — Dokumentasi
+            </button>
+            <button class="pk-tab" data-tab="din9" onclick="pkSwitchTab('din9')"
+              style="padding:7px 16px;border:none;border-radius:7px;cursor:pointer;font-size:12.5px;font-weight:600;transition:.15s;">
+              D.IN.9 — Grafik
+            </button>
+          </div>
+          <!-- Filter Tahun -->
+          <select id="pkFilterTahun" onchange="pkApplyFilter()"
+            style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+            <option value="">Semua Tahun</option>
+          </select>
+          <!-- Filter Triwulan -->
+          <select id="pkFilterTriwulan" onchange="pkApplyFilter()"
+            style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+            <option value="">Semua Triwulan</option>
+            <option value="I">Triwulan I</option>
+            <option value="II">Triwulan II</option>
+            <option value="III">Triwulan III</option>
+            <option value="IV">Triwulan IV</option>
+          </select>
+          <!-- Filter Kabupaten -->
+          <select id="pkFilterKab" onchange="pkApplyFilter()"
+            style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+            <option value="">Semua Wilayah</option>
+            <option value="Kab. Muna">Kab. Muna</option>
+            <option value="Kab. Muna Barat">Kab. Muna Barat</option>
+            <option value="Kab. Buton Utara">Kab. Buton Utara</option>
+          </select>
+          <button onclick="loadPenkumData()" style="padding:8px 14px;background:#0B3D2E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:6px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+            </svg>Refresh
+          </button>
+          <span id="pkLastUpdate" style="font-size:11.5px;color:#8a9490;"></span>
+        </div>
+
+        <!-- Loading -->
+        <div id="pkLoading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px;gap:14px;">
+          <div style="width:36px;height:36px;border:3px solid rgba(11,61,46,0.15);border-top-color:#0B3D2E;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+          <div style="color:#8a9490;font-size:13px;">Memuat data dari Google Sheets...</div>
+        </div>
+
+        <!-- Content Tabs -->
+        <div id="pkContent" style="display:none;">
+
+          <!-- ===== D.IN.7 Tab ===== -->
+          <div id="pkTab-din7">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+
+              <!-- Tabel Penerangan Hukum -->
+              <div class="panel">
+                <div class="panel-head">
+                  <div class="ph-left">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <h3>Kegiatan Penerangan Hukum</h3>
+                  </div>
+                  <span id="pkPenkumCount" class="panel-tag">0 kegiatan</span>
+                </div>
+                <div id="pkTabelPenkum" style="overflow-x:auto;max-height:380px;overflow-y:auto;font-size:12.5px;"></div>
+              </div>
+
+              <!-- Tabel Penyuluhan Hukum -->
+              <div class="panel">
+                <div class="panel-head">
+                  <div class="ph-left">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <h3>Kegiatan Penyuluhan Hukum</h3>
+                  </div>
+                  <span id="pkLuhkumCount" class="panel-tag">0 kegiatan</span>
+                </div>
+                <div id="pkTabelLuhkum" style="overflow-x:auto;max-height:380px;overflow-y:auto;font-size:12.5px;"></div>
+              </div>
+
+            </div>
+
+            <!-- Rekap per Kabupaten -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="ph-left">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>
+                  <h3>Rekap Kegiatan per Wilayah</h3>
+                </div>
+                <span class="panel-tag">Kab. Muna · Kab. Muna Barat · Kab. Buton Utara</span>
+              </div>
+              <div id="pkRekapWilayah" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:4px 0 6px;"></div>
+            </div>
+          </div>
+
+          <!-- ===== D.IN.8 Tab ===== -->
+          <div id="pkTab-din8" style="display:none;">
+            <div class="panel">
+              <div class="panel-head">
+                <div class="ph-left">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  <h3>Foto Dokumentasi Kegiatan Penerangan &amp; Penyuluhan Hukum</h3>
+                </div>
+                <span id="pkFotoCount" class="panel-tag">0 foto</span>
+              </div>
+              <div id="pkGaleri" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;padding:4px 0 6px;"></div>
+            </div>
+          </div>
+
+          <!-- ===== D.IN.9 Tab ===== -->
+          <div id="pkTab-din9" style="display:none;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+              <!-- Bar Chart Triwulan -->
+              <div class="panel">
+                <div class="panel-head">
+                  <div class="ph-left">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    <h3>Grafik Penerangan &amp; Penyuluhan per Triwulan</h3>
+                  </div>
+                </div>
+                <div style="height:260px;"><canvas id="pkBarChart"></canvas></div>
+              </div>
+              <!-- Bar Chart per Wilayah -->
+              <div class="panel">
+                <div class="panel-head">
+                  <div class="ph-left">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>
+                    <h3>Grafik Kegiatan per Wilayah</h3>
+                  </div>
+                </div>
+                <div style="height:260px;"><canvas id="pkWilayahChart"></canvas></div>
+              </div>
+              <!-- Rekap Tabel per Tahun -->
+              <div class="panel" style="grid-column:1/-1;">
+                <div class="panel-head">
+                  <div class="ph-left">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <h3>Rekap Tahunan — Target vs Terlaksana</h3>
+                  </div>
+                </div>
+                <div id="pkRekapTahunan" style="overflow-x:auto;font-size:12.5px;"></div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /pkContent -->
+
+      </section>
+      <!-- /PAGE PENERANGAN HUKUM -->
+
+
+      <!-- ==================
+           PAGE: KALENDER
+           ================== -->
+      <section class="page" id="page-kalender">
+
+        <!-- Hero -->
+        <div class="hero-banner" style="margin-bottom:14px;">
+          <div class="hb-left">
+            <div class="hb-eyebrow">Dashboard · Kalender</div>
+            <div class="hb-title">Agenda &amp; Kalender<br>Kegiatan Intelijen</div>
+            <div class="hb-sub">Kejaksaan Negeri Muna — Notifikasi WhatsApp via Fonnte</div>
+          </div>
+          <div class="hb-right">
+            <div class="hb-stat"><div class="hb-stat-val" id="kalStatTotal">0</div><div class="hb-stat-label">Total Kegiatan</div></div>
+            <div class="hb-stat"><div class="hb-stat-val" id="kalStatBulanIni">0</div><div class="hb-stat-label">Bulan Ini</div></div>
+            <div class="hb-stat"><div class="hb-stat-val" id="kalStatMendatang">0</div><div class="hb-stat-label">Akan Datang</div></div>
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px;">
+          <button onclick="kalShowModal()" style="display:flex;align-items:center;gap:6px;padding:8px 16px;background:#0B3D2E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Tambah Kegiatan
+          </button>
+          <div style="display:flex;gap:4px;background:rgba(11,61,46,0.06);padding:4px;border-radius:10px;">
+            <button class="kal-view-btn active" data-view="agenda" onclick="kalSwitchView('agenda')" style="padding:6px 14px;border:none;border-radius:7px;cursor:pointer;font-size:12.5px;font-weight:600;">Agenda</button>
+            <button class="kal-view-btn" data-view="kalender" onclick="kalSwitchView('kalender')" style="padding:6px 14px;border:none;border-radius:7px;cursor:pointer;font-size:12.5px;font-weight:600;">Kalender</button>
+          </div>
+          <select id="kalFilterJenis" onchange="kalRender()" style="padding:8px 12px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:12.5px;color:#1a2e22;background:#fff;outline:none;cursor:pointer;">
+            <option value="">Semua Jenis</option>
+            <option value="Rapat">Rapat</option>
+            <option value="Operasi">Operasi</option>
+            <option value="Penerangan Hukum">Penerangan Hukum</option>
+            <option value="Penyuluhan Hukum">Penyuluhan Hukum</option>
+            <option value="Pengamanan">Pengamanan</option>
+            <option value="Penyelidikan">Penyelidikan</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+          <select id="kalFilterBulan" onchange="kalRender()" style="padding:8px 12px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:12.5px;color:#1a2e22;background:#fff;outline:none;cursor:pointer;">
+            <option value="">Semua Bulan</option>
+            <option value="0">Januari</option><option value="1">Februari</option><option value="2">Maret</option>
+            <option value="3">April</option><option value="4">Mei</option><option value="5">Juni</option>
+            <option value="6">Juli</option><option value="7">Agustus</option><option value="8">September</option>
+            <option value="9">Oktober</option><option value="10">November</option><option value="11">Desember</option>
+          </select>
+          <button onclick="kalOpenWaSetting()" style="display:flex;align-items:center;gap:6px;padding:8px 14px;background:#25D366;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:12.5px;font-weight:600;">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Pengaturan WA
+          </button>
+        </div>
+
+        <!-- VIEW: AGENDA -->
+        <div id="kalViewAgenda">
+          <div style="display:grid;grid-template-columns:1fr 320px;gap:14px;">
+
+            <!-- Agenda List -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="ph-left">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                  <h3>Daftar Agenda</h3>
+                </div>
+                <span id="kalAgendaCount" class="panel-tag">0 kegiatan</span>
+              </div>
+              <div id="kalAgendaList" style="max-height:560px;overflow-y:auto;"></div>
+            </div>
+
+            <!-- Sidebar: Mendatang + Notif Log -->
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div class="panel">
+                <div class="panel-head">
+                  <div class="ph-left">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <h3>Kegiatan Mendatang</h3>
+                  </div>
+                </div>
+                <div id="kalUpcoming" style="font-size:12.5px;max-height:200px;overflow-y:auto;"></div>
+              </div>
+              <div class="panel">
+                <div class="panel-head">
+                  <div class="ph-left">
+                    <svg viewBox="0 0 24 24" fill="currentColor" style="width:15px;height:15px;fill:#25D366;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    <h3>Log Notifikasi WA</h3>
+                  </div>
+                  <button onclick="kalClearLog()" style="font-size:11px;color:#8a9490;background:none;border:none;cursor:pointer;">Hapus log</button>
+                </div>
+                <div id="kalWaLog" style="font-size:12px;max-height:180px;overflow-y:auto;">
+                  <div style="color:#aaa;text-align:center;padding:16px;">Belum ada notifikasi terkirim</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- VIEW: KALENDER 12 BULAN -->
+        <div id="kalViewKalender" style="display:none;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+            <button onclick="kalPrevYear()" style="padding:6px 14px;background:rgba(11,61,46,0.08);color:#0B3D2E;border:none;border-radius:8px;cursor:pointer;font-weight:600;">← Prev</button>
+            <span id="kalYearLabel" style="font-size:16px;font-weight:700;color:#0B3D2E;min-width:60px;text-align:center;"></span>
+            <button onclick="kalNextYear()" style="padding:6px 14px;background:rgba(11,61,46,0.08);color:#0B3D2E;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Next →</button>
+            <button onclick="kalGoToday()" style="padding:6px 14px;background:#0B3D2E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:12.5px;">Tahun Ini</button>
+          </div>
+          <div id="kal12Grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;"></div>
+        </div>
+
+        <!-- MODAL DETAIL HARI -->
+        <div id="kalDayModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:999;align-items:center;justify-content:center;">
+          <div style="background:#fff;border-radius:14px;padding:22px;max-width:460px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+              <h3 id="kalDayModalTitle" style="margin:0;font-size:15px;color:#0B3D2E;"></h3>
+              <button onclick="document.getElementById('kalDayModal').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:20px;color:#888;">×</button>
+            </div>
+            <div id="kalDayModalContent"></div>
+          </div>
+        </div>
+
+        <!-- MODAL TAMBAH/EDIT KEGIATAN -->
+        <div id="kalModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;">
+          <div style="background:#fff;border-radius:16px;padding:24px;max-width:520px;width:92%;max-height:90vh;overflow-y:auto;box-shadow:0 10px 40px rgba(0,0,0,0.25);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+              <h3 id="kalModalTitle" style="margin:0;font-size:16px;color:#0B3D2E;">Tambah Kegiatan</h3>
+              <button onclick="kalCloseModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#888;line-height:1;">×</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div>
+                <label style="font-size:12.5px;font-weight:600;color:#4a5568;display:block;margin-bottom:5px;">Judul Kegiatan *</label>
+                <input id="kf-judul" type="text" placeholder="Contoh: Rapat Koordinasi Bidang Intelijen" style="width:100%;padding:9px 12px;border:1.5px solid rgba(11,61,46,0.2);border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;">
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div>
+                  <label style="font-size:12.5px;font-weight:600;color:#4a5568;display:block;margin-bottom:5px;">Tanggal *</label>
+                  <input id="kf-tanggal" type="date" style="width:100%;padding:9px 12px;border:1.5px solid rgba(11,61,46,0.2);border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;">
+                </div>
+                <div>
+                  <label style="font-size:12.5px;font-weight:600;color:#4a5568;display:block;margin-bottom:5px;">Waktu</label>
+                  <input id="kf-waktu" type="time" style="width:100%;padding:9px 12px;border:1.5px solid rgba(11,61,46,0.2);border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;">
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div>
+                  <label style="font-size:12.5px;font-weight:600;color:#4a5568;display:block;margin-bottom:5px;">Jenis Kegiatan</label>
+                  <select id="kf-jenis" style="width:100%;padding:9px 12px;border:1.5px solid rgba(11,61,46,0.2);border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;background:#fff;">
+                    <option>Rapat</option><option>Operasi</option><option>Penerangan Hukum</option>
+                    <option>Penyuluhan Hukum</option><option>Pengamanan</option><option>Penyelidikan</option><option>Lainnya</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:12.5px;font-weight:600;color:#4a5568;display:block;margin-bottom:5px;">Prioritas</label>
+                  <select id="kf-prioritas" style="width:100%;padding:9px 12px;border:1.5px solid rgba(11,61,46,0.2);border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;background:#fff;">
+                    <option value="normal">Normal</option><option value="penting">Penting</option><option value="mendesak">Mendesak</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label style="font-size:12.5px;font-weight:600;color:#4a5568;display:block;margin-bottom:5px;">Tempat</label>
+                <input id="kf-tempat" type="text" placeholder="Contoh: Aula Kejaksaan Negeri Muna" style="width:100%;padding:9px 12px;border:1.5px solid rgba(11,61,46,0.2);border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <label style="font-size:12.5px;font-weight:600;color:#4a5568;display:block;margin-bottom:5px;">Penanggung Jawab</label>
+                <input id="kf-pj" type="text" placeholder="Nama penanggung jawab kegiatan" style="width:100%;padding:9px 12px;border:1.5px solid rgba(11,61,46,0.2);border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <label style="font-size:12.5px;font-weight:600;color:#4a5568;display:block;margin-bottom:5px;">Keterangan</label>
+                <textarea id="kf-ket" rows="3" placeholder="Deskripsi singkat kegiatan..." style="width:100%;padding:9px 12px;border:1.5px solid rgba(11,61,46,0.2);border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
+              </div>
+              <!-- Notifikasi WA -->
+              <div style="background:rgba(37,211,102,0.06);border:1.5px solid rgba(37,211,102,0.2);border-radius:10px;padding:12px;">
+                <div style="font-size:12.5px;font-weight:600;color:#1a6e31;margin-bottom:8px;">
+                  <svg viewBox="0 0 24 24" fill="#25D366" width="13" height="13" style="vertical-align:middle;margin-right:4px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                  Notifikasi WhatsApp
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                  <input type="checkbox" id="kf-notif-aktif" style="cursor:pointer;" onchange="document.getElementById('kf-notif-box').style.opacity=this.checked?'1':'0.5'">
+                  <label for="kf-notif-aktif" style="font-size:12.5px;color:#1a6e31;cursor:pointer;">Aktifkan notifikasi WA untuk kegiatan ini</label>
+                </div>
+                <div id="kf-notif-box" style="opacity:0.5;transition:.2s;">
+                  <div style="font-size:12px;color:#4a5568;margin-bottom:6px;">Kirim notifikasi:</div>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">
+                    <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" id="kf-n-h3" value="3"> H-3</label>
+                    <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" id="kf-n-h1" value="1" checked> H-1</label>
+                    <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" id="kf-n-h0" value="0"> Hari-H (30 menit sebelum)</label>
+                    <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" id="kf-n-m5" value="5m"> 5 menit sebelum kegiatan</label>
+                  </div>
+                  <div>
+                    <label style="font-size:12px;color:#4a5568;display:block;margin-bottom:4px;">Nomor WA penerima (pisah koma):</label>
+                    <input id="kf-notif-nomor" type="text" placeholder="628xxxxxxxxxx, 628xxxxxxxxxx" style="width:100%;padding:7px 10px;border:1.5px solid rgba(37,211,102,0.3);border-radius:7px;font-size:12px;outline:none;box-sizing:border-box;">
+                    <div style="font-size:11px;color:#8a9490;margin-top:3px;">Format: 628xxx (tanpa + atau 0 di depan)</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:flex;gap:10px;margin-top:4px;">
+                <button onclick="kalSaveKegiatan()" style="flex:1;padding:10px;background:#0B3D2E;color:#fff;border:none;border-radius:9px;cursor:pointer;font-size:13.5px;font-weight:600;">Simpan Kegiatan</button>
+                <button onclick="kalCloseModal()" style="padding:10px 18px;background:rgba(0,0,0,0.06);color:#4a5568;border:none;border-radius:9px;cursor:pointer;font-size:13.5px;">Batal</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODAL PENGATURAN WA -->
+        <div id="kalWaModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;">
+          <div style="background:#fff;border-radius:16px;padding:24px;max-width:460px;width:92%;box-shadow:0 10px 40px rgba(0,0,0,0.25);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+              <h3 style="margin:0;font-size:16px;color:#0B3D2E;">Pengaturan WhatsApp — Fonnte</h3>
+              <button onclick="kalCloseWaSetting()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#888;">×</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div style="background:rgba(37,211,102,0.05);border:1.5px solid rgba(37,211,102,0.2);border-radius:10px;padding:12px;font-size:12.5px;color:#1a6e31;">
+                <strong>Cara mendapatkan token Fonnte:</strong><br>
+                1. Daftar di <a href="https://fonnte.com" target="_blank" style="color:#0B3D2E;">fonnte.com</a><br>
+                2. Tambahkan device → scan QR dengan WA<br>
+                3. Copy token dari dashboard Fonnte
+              </div>
+              <div>
+                <label style="font-size:12.5px;font-weight:600;color:#4a5568;display:block;margin-bottom:5px;">Token Fonnte API *</label>
+                <input id="wa-token" type="password" placeholder="Token dari dashboard.fonnte.com" style="width:100%;padding:9px 12px;border:1.5px solid rgba(11,61,46,0.2);border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <label style="font-size:12.5px;font-weight:600;color:#4a5568;display:block;margin-bottom:5px;">Nomor WA Default Penerima</label>
+                <input id="wa-default-nomor" type="text" placeholder="628xxxxxxxxxx, 628xxxxxxxxxx" style="width:100%;padding:9px 12px;border:1.5px solid rgba(11,61,46,0.2);border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;">
+                <div style="font-size:11px;color:#8a9490;margin-top:3px;">Nomor ini dipakai jika tidak diisi di form kegiatan</div>
+              </div>
+              <div>
+                <label style="font-size:12.5px;font-weight:600;color:#4a5568;display:block;margin-bottom:5px;">Nama Pengirim (opsional)</label>
+                <input id="wa-sender" type="text" placeholder="Kejaksaan Negeri Muna" style="width:100%;padding:9px 12px;border:1.5px solid rgba(11,61,46,0.2);border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;">
+              </div>
+              <div style="background:#f8f9fa;border-radius:8px;padding:10px;">
+                <div style="font-size:12px;font-weight:600;color:#4a5568;margin-bottom:6px;">Template Pesan WA:</div>
+                <textarea id="wa-template" rows="5" style="width:100%;padding:8px;border:1.5px solid rgba(11,61,46,0.15);border-radius:7px;font-size:12px;box-sizing:border-box;resize:vertical;"></textarea>
+                <div style="font-size:11px;color:#8a9490;margin-top:3px;">Variabel: {judul} {tanggal} {waktu} {tempat} {jenis} {pj} {hari}</div>
+              </div>
+              <div style="display:flex;gap:10px;">
+                <button onclick="kalSaveWaSetting()" style="flex:1;padding:10px;background:#0B3D2E;color:#fff;border:none;border-radius:9px;cursor:pointer;font-size:13px;font-weight:600;">Simpan Pengaturan</button>
+                <button onclick="kalTestWa()" style="padding:10px 14px;background:#25D366;color:#fff;border:none;border-radius:9px;cursor:pointer;font-size:13px;font-weight:600;">Test Kirim</button>
+              </div>
+              <div id="wa-setting-status" style="font-size:12px;text-align:center;min-height:18px;"></div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- ==================
+           PAGE: PENGATURAN
+           ================== -->
+      <section class="page" id="page-pengaturan">
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <h3>Pengaturan Sistem</h3>
+          <p>Konfigurasi sistem dan preferensi pengguna dapat diatur di sini.</p>
+        </div>
+      </section>
+
+    </div>
+    <!-- /SCROLLABLE CONTENT -->
+
+  </div>
+  <!-- /MAIN AREA -->
+
+</div>
+<!-- /APP SHELL -->
+
+<!-- Chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<!-- html2canvas (untuk ekspor infografis PNG) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<!-- Leaflet (GIS Map) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+/* =====================
+   SESSION GUARD
+   ===================== */
+(function(){
+  const s = localStorage.getItem('intel_session');
+  if(!s){
+    window.location.href = 'index.html';
+    return;
+  }
+  try{
+    const d = JSON.parse(s);
+    const el = document.getElementById('userAv');
+    const nm = document.getElementById('userChipName');
+    const rl = document.getElementById('userChipRole');
+    if(d.username){
+      const initials = d.username.slice(0,2).toUpperCase();
+      if(el) el.textContent = initials;
+      if(nm) nm.textContent = d.username;
+      if(rl) rl.textContent = d.role || 'Intelijen';
+    }
+  }catch(e){}
+})();
+
+/* =====================
+   NAV ROUTING
+   ===================== */
+function navigate(pageKey){
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.toggle('active', n.dataset.page === pageKey);
+  });
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.toggle('active', p.id === 'page-' + pageKey);
+  });
+}
+
+document.querySelectorAll('[data-page]').forEach(el => {
+  el.addEventListener('click', () => navigate(el.dataset.page));
+});
+
+/* =====================
+   LOGOUT
+   ===================== */
+document.getElementById('logoutBtn').addEventListener('click', function(e){
+  e.preventDefault();
+  localStorage.removeItem('intel_session');
+  window.location.href = 'index.html';
+});
+
+/* =====================
+   GOOGLE SHEETS — CAPAIAN KINERJA
+   Kolom: A=KEGIATAN, B=TARGET, C=TERLAKSANA
+   ===================== */
+const SHEET_ID    = '1MCpf11JdwMze8iGfX1FkLnB7vatgwzmVuwtX2mjEWiY';
+const SHEET_NAME  = 'CAPAIAN KINERJA';
+// CSV: pakai nama sheet (lebih reliabel daripada GID)
+const CSV_URL     = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
+// gviz JSON fallback
+const GVIZ_URL    = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+
+const COLORS = ['#0B3D2E','#2E9A6B','#B8902E','#4A90D9','#7C5CBF','#D94A4A','#4AC5C5','#C8A84B','#6B8F71','#C8C8C0'];
+
+let barChartInstance  = null;
+let donutChartInstance = null;
+
+/* --- Parse CSV teks → array objek --- */
+function parseCSV(text) {
+  const lines = text.trim().split(/\r?\n/);
+  if (lines.length < 2) return [];
+  // Baris pertama = header (KEGIATAN, TARGET, TERLAKSANA), skip
+  const data = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cols = lines[i].split(',');
+    const kegiatan   = (cols[0] || '').replace(/"/g, '').trim();
+    const target     = parseFloat((cols[1] || '0').replace(/"/g, '').trim()) || 0;
+    const terlaksana = parseFloat((cols[2] || '0').replace(/"/g, '').trim()) || 0;
+    if (!kegiatan) continue;
+    data.push({ kegiatan, target, terlaksana });
+  }
+  return data;
+}
+
+/* --- Parse gviz JSON → array objek --- */
+function parseGviz(text) {
+  const clean = text.replace(/^[^(]+\(/, '').replace(/\);\s*$/, '');
+  const json  = JSON.parse(clean);
+  const rows  = (json.table && json.table.rows) ? json.table.rows : [];
+  const data  = [];
+  for (const row of rows) {
+    if (!row || !row.c) continue;
+    const c0 = row.c[0];
+    if (!c0 || c0.v === null || c0.v === undefined) continue;
+    const kegiatan   = String(c0.v).trim();
+    const target     = row.c[1] && row.c[1].v != null ? Number(row.c[1].v) || 0 : 0;
+    const terlaksana = row.c[2] && row.c[2].v != null ? Number(row.c[2].v) || 0 : 0;
+    if (!kegiatan) continue;
+    data.push({ kegiatan, target, terlaksana });
+  }
+  return data;
+}
+
+/* --- Fetch dengan timeout agar tidak nge-hang selamanya --- */
+function fetchWithTimeout(url, ms = 8000) {
+  const ctrl = new AbortController();
+  const tid  = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(tid));
+}
+
+/* --- Coba CSV dulu, kalau gagal fallback ke gviz --- */
+async function fetchSheetData() {
+  // Metode 1: CSV export (paling reliable, tidak kena CORS di browser modern)
+  try {
+    const res = await fetchWithTimeout(CSV_URL);
+    if (res.ok) {
+      const text = await res.text();
+      // Deteksi redirect ke halaman login Google (bukan CSV beneran)
+      if (!text.includes('<html') && !text.includes('<!DOCTYPE')) {
+        const data = parseCSV(text);
+        if (data.length > 0) return data;
+      }
+    }
+  } catch (e1) {
+    console.warn('CSV fetch gagal, coba gviz:', e1.message);
+  }
+
+  // Metode 2: gviz/tq JSON (fallback)
+  const res2 = await fetchWithTimeout(GVIZ_URL);
+  if (!res2.ok) throw new Error('HTTP ' + res2.status);
+  const text2 = await res2.text();
+  const data2 = parseGviz(text2);
+  if (data2.length === 0) throw new Error('Data kosong dari kedua sumber');
+  return data2;
+}
+
+function renderDashboard(data) {
+  const totalTarget     = data.reduce((s, r) => s + r.target, 0);
+  const totalTerlaksana = data.reduce((s, r) => s + r.terlaksana, 0);
+  const persen          = totalTarget > 0 ? Math.round((totalTerlaksana / totalTarget) * 100) : 0;
+  const jenisKegiatan   = data.length;
+
+  // --- Hero Banner ---
+  document.getElementById('statCapaian').textContent        = persen + '%';
+  document.getElementById('statTotalTarget').textContent    = totalTarget;
+  document.getElementById('statTotalTerlaksana').textContent = totalTerlaksana;
+
+  // --- KPI Cards ---
+  document.getElementById('kpiJenisKegiatan').textContent   = jenisKegiatan;
+  document.getElementById('kpiJenisKegiatanSub').textContent = jenisKegiatan + ' jenis kegiatan aktif';
+  document.getElementById('kpiTotalTarget').textContent     = totalTarget;
+  document.getElementById('kpiTotalTerlaksana').textContent = totalTerlaksana;
+
+  const overDelta = document.getElementById('kpiTerlaksanaDelta');
+  const over = totalTerlaksana - totalTarget;
+  if (over > 0) {
+    overDelta.textContent = '▲ ' + over + ' melebihi target';
+    overDelta.style.color = '#2E9A6B';
+  } else if (over < 0) {
+    overDelta.textContent = '▼ ' + Math.abs(over) + ' di bawah target';
+    overDelta.style.color = '#D94A4A';
+  } else {
+    overDelta.textContent = 'Tepat sesuai target';
+    overDelta.style.color = '#B8902E';
+  }
+
+  document.getElementById('kpiPersenCapaian').textContent   = persen + '%';
+  const capDelta = document.getElementById('kpiCapaianDelta');
+  capDelta.textContent = persen >= 100 ? '✓ Target tercapai' : (persen + '% dari total target');
+  capDelta.style.color = persen >= 100 ? '#2E9A6B' : (persen >= 70 ? '#B8902E' : '#D94A4A');
+
+  // --- Timestamp tag ---
+  const now = new Date();
+  document.getElementById('lastUpdatedTag').textContent =
+    'Update: ' + now.toLocaleString('id-ID', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+
+  // --- Bar Chart ---
+  const barCtx = document.getElementById('barChart');
+  if (barCtx) {
+    if (barChartInstance) barChartInstance.destroy();
+    barChartInstance = new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: data.map(r => r.kegiatan),
+        datasets: [
+          {
+            label: 'Target',
+            data: data.map(r => r.target),
+            backgroundColor: 'rgba(11,61,46,0.15)',
+            borderColor: '#0B3D2E',
+            borderWidth: 1.5,
+            borderRadius: 4,
+          },
+          {
+            label: 'Terlaksana',
+            data: data.map(r => r.terlaksana),
+            backgroundColor: data.map(r => r.terlaksana >= r.target ? '#2E9A6B' : '#B8902E'),
+            borderColor: 'transparent',
+            borderRadius: 4,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+            labels: { font: { size: 11 }, color: '#4a5568', boxWidth: 12, padding: 14 }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(11,61,46,0.92)',
+            padding: 10,
+            cornerRadius: 8,
+            callbacks: {
+              label: ctx => ' ' + ctx.dataset.label + ': ' + ctx.parsed.y
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { font: { size: 11 }, color: '#8a9490', stepSize: 1 },
+            grid: { color: 'rgba(0,0,0,0.05)' },
+            border: { display: false }
+          },
+          x: {
+            ticks: {
+              font: { size: 10 },
+              color: '#8a9490',
+              maxRotation: 30,
+              callback: function(val, i) {
+                const label = data[i].kegiatan;
+                return label.length > 14 ? label.slice(0, 13) + '…' : label;
+              }
+            },
+            grid: { display: false },
+            border: { display: false }
+          }
+        }
+      }
+    });
+  }
+
+  // --- Chart Summary (bawah bar chart) ---
+  const summaryEl = document.getElementById('chartSummary');
+  if (summaryEl) {
+    const tercapai  = data.filter(r => r.terlaksana >= r.target).length;
+    const belum     = data.filter(r => r.terlaksana < r.target).length;
+    summaryEl.innerHTML = `
+      <div class="cs-item">
+        <div class="cs-label">Kegiatan Tercapai</div>
+        <div class="cs-val">${tercapai} <span class="cs-arrow" style="color:#2E9A6B;">✓</span></div>
+      </div>
+      <div class="cs-item">
+        <div class="cs-label">Belum Tercapai</div>
+        <div class="cs-val">${belum} <span class="cs-arrow" style="color:#D94A4A;">!</span></div>
+      </div>
+      <div class="cs-item">
+        <div class="cs-label">Persentase</div>
+        <div class="cs-val">${persen}% <span class="cs-arrow">↗</span></div>
+      </div>
+    `;
+  }
+
+  // --- Donut Chart ---
+  document.getElementById('donutTotalTag').textContent = 'Total ' + totalTerlaksana;
+  document.getElementById('donutCenterNum').textContent = totalTerlaksana;
+
+  const donutCtx = document.getElementById('donutChart');
+  if (donutCtx) {
+    if (donutChartInstance) donutChartInstance.destroy();
+    donutChartInstance = new Chart(donutCtx, {
+      type: 'doughnut',
+      data: {
+        labels: data.map(r => r.kegiatan),
+        datasets: [{
+          data: data.map(r => r.terlaksana),
+          backgroundColor: COLORS.slice(0, data.length),
+          borderWidth: 2.5,
+          borderColor: '#fff',
+          hoverOffset: 5
+        }]
+      },
+      options: {
+        responsive: false,
+        cutout: '68%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(11,61,46,0.92)',
+            padding: 10,
+            cornerRadius: 8,
+            callbacks: {
+              label: ctx => ' ' + ctx.label + ': ' + ctx.parsed + ' kegiatan'
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // --- Donut Legend ---
+  const legendEl = document.getElementById('donutLegend');
+  if (legendEl) {
+    legendEl.innerHTML = data.map((r, i) => {
+      const pct = totalTerlaksana > 0 ? Math.round((r.terlaksana / totalTerlaksana) * 100) : 0;
+      return `
+        <div class="dl-item">
+          <div class="dl-dot" style="background:${COLORS[i % COLORS.length]};"></div>
+          <span class="dl-label">${r.kegiatan}</span>
+          <span class="dl-val">${pct}%</span>
+        </div>`;
+    }).join('');
+  }
+
+  // --- Tabel Rincian ---
+  const tabelEl = document.getElementById('tabelKegiatan');
+  if (tabelEl) {
+    tabelEl.innerHTML = `
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="border-bottom:2px solid rgba(11,61,46,0.12);">
+            <th style="text-align:left;padding:8px 10px;color:#4a5568;font-weight:600;">Kegiatan</th>
+            <th style="text-align:center;padding:8px 10px;color:#4a5568;font-weight:600;">Target</th>
+            <th style="text-align:center;padding:8px 10px;color:#4a5568;font-weight:600;">Terlaksana</th>
+            <th style="text-align:center;padding:8px 10px;color:#4a5568;font-weight:600;">Capaian</th>
+            <th style="text-align:left;padding:8px 10px;color:#4a5568;font-weight:600;">Progress</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.map(r => {
+            const p = r.target > 0 ? Math.min(Math.round((r.terlaksana / r.target) * 100), 100) : 0;
+            const actual = r.target > 0 ? Math.round((r.terlaksana / r.target) * 100) : 0;
+            const barColor = actual >= 100 ? '#2E9A6B' : (actual >= 60 ? '#B8902E' : '#D94A4A');
+            const badgeStyle = `background:${barColor}20;color:${barColor};padding:2px 8px;border-radius:20px;font-weight:600;font-size:12px;`;
+            return `
+              <tr style="border-bottom:1px solid rgba(0,0,0,0.05);transition:background .15s;" 
+                  onmouseover="this.style.background='rgba(11,61,46,0.03)'" 
+                  onmouseout="this.style.background=''">
+                <td style="padding:9px 10px;color:#1a2e22;font-weight:500;">${r.kegiatan}</td>
+                <td style="text-align:center;padding:9px 10px;color:#4a5568;">${r.target}</td>
+                <td style="text-align:center;padding:9px 10px;color:#4a5568;">${r.terlaksana}</td>
+                <td style="text-align:center;padding:9px 10px;">
+                  <span style="${badgeStyle}">${actual}%</span>
+                </td>
+                <td style="padding:9px 10px;min-width:100px;">
+                  <div style="background:rgba(0,0,0,0.07);border-radius:20px;height:6px;overflow:hidden;">
+                    <div style="background:${barColor};width:${p}%;height:100%;border-radius:20px;transition:width .5s;"></div>
+                  </div>
+                </td>
+              </tr>`;
+          }).join('')}
+        </tbody>
+        <tfoot>
+          <tr style="border-top:2px solid rgba(11,61,46,0.12);background:rgba(11,61,46,0.03);">
+            <td style="padding:9px 10px;font-weight:700;color:#0B3D2E;">TOTAL</td>
+            <td style="text-align:center;padding:9px 10px;font-weight:700;color:#0B3D2E;">${totalTarget}</td>
+            <td style="text-align:center;padding:9px 10px;font-weight:700;color:#0B3D2E;">${totalTerlaksana}</td>
+            <td style="text-align:center;padding:9px 10px;">
+              <span style="background:${persen>=100?'#2E9A6B':persen>=60?'#B8902E':'#D94A4A'}20;color:${persen>=100?'#2E9A6B':persen>=60?'#B8902E':'#D94A4A'};padding:2px 8px;border-radius:20px;font-weight:700;font-size:12px;">${persen}%</span>
+            </td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>`;
+  }
+
+  // Tampilkan konten, sembunyikan loading
+  document.getElementById('capaianLoading').style.display = 'none';
+  document.getElementById('capaianContent').style.display = 'block';
+}
+
+function showError(msg) {
+  const loading = document.getElementById('capaianLoading');
+  if (!loading) return;
+  loading.style.display = 'flex';
+  loading.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="#D94A4A" stroke-width="2" width="40" height="40" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <div style="color:#D94A4A;font-size:13px;text-align:center;max-width:320px;line-height:1.6;">${msg}</div>
+    <div style="display:flex;gap:10px;margin-top:4px;">
+      <button onclick="loadCapaianData()" style="padding:8px 18px;background:#0B3D2E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;">↻ Coba Lagi</button>
+      <a href="https://docs.google.com/spreadsheets/d/1MCpf11JdwMze8iGfX1FkLnB7vatgwzmVuwtX2mjEWiY/edit" target="_blank"
+         style="padding:8px 18px;background:transparent;color:#0B3D2E;border:1.5px solid #0B3D2E;border-radius:8px;cursor:pointer;font-size:13px;text-decoration:none;">
+         Buka Sheet ↗
+      </a>
+    </div>
+    <div style="color:#aaa;font-size:11px;margin-top:6px;">Pastikan sheet diatur: <b>Bagikan → Anyone with the link → Viewer</b></div>
+  `;
+}
+
+async function loadCapaianData() {
+  const loading = document.getElementById('capaianLoading');
+  const content = document.getElementById('capaianContent');
+
+  // Reset ke spinner
+  if (loading) {
+    loading.style.display = 'flex';
+    loading.innerHTML = `
+      <div style="width:36px;height:36px;border:3px solid rgba(11,61,46,0.15);border-top-color:#0B3D2E;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+      <div style="color:#8a9490;font-size:13px;">Memuat data dari Google Sheets...</div>
+    `;
+  }
+  if (content) content.style.display = 'none';
+
+  try {
+    const data = await fetchSheetData();
+    if (!data || data.length === 0) {
+      showError('Data tidak ditemukan di sheet.<br>Pastikan sheet <b>CAPAIAN KINERJA</b> memiliki data di kolom A, B, C dan sudah dibagikan ke publik.');
+      return;
+    }
+    renderDashboard(data);
+  } catch (err) {
+    console.error('Gagal memuat data:', err);
+    showError(`Gagal memuat data dari Google Sheets.<br><small style="opacity:.8;">${err.message}</small>`);
+  }
+}
+
+// Jalankan saat halaman load
+loadCapaianData();
+
+// Auto-refresh setiap 5 menit
+setInterval(() => {
+  const content = document.getElementById('capaianContent');
+  if (content && content.style.display !== 'none') {
+    loadCapaianData();
+  }
+}, 5 * 60 * 1000);
+
+/* =====================================================
+   DATA PETA INTELIJEN — GIS (Pulau Muna & Buton)
+   Berdasarkan Lampiran IV Kepjagung No. KEP-135/A/JA/05/2019
+   Kolom Sheet: BIDANG | SEKTOR | LOKASI | LATITUDE | LONGITUDE | URAIAN | KETERANGAN
+   ===================================================== */
+
+// GANTI dengan Sheet ID dari folder yang dibagikan:
+// https://drive.google.com/drive/folders/1T1UhKslCPy4Q3KTrQoZI9mLsxRHhyGyd
+const GIS_SHEET_ID   = '1e5SoJFaDBp2JGtXpC0A14mw4TDgVw1Pxk0TijvtE-pQ';
+const GIS_SHEET_NAME = 'DATA PETA';
+const GIS_CSV_URL  = `https://docs.google.com/spreadsheets/d/${GIS_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(GIS_SHEET_NAME)}`;
+const GIS_GVIZ_URL = `https://docs.google.com/spreadsheets/d/${GIS_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(GIS_SHEET_NAME)}`;
+
+// Batas wilayah Pulau Muna & Pulau Buton (Sulawesi Tenggara)
+const MUNA_BUTON_BOUNDS = [
+  [-5.85, 121.85],  // Southwest
+  [-3.95, 123.35]   // Northeast
+];
+const MUNA_BUTON_CENTER = [-4.95, 122.55];
+
+// Warna per bidang sesuai Lampiran IV (nama tanpa tanda koma agar aman di parsing CSV)
+const GIS_BIDANG_COLORS = {
+  'IDEOLOGI POLITIK PERTAHANAN DAN KEAMANAN': '#D94A4A',
+  'SOSIAL BUDAYA DAN KEMASYARAKATAN': '#4A90D9',
+  'EKONOMI DAN KEUANGAN': '#B8902E',
+  'PENGAMANAN PEMBANGUNAN STRATEGIS': '#2E9A6B',
+  'TEKNOLOGI INFORMASI DAN PRODUKSI INTELIJEN': '#7C5CBF'
+};
+const GIS_BIDANG_LABELS = {
+  'IDEOLOGI POLITIK PERTAHANAN DAN KEAMANAN': 'Ipolhankam',
+  'SOSIAL BUDAYA DAN KEMASYARAKATAN': 'Sosbud',
+  'EKONOMI DAN KEUANGAN': 'Ekonomi & Keuangan',
+  'PENGAMANAN PEMBANGUNAN STRATEGIS': 'Pembangunan Strategis',
+  'TEKNOLOGI INFORMASI DAN PRODUKSI INTELIJEN': 'TI & Produksi Intelijen'
+};
+
+let gisMap = null;
+let gisMarkersLayer = null;
+let gisAllData = [];
+
+function gisParseCSV(text) {
+  const lines = text.trim().split(/\r?\n/);
+  if (lines.length < 2) return [];
+  const data = [];
+  for (let i = 1; i < lines.length; i++) {
+    // Simple CSV parse yang menangani koma di dalam quote
+    const cols = lines[i].match(/(".*?"|[^",]+)(?=,|$)/g) || [];
+    const clean = cols.map(c => c.replace(/^"|"$/g, '').trim());
+    const [bidang, sektor, lokasi, lat, lng, uraian, ket] = clean;
+    if (!bidang || !lat || !lng) continue;
+    const latNum = parseFloat(lat);
+    const lngNum = parseFloat(lng);
+    if (isNaN(latNum) || isNaN(lngNum)) continue;
+    data.push({
+      bidang: bidang.trim().toUpperCase(),
+      sektor: (sektor || '').trim(),
+      lokasi: (lokasi || '').trim(),
+      lat: latNum,
+      lng: lngNum,
+      uraian: (uraian || '').trim(),
+      keterangan: (ket || '').trim()
+    });
+  }
+  return data;
+}
+
+function gisParseGviz(text) {
+  const clean = text.replace(/^[^(]+\(/, '').replace(/\);\s*$/, '');
+  const json  = JSON.parse(clean);
+  const rows  = (json.table && json.table.rows) ? json.table.rows : [];
+  const data  = [];
+  for (const row of rows) {
+    if (!row || !row.c) continue;
+    const get = i => (row.c[i] && row.c[i].v != null) ? row.c[i].v : '';
+    const bidang = String(get(0)).trim().toUpperCase();
+    const lat = parseFloat(get(3));
+    const lng = parseFloat(get(4));
+    if (!bidang || isNaN(lat) || isNaN(lng)) continue;
+    data.push({
+      bidang,
+      sektor: String(get(1)).trim(),
+      lokasi: String(get(2)).trim(),
+      lat, lng,
+      uraian: String(get(5)).trim(),
+      keterangan: String(get(6)).trim()
+    });
+  }
+  return data;
+}
+
+function gisFetchWithTimeout(url, ms = 8000) {
+  const ctrl = new AbortController();
+  const tid  = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(tid));
+}
+
+async function fetchGisData() {
+  try {
+    const res = await gisFetchWithTimeout(GIS_CSV_URL);
+    if (res.ok) {
+      const text = await res.text();
+      if (!text.includes('<html') && !text.includes('<!DOCTYPE')) {
+        const data = gisParseCSV(text);
+        if (data.length > 0) return data;
+      }
+    }
+  } catch (e) {
+    console.warn('CSV GIS fetch gagal, coba gviz:', e.message);
+  }
+  const res2 = await gisFetchWithTimeout(GIS_GVIZ_URL);
+  if (!res2.ok) throw new Error('HTTP ' + res2.status);
+  const text2 = await res2.text();
+  const data2 = gisParseGviz(text2);
+  if (data2.length === 0) throw new Error('Data kosong dari kedua sumber');
+  return data2;
+}
+
+function initGisMap() {
+  if (gisMap) return; // sudah pernah di-init
+
+  gisMap = L.map('gisMap', {
+    maxBounds: MUNA_BUTON_BOUNDS,
+    maxBoundsViscosity: 1.0,
+    minZoom: 8,
+    maxZoom: 16
+  }).setView(MUNA_BUTON_CENTER, 9);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    bounds: MUNA_BUTON_BOUNDS
+  }).addTo(gisMap);
+
+  // Batasi tampilan hanya ke area Muna-Buton
+  gisMap.fitBounds(MUNA_BUTON_BOUNDS);
+
+  gisMarkersLayer = L.layerGroup().addTo(gisMap);
+}
+
+function gisCreateIcon(color) {
+  return L.divIcon({
+    className: 'gis-marker',
+    html: `<div style="
+      width:22px;height:22px;border-radius:50%;
+      background:${color};border:3px solid #fff;
+      box-shadow:0 2px 6px rgba(0,0,0,0.4);
+    "></div>`,
+    iconSize: [22, 22],
+    iconAnchor: [11, 11]
+  });
+}
+
+function renderGisMarkers(data) {
+  if (!gisMarkersLayer) return;
+  gisMarkersLayer.clearLayers();
+
+  data.forEach(d => {
+    const color = GIS_BIDANG_COLORS[d.bidang] || '#888';
+    const icon  = gisCreateIcon(color);
+    const label = GIS_BIDANG_LABELS[d.bidang] || d.bidang;
+
+    const popupHtml = `
+      <div style="font-size:12.5px;min-width:200px;">
+        <div style="font-weight:700;color:${color};margin-bottom:4px;">${label}</div>
+        ${d.sektor ? `<div style="font-weight:600;margin-bottom:3px;">${d.sektor}</div>` : ''}
+        ${d.lokasi ? `<div style="color:#555;margin-bottom:3px;">📍 ${d.lokasi}</div>` : ''}
+        ${d.uraian ? `<div style="margin-top:5px;line-height:1.5;">${d.uraian}</div>` : ''}
+        ${d.keterangan ? `<div style="margin-top:5px;font-style:italic;color:#888;font-size:11.5px;">${d.keterangan}</div>` : ''}
+      </div>
+    `;
+
+    L.marker([d.lat, d.lng], { icon })
+      .bindPopup(popupHtml)
+      .addTo(gisMarkersLayer);
+  });
+}
+
+function renderGisLegend(data) {
+  const legendEl = document.getElementById('gisLegend');
+  if (!legendEl) return;
+
+  const bidangSet = [...new Set(data.map(d => d.bidang))];
+  if (bidangSet.length === 0) {
+    legendEl.innerHTML = '<div style="color:#aaa;">Belum ada data</div>';
+    return;
+  }
+
+  legendEl.innerHTML = bidangSet.map(b => {
+    const color = GIS_BIDANG_COLORS[b] || '#888';
+    const label = GIS_BIDANG_LABELS[b] || b;
+    const count = data.filter(d => d.bidang === b).length;
+    return `
+      <div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.04);">
+        <div style="width:12px;height:12px;border-radius:50%;background:${color};flex-shrink:0;"></div>
+        <span style="flex:1;color:#1a2e22;">${label}</span>
+        <span style="color:#8a9490;font-weight:600;">${count}</span>
+      </div>`;
+  }).join('');
+}
+
+function renderGisTable(data) {
+  const tabelEl = document.getElementById('gisTabel');
+  const countEl = document.getElementById('gisDataCount');
+  if (countEl) countEl.textContent = data.length + ' data';
+  if (!tabelEl) return;
+
+  if (data.length === 0) {
+    tabelEl.innerHTML = '<div style="color:#aaa;text-align:center;padding:20px;">Tidak ada data untuk filter ini</div>';
+    return;
+  }
+
+  tabelEl.innerHTML = data.map(d => {
+    const color = GIS_BIDANG_COLORS[d.bidang] || '#888';
+    const label = GIS_BIDANG_LABELS[d.bidang] || d.bidang;
+    return `
+      <div onclick="gisFlyTo(${d.lat}, ${d.lng})"
+           style="padding:8px 10px;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;transition:background .15s;"
+           onmouseover="this.style.background='rgba(11,61,46,0.04)'"
+           onmouseout="this.style.background=''">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;"></div>
+          <span style="font-weight:600;color:#1a2e22;font-size:12px;">${d.sektor || label}</span>
+        </div>
+        <div style="color:#8a9490;font-size:11px;padding-left:14px;">${d.lokasi || '-'}</div>
+      </div>`;
+  }).join('');
+}
+
+function gisFlyTo(lat, lng) {
+  if (gisMap) gisMap.flyTo([lat, lng], 13, { duration: 0.8 });
+}
+
+function updateGisStats(data) {
+  const totalEl  = document.getElementById('gisStatTotal');
+  const bidangEl = document.getElementById('gisStatBidang');
+  if (totalEl)  totalEl.textContent  = data.length;
+  if (bidangEl) bidangEl.textContent = new Set(data.map(d => d.bidang)).size;
+}
+
+function applyGisFilter() {
+  const sel = document.getElementById('gisFilterBidang');
+  const val = sel ? sel.value : '';
+  const filtered = val ? gisAllData.filter(d => d.bidang === val) : gisAllData;
+  renderGisMarkers(filtered);
+  renderGisTable(filtered);
+}
+
+function gisShowError(msg) {
+  const loadingMap = document.getElementById('gisLoadingMap');
+  if (!loadingMap) return;
+  loadingMap.style.display = 'flex';
+  document.getElementById('gisMap').style.display = 'none';
+  loadingMap.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="#D94A4A" stroke-width="2" width="36" height="36" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <div style="color:#D94A4A;font-size:13px;text-align:center;max-width:320px;padding:0 20px;line-height:1.6;">${msg}</div>
+    <button onclick="loadGisData()" style="padding:8px 18px;background:#0B3D2E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;">↻ Coba Lagi</button>
+  `;
+}
+
+async function loadGisData() {
+  const loadingMap = document.getElementById('gisLoadingMap');
+  const mapEl      = document.getElementById('gisMap');
+  const tabelEl     = document.getElementById('gisTabel');
+
+  if (loadingMap) {
+    loadingMap.style.display = 'flex';
+    loadingMap.innerHTML = `
+      <div style="width:36px;height:36px;border:3px solid rgba(11,61,46,0.15);border-top-color:#0B3D2E;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+      <div style="color:#8a9490;font-size:13px;">Memuat peta dan data kejadian...</div>
+    `;
+  }
+  if (mapEl) mapEl.style.display = 'none';
+  if (tabelEl) tabelEl.innerHTML = '<div style="color:#aaa;text-align:center;padding:20px;">Memuat data...</div>';
+
+  try {
+    const data = await fetchGisData();
+    gisAllData = data;
+
+    if (mapEl) mapEl.style.display = 'block';
+    if (loadingMap) loadingMap.style.display = 'none';
+
+    initGisMap();
+    setTimeout(() => { if (gisMap) gisMap.invalidateSize(); }, 100);
+
+    renderGisMarkers(data);
+    renderGisLegend(data);
+    renderGisTable(data);
+    updateGisStats(data);
+
+    const updEl = document.getElementById('gisLastUpdate');
+    if (updEl) {
+      const now = new Date();
+      updEl.textContent = 'Update: ' + now.toLocaleString('id-ID', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+    }
+  } catch (err) {
+    console.error('Gagal memuat data GIS:', err);
+    gisShowError(`Gagal memuat data peta dari Google Sheets.<br><small style="opacity:.8;">${err.message}</small><br><br>Pastikan Sheet ID sudah diisi dengan benar di kode, dan sheet dibagikan ke publik (Anyone with the link – Viewer).`);
+  }
+}
+
+// Filter listener (script berada di akhir body, DOM sudah siap)
+const _gisFilterEl = document.getElementById('gisFilterBidang');
+if (_gisFilterEl) _gisFilterEl.addEventListener('change', applyGisFilter);
+
+/* =====================================================
+   DATA PERKARA (SPDP) — Sheet "data kriminalitas"
+   Sumber: https://docs.google.com/spreadsheets/d/1DDDpmHEggIPK1soU1R0jA8CwHnsqjVwePfmTA0JQt0Q
+   Diambil berdasarkan GID tab, bukan nama sheet, supaya
+   tetap jalan walau nama tab di-rename.
+   Kolom terdeteksi (via label header, urutan aman terhadap
+   kolom tersembunyi):
+   No | Sumber | No SPDP | Tanggal SPDP | Kecamatan | Kabupaten |
+   Waktu Kejadian | Tanggal Kejadian | Lokasi lengkap Kejadian |
+   Melanggar UU dan Pasal | Pidana | Tersangka | Status Laporan |
+   Kordinat ("lat, lng") | ... | Status
+   ===================================================== */
+
+const PRK_SHEET_ID = '1DDDpmHEggIPK1soU1R0jA8CwHnsqjVwePfmTA0JQt0Q';
+const PRK_GID       = '38313220';
+const PRK_CSV_URL   = `https://docs.google.com/spreadsheets/d/${PRK_SHEET_ID}/gviz/tq?tqx=out:csv&gid=${PRK_GID}`;
+const PRK_GVIZ_URL  = `https://docs.google.com/spreadsheets/d/${PRK_SHEET_ID}/gviz/tq?tqx=out:json&gid=${PRK_GID}`;
+
+// Batas wilayah Pulau Muna & Pulau Buton (sama seperti peta Data Peta Intelijen)
+const PRK_BOUNDS = [
+  [-5.85, 121.85],
+  [-3.95, 123.35]
+];
+const PRK_CENTER = [-4.95, 122.55];
+
+// Warna berdasarkan Status Laporan
+const PRK_STATUS_COLORS = {
+  'TAHAP 1': '#B8902E',
+  'TAHAP 2': '#2E9A6B',
+  'PENGEMBALIAN SPDP': '#4A90D9',
+  'DIHENTIKAN (SP-3)': '#D94A4A'
+};
+const PRK_STATUS_LABELS = {
+  'TAHAP 1': 'Tahap 1',
+  'TAHAP 2': 'Tahap 2 (Menjadi Berkas)',
+  'PENGEMBALIAN SPDP': 'Pengembalian SPDP',
+  'DIHENTIKAN (SP-3)': 'Dihentikan (SP-3)'
+};
+const PRK_DEFAULT_COLOR = '#7C5CBF';
+
+// Nama-nama kolom yang dicari (fleksibel terhadap variasi spasi/kapital)
+const PRK_LABELS = {
+  sumber:   ['sumber'],
+  nospdp:   ['no spdp'],
+  tglspdp:  ['tanggal spdp'],
+  kecamatan:['kecamatan'],
+  kabupaten:['kabupaten'],
+  waktu:    ['waktu kejadian'],
+  tglkejadian:['tanggal kejadian'],
+  lokasi:   ['lokasi lengkap kejadian','lokasi kejadian'],
+  pasal:    ['melanggar uu dan pasal','pasal'],
+  pidana:   ['pidana'],
+  tersangka:['tersangka'],
+  statuslaporan:['status laporan'],
+  kordinat: ['kordinat','koordinat'],
+  status:   ['status']
+};
+
+let prkMap = null;
+let prkMarkersLayer = null;
+let prkAllData = [];
+let prkGroupStore = {};      // key koordinat -> { lat, lng, items:[...] }
+let prkMarkersByKey = {};    // key koordinat -> instance L.marker
+let prkPopupIndex = {};      // key koordinat -> index slide yang sedang tampil
+let prkLastRenderedData = []; // array data terakhir dirender di tabel (untuk klik baris)
+
+function prkNorm(s) {
+  return String(s || '').trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
+// Bangun peta { key: colIndex } dari daftar label header, dengan toleransi variasi teks.
+// "status" dicocokkan paling terakhir supaya tidak bentrok dengan "status laporan".
+function prkBuildColMap(headerLabels) {
+  const norm = headerLabels.map(prkNorm);
+  const map = {};
+  const order = ['sumber','nospdp','tglspdp','kecamatan','kabupaten','waktu','tglkejadian','lokasi','pasal','pidana','tersangka','statuslaporan','kordinat','status'];
+  order.forEach(key => {
+    const candidates = PRK_LABELS[key];
+    let idx = -1;
+    for (const cand of candidates) {
+      idx = norm.findIndex((h, i) => h === cand && !Object.values(map).includes(i));
+      if (idx !== -1) break;
+    }
+    if (idx === -1) {
+      // fallback: cari yang mengandung kata kunci (mis. "status" harus persis, bukan "status laporan")
+      for (const cand of candidates) {
+        idx = norm.findIndex((h, i) => h.includes(cand) && !Object.values(map).includes(i));
+        if (idx !== -1) break;
+      }
+    }
+    if (idx !== -1) map[key] = idx;
+  });
+  return map;
+}
+
+function prkRowToObj(cols, map) {
+  const get = key => (map[key] != null && cols[map[key]] != null) ? String(cols[map[key]]).trim() : '';
+  const kordinatRaw = get('kordinat');
+  const parts = kordinatRaw.split(',').map(s => parseFloat(s.trim()));
+  const lat = parts[0], lng = parts[1];
+  if (isNaN(lat) || isNaN(lng)) return null;
+
+  const statusLaporan = get('statuslaporan').trim().toUpperCase();
+  const tglKejadianRaw = get('tglkejadian');
+  const tglSpdpRaw = get('tglspdp');
+  const tgl = prkParseTanggalID(tglKejadianRaw) || prkParseTglDMY(tglSpdpRaw);
+
+  return {
+    sumber: get('sumber'),
+    noSpdp: get('nospdp'),
+    tglSpdp: tglSpdpRaw,
+    kecamatan: get('kecamatan'),
+    kabupaten: get('kabupaten').trim().toUpperCase(),
+    waktu: get('waktu'),
+    tglKejadian: tglKejadianRaw,
+    lokasi: get('lokasi'),
+    pasal: get('pasal'),
+    pidana: get('pidana') || '-',
+    tersangka: get('tersangka'),
+    statusLaporan: statusLaporan || '-',
+    status: get('status') || statusLaporan || '-',
+    year: tgl ? tgl.year : null,
+    month: tgl ? tgl.month : null,
+    lat, lng
+  };
+}
+
+// Bulan Indonesia -> angka, dipakai untuk parsing "Tanggal Kejadian" bebas teks
+const PRK_BULAN_ID = {
+  januari:1, februari:2, maret:3, april:4, mei:5, juni:6,
+  juli:7, agustus:8, september:9, oktober:10, november:11, desember:12
+};
+const PRK_BULAN_NAMA = ['','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
+// Cari pola "1 Oktober 2024" di dalam teks bebas (mis. "Hari Kamis Tanggal 10 April 2025, Sekitar 00.30 Wita")
+function prkParseTanggalID(str) {
+  if (!str) return null;
+  const m = String(str).match(/(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/);
+  if (!m) return null;
+  const bulan = PRK_BULAN_ID[m[2].toLowerCase()];
+  if (!bulan) return null;
+  return { year: parseInt(m[3], 10), month: bulan, day: parseInt(m[1], 10) };
+}
+
+// Format "DD-MM-YYYY" (dipakai Tanggal SPDP) sebagai cadangan bila Tanggal Kejadian gagal di-parse
+function prkParseTglDMY(str) {
+  if (!str) return null;
+  const m = String(str).match(/(\d{1,2})-(\d{1,2})-(\d{4})/);
+  if (!m) return null;
+  return { year: parseInt(m[3], 10), month: parseInt(m[2], 10), day: parseInt(m[1], 10) };
+}
+
+function prkParseCSV(text) {
+  const lines = text.trim().split(/\r?\n/);
+  if (lines.length < 2) return [];
+  const splitLine = line => (line.match(/(".*?"|[^",]+)(?=,|$)/g) || []).map(c => c.replace(/^"|"$/g, '').trim());
+  const header = splitLine(lines[0]);
+  const map = prkBuildColMap(header);
+  const data = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cols = splitLine(lines[i]);
+    if (!cols.length) continue;
+    const obj = prkRowToObj(cols, map);
+    if (obj) data.push(obj);
+  }
+  return data;
+}
+
+function prkParseGviz(text) {
+  const clean = text.replace(/^[^(]+\(/, '').replace(/\);\s*$/, '');
+  const json  = JSON.parse(clean);
+  const cols  = (json.table && json.table.cols) ? json.table.cols : [];
+  const rows  = (json.table && json.table.rows) ? json.table.rows : [];
+  const header = cols.map(c => c.label || '');
+  const map = prkBuildColMap(header);
+  const data = [];
+  for (const row of rows) {
+    if (!row || !row.c) continue;
+    const values = row.c.map(c => (c && c.v != null) ? c.v : '');
+    const obj = prkRowToObj(values, map);
+    if (obj) data.push(obj);
+  }
+  return data;
+}
+
+function prkFetchWithTimeout(url, ms = 8000) {
+  const ctrl = new AbortController();
+  const tid  = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(tid));
+}
+
+async function fetchPrkData() {
+  try {
+    const res = await prkFetchWithTimeout(PRK_CSV_URL);
+    if (res.ok) {
+      const text = await res.text();
+      if (!text.includes('<html') && !text.includes('<!DOCTYPE')) {
+        const data = prkParseCSV(text);
+        if (data.length > 0) return data;
+      }
+    }
+  } catch (e) {
+    console.warn('CSV Perkara fetch gagal, coba gviz:', e.message);
+  }
+  const res2 = await prkFetchWithTimeout(PRK_GVIZ_URL);
+  if (!res2.ok) throw new Error('HTTP ' + res2.status);
+  const text2 = await res2.text();
+  const data2 = prkParseGviz(text2);
+  if (data2.length === 0) throw new Error('Data kosong dari kedua sumber');
+  return data2;
+}
+
+function initPrkMap() {
+  if (prkMap) return;
+  prkMap = L.map('prkMap', {
+    maxBounds: PRK_BOUNDS,
+    maxBoundsViscosity: 1.0,
+    minZoom: 8,
+    maxZoom: 16
+  }).setView(PRK_CENTER, 9);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    bounds: PRK_BOUNDS
+  }).addTo(prkMap);
+
+  prkMap.fitBounds(PRK_BOUNDS);
+  prkMarkersLayer = L.layerGroup().addTo(prkMap);
+}
+
+function prkCreateIcon(color, count) {
+  const badge = (count && count > 1)
+    ? `<div style="position:absolute;top:-6px;right:-7px;background:#1a2e22;color:#fff;font-size:9.5px;font-weight:700;min-width:16px;height:16px;line-height:16px;text-align:center;border-radius:50%;border:1.5px solid #fff;padding:0 2px;">${count}</div>`
+    : '';
+  return L.divIcon({
+    className: 'prk-marker',
+    html: `<div style="position:relative;width:22px;height:22px;">
+      <div style="width:20px;height:20px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${color};border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.4);"></div>
+      ${badge}
+    </div>`,
+    iconSize: [26, 26],
+    iconAnchor: [10, 22]
+  });
+}
+
+function prkEsc(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function prkCoordKey(lat, lng) {
+  return lat.toFixed(5) + ',' + lng.toFixed(5);
+}
+
+// Warna marker ditentukan oleh status laporan yang paling sering muncul
+// di antara seluruh kasus pada titik (kecamatan) tersebut.
+function prkDominantColor(items) {
+  const counts = {};
+  items.forEach(it => { counts[it.statusLaporan] = (counts[it.statusLaporan] || 0) + 1; });
+  let best = null, bestN = -1;
+  Object.entries(counts).forEach(([k, v]) => { if (v > bestN) { best = k; bestN = v; } });
+  return PRK_STATUS_COLORS[best] || PRK_DEFAULT_COLOR;
+}
+
+// Bangun kerangka popup: header lokasi + placeholder slide + tombol navigasi.
+// Isi slide-nya sendiri dirender belakangan lewat prkRenderSlide() saat popup dibuka,
+// supaya selalu sinkron dengan prkPopupIndex[key] yang sedang aktif.
+function prkBuildPopup(key, group) {
+  const kec = group.items[0].kecamatan || '-';
+  const kab = group.items[0].kabupaten || '-';
+  const navBtn = (dir, label) => `
+    <button onclick="prkSlideNav('${key}',${dir})"
+      style="border:none;background:#0B3D2E;color:#fff;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;">
+      ${label}
+    </button>`;
+  return `
+    <div class="prk-popup" style="font-size:12.5px;min-width:235px;max-width:290px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:700;color:#0B3D2E;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(0,0,0,0.08);">
+        <span>📍 ${prkEsc(kec)}, ${prkEsc(kab)}</span>
+        <span style="font-weight:600;color:#8a9490;font-size:11px;white-space:nowrap;">${group.items.length} kasus</span>
+      </div>
+      <div id="prk-slide-${key}"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:6px;border-top:1px solid rgba(0,0,0,0.08);">
+        ${navBtn(-1, '‹ Sebelumnya')}
+        <span id="prk-idx-${key}" style="font-size:11px;color:#8a9490;font-weight:600;"></span>
+        ${navBtn(1, 'Berikutnya ›')}
+      </div>
+    </div>
+  `;
+}
+
+// Render 1 slide (1 kasus) sesuai prkPopupIndex[key] ke dalam popup yang sedang terbuka.
+function prkRenderSlide(key) {
+  const group = prkGroupStore[key];
+  if (!group) return;
+  const total = group.items.length;
+  let idx = prkPopupIndex[key] || 0;
+  if (idx < 0) idx = total - 1;
+  if (idx >= total) idx = 0;
+  prkPopupIndex[key] = idx;
+
+  const d = group.items[idx];
+  const idxEl   = document.getElementById('prk-idx-' + key);
+  const slideEl = document.getElementById('prk-slide-' + key);
+  if (idxEl) idxEl.textContent = (idx + 1) + ' / ' + total;
+  if (!slideEl || !d) return;
+
+  const color = PRK_STATUS_COLORS[d.statusLaporan] || PRK_DEFAULT_COLOR;
+  const label = PRK_STATUS_LABELS[d.statusLaporan] || d.statusLaporan;
+
+  slideEl.innerHTML = `
+    <div style="font-weight:700;color:${color};margin-bottom:4px;">${prkEsc(label)}</div>
+    <div style="font-weight:600;margin-bottom:3px;">${prkEsc(d.pidana)}</div>
+    ${d.tersangka ? `<div style="color:#555;margin-bottom:3px;">👤 ${prkEsc(d.tersangka)}</div>` : ''}
+    ${d.lokasi ? `<div style="color:#555;margin-bottom:3px;">📍 ${prkEsc(d.lokasi)}</div>` : ''}
+    ${d.tglKejadian ? `<div style="color:#555;margin-bottom:3px;">📅 ${prkEsc(d.tglKejadian)}</div>` : ''}
+    ${d.noSpdp ? `<div style="margin-top:5px;font-size:11px;color:#8a9490;">${prkEsc(d.noSpdp)}</div>` : ''}
+    ${d.sumber ? `<div style="font-size:11px;color:#8a9490;">${prkEsc(d.sumber)}</div>` : ''}
+    ${d.status ? `<div style="margin-top:5px;font-style:italic;color:#888;font-size:11.5px;">Status: ${prkEsc(d.status)}</div>` : ''}
+  `;
+}
+
+// Navigasi slide (dipanggil dari tombol ‹ / › di dalam popup)
+function prkSlideNav(key, dir) {
+  const group = prkGroupStore[key];
+  if (!group) return;
+  const total = group.items.length;
+  let idx = (prkPopupIndex[key] || 0) + dir;
+  if (idx < 0) idx = total - 1;
+  if (idx >= total) idx = 0;
+  prkPopupIndex[key] = idx;
+  prkRenderSlide(key);
+}
+
+function renderPrkMarkers(data) {
+  if (!prkMarkersLayer) return;
+  prkMarkersLayer.clearLayers();
+  prkGroupStore = {};
+  prkMarkersByKey = {};
+
+  // Kelompokkan seluruh kasus berdasarkan titik koordinat yang sama
+  // (satu kecamatan biasanya memakai satu koordinat yang sama untuk semua kasusnya).
+  data.forEach(d => {
+    const key = prkCoordKey(d.lat, d.lng);
+    if (!prkGroupStore[key]) prkGroupStore[key] = { lat: d.lat, lng: d.lng, items: [] };
+    prkGroupStore[key].items.push(d);
+  });
+
+  Object.keys(prkGroupStore).forEach(key => {
+    const group = prkGroupStore[key];
+    if (prkPopupIndex[key] == null) prkPopupIndex[key] = 0;
+
+    const color = prkDominantColor(group.items);
+    const icon  = prkCreateIcon(color, group.items.length);
+
+    const marker = L.marker([group.lat, group.lng], { icon })
+      .bindPopup(prkBuildPopup(key, group), { maxWidth: 300 })
+      .addTo(prkMarkersLayer);
+
+    // Render slide saat popup dibuka; reset ke slide pertama saat popup ditutup
+    // (kecuali index sengaja di-set dari klik baris tabel, lihat prkTableItemClick).
+    marker.on('popupopen', () => prkRenderSlide(key));
+    marker.on('popupclose', () => { prkPopupIndex[key] = 0; });
+
+    prkMarkersByKey[key] = marker;
+  });
+}
+
+function renderPrkLegend(data) {
+  const legendEl = document.getElementById('prkLegend');
+  if (!legendEl) return;
+
+  const statusSet = [...new Set(data.map(d => d.statusLaporan))];
+  if (statusSet.length === 0) {
+    legendEl.innerHTML = '<div style="color:#aaa;">Belum ada data</div>';
+    return;
+  }
+
+  legendEl.innerHTML = statusSet.map(s => {
+    const color = PRK_STATUS_COLORS[s] || PRK_DEFAULT_COLOR;
+    const label = PRK_STATUS_LABELS[s] || s;
+    const count = data.filter(d => d.statusLaporan === s).length;
+    return `
+      <div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.04);">
+        <div style="width:12px;height:12px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${color};flex-shrink:0;"></div>
+        <span style="flex:1;color:#1a2e22;">${prkEsc(label)}</span>
+        <span style="color:#8a9490;font-weight:600;">${count}</span>
+      </div>`;
+  }).join('');
+}
+
+function renderPrkTable(data) {
+  const tabelEl = document.getElementById('prkTabel');
+  const countEl = document.getElementById('prkDataCount');
+  if (countEl) countEl.textContent = data.length + ' data';
+  prkLastRenderedData = data;
+  if (!tabelEl) return;
+
+  if (data.length === 0) {
+    tabelEl.innerHTML = '<div style="color:#aaa;text-align:center;padding:20px;">Tidak ada data untuk filter ini</div>';
+    return;
+  }
+
+  const PRK_LIST_LIMIT = 4;
+  const shown = data.slice(0, PRK_LIST_LIMIT);
+  const sisa  = data.length - shown.length;
+
+  const rows = shown.map((d, i) => {
+    const color = PRK_STATUS_COLORS[d.statusLaporan] || PRK_DEFAULT_COLOR;
+    const label = PRK_STATUS_LABELS[d.statusLaporan] || d.statusLaporan;
+    return `
+      <div onclick="prkTableItemClick(${i})"
+           style="padding:8px 10px;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;transition:background .15s;"
+           onmouseover="this.style.background='rgba(11,61,46,0.04)'"
+           onmouseout="this.style.background=''">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+          <div style="width:8px;height:8px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${color};flex-shrink:0;"></div>
+          <span style="font-weight:600;color:#1a2e22;font-size:12px;">${prkEsc(d.pidana)}</span>
+        </div>
+        <div style="color:#1a2e22;font-size:11.5px;padding-left:14px;">${prkEsc(d.tersangka) || '-'}</div>
+        <div style="color:#8a9490;font-size:11px;padding-left:14px;">${prkEsc(d.kecamatan)}${d.kecamatan && d.kabupaten ? ', ' : ''}${prkEsc(d.kabupaten)} · <span style="color:${color};">${prkEsc(label)}</span></div>
+      </div>`;
+  }).join('');
+
+  const footer = sisa > 0
+    ? `<div onclick="prkOpenFullList()"
+           style="text-align:center;padding:9px;font-size:12px;font-weight:600;color:#0B3D2E;cursor:pointer;background:rgba(11,61,46,0.04);border-top:1px solid rgba(11,61,46,0.08);"
+           onmouseover="this.style.background='rgba(11,61,46,0.08)'"
+           onmouseout="this.style.background='rgba(11,61,46,0.04)'">
+         Lihat ${sisa} data lainnya ↓
+       </div>`
+    : '';
+
+  tabelEl.innerHTML = rows + footer;
+}
+
+// Modal "Lihat Semua" — dipicu dari tombol footer daftar perkara
+function prkOpenFullList() {
+  const modal   = document.getElementById('kalDayModal');
+  const title   = document.getElementById('kalDayModalTitle');
+  const content = document.getElementById('kalDayModalContent');
+  if (title) title.textContent = 'Semua Data Perkara (' + prkLastRenderedData.length + ')';
+  if (content) {
+    content.innerHTML = prkLastRenderedData.map((d, i) => {
+      const color = PRK_STATUS_COLORS[d.statusLaporan] || PRK_DEFAULT_COLOR;
+      const label = PRK_STATUS_LABELS[d.statusLaporan] || d.statusLaporan;
+      return `
+        <div onclick="document.getElementById('kalDayModal').style.display='none';prkTableItemClick(${i})"
+             style="padding:9px 4px;border-bottom:1px solid rgba(0,0,0,0.06);cursor:pointer;"
+             onmouseover="this.style.background='rgba(11,61,46,0.04)'"
+             onmouseout="this.style.background=''">
+          <div style="font-weight:700;color:#1a2e22;font-size:13px;">${prkEsc(d.pidana)}</div>
+          <div style="font-size:12px;color:#555;">${prkEsc(d.tersangka) || '-'}</div>
+          <div style="font-size:11.5px;color:#8a9490;">${prkEsc(d.kecamatan)}${d.kecamatan && d.kabupaten ? ', ' : ''}${prkEsc(d.kabupaten)}</div>
+          <span style="display:inline-block;margin-top:4px;background:${color}18;color:${color};font-size:10.5px;padding:2px 9px;border-radius:20px;font-weight:600;">${prkEsc(label)}</span>
+        </div>`;
+    }).join('');
+  }
+  if (modal) modal.style.display = 'flex';
+}
+
+// Klik baris tabel: pan ke titik + buka popup marker langsung pada slide kasus yang diklik
+function prkTableItemClick(i) {
+  const d = prkLastRenderedData[i];
+  if (!d) return;
+  const key = prkCoordKey(d.lat, d.lng);
+  const group = prkGroupStore[key];
+  if (group) {
+    const idx = group.items.indexOf(d);
+    prkPopupIndex[key] = idx >= 0 ? idx : 0;
+  }
+  if (prkMap) prkMap.flyTo([d.lat, d.lng], 14, { duration: 0.8 });
+  const marker = prkMarkersByKey[key];
+  if (marker) {
+    setTimeout(() => marker.openPopup(), 700);
+  }
+}
+
+function updatePrkStats(data) {
+  const totalEl  = document.getElementById('prkStatTotal');
+  const tahap2El = document.getElementById('prkStatTahap2');
+  const sp3El    = document.getElementById('prkStatSp3');
+  if (totalEl)  totalEl.textContent  = data.length;
+  if (tahap2El) tahap2El.textContent = data.filter(d => d.statusLaporan === 'TAHAP 2').length;
+  if (sp3El)    sp3El.textContent    = data.filter(d => d.statusLaporan === 'DIHENTIKAN (SP-3)').length;
+}
+
+/* ── Grafik dinamis (Chart.js) ── */
+let prkChartKecamatan = null;
+let prkChartPidana    = null;
+let prkChartStatus    = null;
+let prkChartTren      = null;
+
+const PRK_CHART_PALETTE = ['#0B3D2E','#2E9A6B','#4A90D9','#B8902E','#D94A4A','#7C5CBF','#3AA6A0','#C46A2E','#5B7DB1','#8A9490'];
+
+function prkTopCounts(data, key, limit) {
+  const counts = {};
+  data.forEach(d => {
+    const val = (d[key] || '-').trim() || '-';
+    counts[val] = (counts[val] || 0) + 1;
+  });
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit);
+}
+
+function prkRenderBarChart(canvasId, chartRef, pairs, color) {
+  const el = document.getElementById(canvasId);
+  if (!el) return chartRef;
+  const labels = pairs.map(p => p[0]);
+  const values = pairs.map(p => p[1]);
+
+  if (chartRef) {
+    chartRef.data.labels = labels;
+    chartRef.data.datasets[0].data = values;
+    chartRef.update();
+    return chartRef;
+  }
+
+  return new Chart(el.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: color,
+        borderRadius: 5,
+        maxBarThickness: 22
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { beginAtZero: true, ticks: { precision: 0, font: { size: 10.5 } }, grid: { color: 'rgba(11,61,46,0.06)' } },
+        y: { ticks: { font: { size: 10.5 } }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+function updatePrkChartKecamatan(data) {
+  const pairs = prkTopCounts(data, 'kecamatan', 10);
+  prkChartKecamatan = prkRenderBarChart('prkChartKecamatan', prkChartKecamatan, pairs, '#2E9A6B');
+}
+
+function updatePrkChartPidana(data) {
+  const pairs = prkTopCounts(data, 'pidana', 10);
+  prkChartPidana = prkRenderBarChart('prkChartPidana', prkChartPidana, pairs, '#D94A4A');
+}
+
+function updatePrkChartStatus(data) {
+  const el = document.getElementById('prkChartStatus');
+  if (!el) return;
+
+  const statusSet = [...new Set(data.map(d => d.statusLaporan))];
+  const labels = statusSet.map(s => PRK_STATUS_LABELS[s] || s);
+  const values = statusSet.map(s => data.filter(d => d.statusLaporan === s).length);
+  const colors = statusSet.map(s => PRK_STATUS_COLORS[s] || PRK_DEFAULT_COLOR);
+
+  if (prkChartStatus) {
+    prkChartStatus.data.labels = labels;
+    prkChartStatus.data.datasets[0].data = values;
+    prkChartStatus.data.datasets[0].backgroundColor = colors;
+    prkChartStatus.update();
+    return;
+  }
+
+  prkChartStatus = new Chart(el.getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{ data: values, backgroundColor: colors, borderWidth: 2, borderColor: '#f8faf9' }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '62%',
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 10.5 }, boxWidth: 10, padding: 10 } }
+      }
+    }
+  });
+}
+
+function updatePrkChartTren(data) {
+  const el = document.getElementById('prkChartTren');
+  if (!el) return;
+
+  const counts = {};
+  data.forEach(d => {
+    if (!d.year || !d.month) return;
+    const key = d.year + '-' + String(d.month).padStart(2, '0');
+    counts[key] = (counts[key] || 0) + 1;
+  });
+  const keys = Object.keys(counts).sort();
+  const labels = keys.map(k => {
+    const [y, m] = k.split('-');
+    return PRK_BULAN_NAMA[parseInt(m, 10)] + ' ' + y;
+  });
+  const values = keys.map(k => counts[k]);
+
+  if (prkChartTren) {
+    prkChartTren.data.labels = labels;
+    prkChartTren.data.datasets[0].data = values;
+    prkChartTren.update();
+    return;
+  }
+
+  prkChartTren = new Chart(el.getContext('2d'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        borderColor: '#0B3D2E',
+        backgroundColor: 'rgba(11,61,46,0.10)',
+        fill: true,
+        tension: 0.35,
+        pointRadius: 3,
+        pointBackgroundColor: '#0B3D2E'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { font: { size: 10 }, maxRotation: 45, minRotation: 45 }, grid: { display: false } },
+        y: { beginAtZero: true, ticks: { precision: 0, font: { size: 10.5 } }, grid: { color: 'rgba(11,61,46,0.06)' } }
+      }
+    }
+  });
+}
+
+function updatePrkCharts(data) {
+  if (typeof Chart === 'undefined') return;
+  updatePrkChartKecamatan(data);
+  updatePrkChartPidana(data);
+  updatePrkChartStatus(data);
+  updatePrkChartTren(data);
+}
+
+function prkPopulatePidanaFilter(data) {
+  const sel = document.getElementById('prkFilterPidana');
+  if (!sel) return;
+  const current = sel.value;
+  const pidanaSet = [...new Set(data.map(d => d.pidana).filter(Boolean))].sort();
+  sel.innerHTML = '<option value="">Semua Jenis Pidana</option>' +
+    pidanaSet.map(p => `<option value="${prkEsc(p)}">${prkEsc(p)}</option>`).join('');
+  sel.value = current;
+}
+
+function prkPopulateTahunFilter(data) {
+  const sel = document.getElementById('prkFilterTahun');
+  if (!sel) return;
+  const current = sel.value;
+  const years = [...new Set(data.map(d => d.year).filter(Boolean))].sort((a, b) => b - a);
+  sel.innerHTML = '<option value="">Semua Tahun</option>' +
+    years.map(y => `<option value="${y}">${y}</option>`).join('');
+  sel.value = current;
+}
+
+function applyPrkFilter() {
+  const kab    = document.getElementById('prkFilterKabupaten')?.value || '';
+  const status = document.getElementById('prkFilterStatus')?.value || '';
+  const pidana = document.getElementById('prkFilterPidana')?.value || '';
+  const bulan  = document.getElementById('prkFilterBulan')?.value || '';
+  const tahun  = document.getElementById('prkFilterTahun')?.value || '';
+  const search = prkNorm(document.getElementById('prkSearch')?.value || '');
+
+  const filtered = prkAllData.filter(d => {
+    if (kab && d.kabupaten !== kab) return false;
+    if (status && d.statusLaporan !== status) return false;
+    if (pidana && d.pidana !== pidana) return false;
+    if (bulan && String(d.month) !== bulan) return false;
+    if (tahun && String(d.year) !== tahun) return false;
+    if (search) {
+      const hay = prkNorm(d.tersangka + ' ' + d.kecamatan + ' ' + d.noSpdp + ' ' + d.lokasi);
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+
+  renderPrkMarkers(filtered);
+  renderPrkTable(filtered);
+  updatePrkCharts(filtered);
+}
+
+function prkShowError(msg) {
+  const loadingMap = document.getElementById('prkLoadingMap');
+  if (!loadingMap) return;
+  loadingMap.style.display = 'flex';
+  document.getElementById('prkMap').style.display = 'none';
+  loadingMap.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="#D94A4A" stroke-width="2" width="36" height="36" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <div style="color:#D94A4A;font-size:13px;text-align:center;max-width:320px;padding:0 20px;line-height:1.6;">${msg}</div>
+    <button onclick="loadPrkData()" style="padding:8px 18px;background:#0B3D2E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;">↻ Coba Lagi</button>
+  `;
+}
+
+async function loadPrkData() {
+  const loadingMap = document.getElementById('prkLoadingMap');
+  const mapEl      = document.getElementById('prkMap');
+  const tabelEl    = document.getElementById('prkTabel');
+
+  if (loadingMap) {
+    loadingMap.style.display = 'flex';
+    loadingMap.innerHTML = `
+      <div style="width:36px;height:36px;border:3px solid rgba(11,61,46,0.15);border-top-color:#0B3D2E;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+      <div style="color:#8a9490;font-size:13px;">Memuat peta dan data perkara...</div>
+    `;
+  }
+  if (mapEl) mapEl.style.display = 'none';
+  if (tabelEl) tabelEl.innerHTML = '<div style="color:#aaa;text-align:center;padding:20px;">Memuat data...</div>';
+
+  try {
+    const data = await fetchPrkData();
+    prkAllData = data;
+
+    if (mapEl) mapEl.style.display = 'block';
+    if (loadingMap) loadingMap.style.display = 'none';
+
+    initPrkMap();
+    setTimeout(() => { if (prkMap) prkMap.invalidateSize(); }, 100);
+
+    prkPopulatePidanaFilter(data);
+    prkPopulateTahunFilter(data);
+    prkPopulateExportTahun(data);
+    renderPrkMarkers(data);
+    renderPrkLegend(data);
+    renderPrkTable(data);
+    updatePrkStats(data);
+    updatePrkCharts(data);
+
+    const updEl = document.getElementById('prkLastUpdate');
+    if (updEl) {
+      const now = new Date();
+      updEl.textContent = 'Update: ' + now.toLocaleString('id-ID', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+    }
+  } catch (err) {
+    console.error('Gagal memuat data Perkara:', err);
+    prkShowError(`Gagal memuat data perkara dari Google Sheets.<br><small style="opacity:.8;">${err.message}</small><br><br>Pastikan sheet dibagikan ke publik (Anyone with the link – Viewer).`);
+  }
+}
+
+/* ============================================================
+   EKSPOR INFOGRAFIS DATA PERKARA (per Bulan/Tahun) — PNG
+   ============================================================ */
+
+function prkPopulateExportTahun(data) {
+  const sel = document.getElementById('expFilterTahun');
+  if (!sel) return;
+  const current = sel.value;
+  const years = [...new Set((data || prkAllData).map(d => d.year).filter(Boolean))].sort((a, b) => b - a);
+  sel.innerHTML = '<option value="">Semua Tahun</option>' + years.map(y => `<option value="${y}">${y}</option>`).join('');
+  sel.value = current;
+}
+
+function prkInfografisBar(label, val, max, color) {
+  const pct = max > 0 ? Math.max((val / max) * 100, 3) : 0;
+  return `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px;">
+      <div style="width:150px;font-size:12.5px;color:#2c3e35;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${prkEsc(label)}</div>
+      <div style="flex:1;background:#eef1ef;border-radius:7px;height:18px;overflow:hidden;">
+        <div style="width:${pct}%;background:${color};height:100%;border-radius:7px;"></div>
+      </div>
+      <div style="width:28px;font-size:12.5px;font-weight:700;color:#1a2e22;text-align:right;">${val}</div>
+    </div>`;
+}
+
+async function prkDownloadInfografis() {
+  const btn = document.getElementById('expDownloadBtn');
+  const bulan = document.getElementById('expFilterBulan')?.value || '';
+  const tahun = document.getElementById('expFilterTahun')?.value || '';
+  const kab   = document.getElementById('expFilterKabupaten')?.value || '';
+
+  const filtered = prkAllData.filter(d => {
+    if (bulan && String(d.month) !== bulan) return false;
+    if (tahun && String(d.year) !== tahun) return false;
+    if (kab && d.kabupaten !== kab) return false;
+    return true;
+  });
+
+  if (!filtered.length) { alert('Tidak ada data perkara untuk periode/filter yang dipilih.'); return; }
+  if (typeof html2canvas === 'undefined') { alert('Komponen ekspor gagal dimuat. Periksa koneksi internet lalu coba lagi.'); return; }
+
+  if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.querySelector('svg')?.remove(); btn.insertAdjacentHTML('afterbegin',
+    '<span style="width:14px;height:14px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;display:inline-block;animation:spin 0.7s linear infinite;"></span>'); }
+
+  try {
+    const periodeLabel = (bulan ? PRK_BULAN_NAMA[parseInt(bulan, 10)] + ' ' : '') + (tahun || 'Semua Tahun');
+    const wilayahLabel = kab ? (kab === 'MUNA' ? 'Kab. Muna' : kab === 'MUNA BARAT' ? 'Kab. Muna Barat' : 'Kab. Buton Utara') : 'Seluruh Wilayah';
+
+    const total  = filtered.length;
+    const tahap1 = filtered.filter(d => d.statusLaporan === 'TAHAP 1').length;
+    const tahap2 = filtered.filter(d => d.statusLaporan === 'TAHAP 2').length;
+    const kembali= filtered.filter(d => d.statusLaporan === 'PENGEMBALIAN SPDP').length;
+    const sp3    = filtered.filter(d => d.statusLaporan === 'DIHENTIKAN (SP-3)').length;
+
+    const topKec = prkTopCounts(filtered, 'kecamatan', 5);
+    const topPid = prkTopCounts(filtered, 'pidana', 5);
+    const maxKec = Math.max(...topKec.map(k => k[1]), 1);
+    const maxPid = Math.max(...topPid.map(k => k[1]), 1);
+
+    const statusRows = [
+      ['Tahap 1', tahap1, PRK_STATUS_COLORS['TAHAP 1']],
+      ['Tahap 2', tahap2, PRK_STATUS_COLORS['TAHAP 2']],
+      ['Pengembalian SPDP', kembali, PRK_STATUS_COLORS['PENGEMBALIAN SPDP']],
+      ['SP-3', sp3, PRK_STATUS_COLORS['DIHENTIKAN (SP-3)']]
+    ];
+
+    const el = document.createElement('div');
+    el.style.cssText = 'width:960px;padding:40px;background:#ffffff;font-family:Inter,Arial,sans-serif;position:fixed;left:-9999px;top:0;z-index:-1;';
+    el.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:4px solid #0B3D2E;padding-bottom:16px;margin-bottom:24px;">
+        <div>
+          <div style="font-size:11px;font-weight:700;color:#8a9490;letter-spacing:1.5px;text-transform:uppercase;">Kejaksaan Negeri Muna · Bidang Intelijen</div>
+          <div style="font-size:24px;font-weight:800;color:#0B3D2E;margin-top:4px;">Rekap Data Perkara (SPDP)</div>
+          <div style="font-size:13.5px;color:#555;margin-top:2px;">${prkEsc(periodeLabel)} · ${prkEsc(wilayahLabel)}</div>
+        </div>
+        <img src="https://raw.githubusercontent.com/ungumanggis199-svg/dataintelijen/main/Logo-Kejaksaan2.png" style="width:60px;height:60px;object-fit:contain;">
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;">
+        <div style="background:#0B3D2E;color:#fff;border-radius:14px;padding:18px;text-align:center;">
+          <div style="font-size:30px;font-weight:800;line-height:1;">${total}</div>
+          <div style="font-size:11.5px;opacity:.85;margin-top:6px;">Total Perkara</div>
+        </div>
+        <div style="background:#B8902E;color:#fff;border-radius:14px;padding:18px;text-align:center;">
+          <div style="font-size:30px;font-weight:800;line-height:1;">${tahap1}</div>
+          <div style="font-size:11.5px;opacity:.85;margin-top:6px;">Tahap 1</div>
+        </div>
+        <div style="background:#2E9A6B;color:#fff;border-radius:14px;padding:18px;text-align:center;">
+          <div style="font-size:30px;font-weight:800;line-height:1;">${tahap2}</div>
+          <div style="font-size:11.5px;opacity:.85;margin-top:6px;">Tahap 2 (Berkas)</div>
+        </div>
+        <div style="background:#D94A4A;color:#fff;border-radius:14px;padding:18px;text-align:center;">
+          <div style="font-size:30px;font-weight:800;line-height:1;">${sp3}</div>
+          <div style="font-size:11.5px;opacity:.85;margin-top:6px;">Dihentikan (SP-3)</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:24px;">
+        <div>
+          <div style="font-size:13.5px;font-weight:700;color:#0B3D2E;margin-bottom:12px;">🏘️ 5 Kecamatan Perkara Terbanyak</div>
+          ${topKec.map(([k, v]) => prkInfografisBar(k, v, maxKec, '#2E9A6B')).join('') || '<div style="color:#aaa;font-size:12px;">Tidak ada data</div>'}
+        </div>
+        <div>
+          <div style="font-size:13.5px;font-weight:700;color:#0B3D2E;margin-bottom:12px;">⚖️ 5 Jenis Pidana Terbanyak</div>
+          ${topPid.map(([k, v]) => prkInfografisBar(k, v, maxPid, '#D94A4A')).join('') || '<div style="color:#aaa;font-size:12px;">Tidak ada data</div>'}
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:13.5px;font-weight:700;color:#0B3D2E;margin-bottom:12px;">📌 Distribusi Status Laporan</div>
+        <div style="display:flex;gap:10px;">
+          ${statusRows.map(([label, val, color]) => `
+            <div style="flex:1;background:${color}15;border:1.5px solid ${color}40;border-radius:12px;padding:14px;text-align:center;">
+              <div style="font-size:22px;font-weight:800;color:${color};">${val}</div>
+              <div style="font-size:11px;color:#4a5568;margin-top:4px;">${label}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <div style="margin-top:28px;padding-top:14px;border-top:1px solid #eee;display:flex;justify-content:space-between;font-size:10.5px;color:#aaa;">
+        <span>Sistem Informasi Intelijen — Kejaksaan Negeri Muna</span>
+        <span>Diunduh ${new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
+      </div>
+    `;
+    document.body.appendChild(el);
+
+    const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true });
+    document.body.removeChild(el);
+
+    const link = document.createElement('a');
+    const fileSafe = periodeLabel.replace(/\s+/g, '-');
+    link.download = `Infografis-Perkara-${fileSafe}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  } catch (err) {
+    console.error('Gagal membuat infografis:', err);
+    alert('Gagal membuat infografis: ' + err.message);
+  } finally {
+    if (btn) {
+      btn.disabled = false; btn.style.opacity = '1';
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Unduh Infografis (PNG)`;
+    }
+  }
+}
+
+// Filter listeners
+['prkFilterKabupaten','prkFilterStatus','prkFilterPidana','prkFilterBulan','prkFilterTahun'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('change', applyPrkFilter);
+});
+const _prkSearchEl = document.getElementById('prkSearch');
+if (_prkSearchEl) {
+  let _prkSearchTimer;
+  _prkSearchEl.addEventListener('input', () => {
+    clearTimeout(_prkSearchTimer);
+    _prkSearchTimer = setTimeout(applyPrkFilter, 250);
+  });
+}
+
+// Load data GIS hanya ketika menu Data Peta dibuka (lazy load, hemat resource)
+let _gisLoaded = false;
+let _prkLoaded = false;
+const _origNavigate = navigate;
+navigate = function(pageKey) {
+  _origNavigate(pageKey);
+  if (pageKey === 'datapeta' && !_gisLoaded) {
+    _gisLoaded = true;
+    loadGisData();
+  }
+  if (pageKey === 'datapeta' && gisMap) {
+    setTimeout(() => gisMap.invalidateSize(), 150);
+  }
+  if (pageKey === 'perkara' && !_prkLoaded) {
+    _prkLoaded = true;
+    loadPrkData();
+  }
+  if (pageKey === 'perkara' && prkMap) {
+    setTimeout(() => prkMap.invalidateSize(), 150);
+  }
+  if (pageKey === 'penkum' && !_penkumLoaded) {
+    _penkumLoaded = true;
+    loadPenkumData();
+  }
+};
+
+/* ============================================================
+   PENERANGAN HUKUM — D.IN.7 / D.IN.8 / D.IN.9
+   Sheet: DATA D.IN.7  |  DATA D.IN.8  |  DATA D.IN.9
+   Folder: https://drive.google.com/drive/folders/1T1UhKslCPy4Q3KTrQoZI9mLsxRHhyGyd
+   
+   Struktur kolom D.IN.7 (sheet "DATA D.IN.7"):
+   TAHUN | TRIWULAN | JENIS | TEMA | WAKTU | TEMPAT | KABUPATEN | JUMLAH_PESERTA | KETERANGAN
+
+   Struktur kolom D.IN.8 (sheet "DATA D.IN.8"):
+   TAHUN | TRIWULAN | JENIS | KEGIATAN | FOTO_URL | KETERANGAN | KABUPATEN
+
+   Struktur kolom D.IN.9 (sheet "DATA D.IN.9"):
+   TAHUN | TRIWULAN | TARGET | PENERANGAN_HUKUM | PENYULUHAN_HUKUM | KABUPATEN
+   ============================================================ */
+
+const PK_SHEET_ID = '1e5SoJFaDBp2JGtXpC0A14mw4TDgVw1Pxk0TijvtE-pQ';
+const PK_SHEETS   = {
+  din7: 'DATA D.IN.7',
+  din8: 'DATA D.IN.8',
+  din9: 'DATA D.IN.9'
+};
+const PK_WILAYAH  = ['Kab. Muna', 'Kab. Muna Barat', 'Kab. Buton Utara'];
+const PK_COLORS   = { penkum: '#0B3D2E', luhkum: '#2E9A6B', target: '#B8902E' };
+
+let _penkumLoaded  = false;
+let _pkCurrentTab  = 'din7';
+let _pkAllData     = { din7: [], din8: [], din9: [] };
+let pkBarChartInst = null;
+let pkWilayahChartInst = null;
+
+// ---- Fetch helpers ----
+function pkFetchWithTimeout(url, ms=8000) {
+  const ctrl = new AbortController();
+  const tid  = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(tid));
+}
+
+function pkNormHeader(h) {
+  // Normalisasi header: trim, uppercase, spasi/strip -> underscore
+  return h.replace(/"/g,'').trim().toUpperCase().replace(/[\s\-]+/g,'_');
+}
+
+function pkParseCSV(text) {
+  const lines = text.trim().split(/\r?\n/);
+  if (lines.length < 2) return { headers: [], rows: [] };
+  const headers = lines[0].split(',').map(pkNormHeader);
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cols = [];
+    let cur = '', inQ = false;
+    for (const ch of lines[i]) {
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { cols.push(cur.replace(/^"|"$/g,'').trim()); cur = ''; }
+      else cur += ch;
+    }
+    cols.push(cur.replace(/^"|"$/g,'').trim());
+    if (cols.every(c => !c)) continue;
+    const obj = {};
+    headers.forEach((h, idx) => obj[h] = cols[idx] || '');
+    rows.push(obj);
+  }
+  return { headers, rows };
+}
+
+async function pkFetchSheet(sheetName) {
+  const csvUrl  = `https://docs.google.com/spreadsheets/d/${PK_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+  const gvizUrl = `https://docs.google.com/spreadsheets/d/${PK_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+  try {
+    const res = await pkFetchWithTimeout(csvUrl);
+    if (res.ok) {
+      const text = await res.text();
+      if (!text.includes('<html') && !text.includes('<!DOCTYPE')) {
+        const parsed = pkParseCSV(text);
+        console.log(`[${sheetName}] CSV headers:`, parsed.headers);
+        if (parsed.rows.length > 0) {
+          console.log(`[${sheetName}] Sample row:`, parsed.rows[0]);
+          return parsed.rows;
+        }
+      }
+    }
+  } catch(e) { console.warn('CSV failed for', sheetName, e.message); }
+  // Fallback: gviz JSON
+  const res2 = await pkFetchWithTimeout(gvizUrl);
+  if (!res2.ok) throw new Error('HTTP ' + res2.status + ' on ' + sheetName);
+  const text2 = await res2.text();
+  const clean = text2.replace(/^[^(]+\(/, '').replace(/\);\s*$/, '');
+  const json  = JSON.parse(clean);
+  const cols  = (json.table.cols || []).map(c => pkNormHeader(c.label || ''));
+  return (json.table.rows || []).filter(r => r && r.c).map(r => {
+    const obj = {};
+    cols.forEach((h, i) => {
+      const cell = r.c[i];
+      if (!cell || cell.v == null) { obj[h] = ''; return; }
+      // Format number: jika formatted ada gunakan itu, jika tidak pakai v
+      const val = cell.f != null ? cell.f : cell.v;
+      obj[h] = String(val).trim();
+    });
+    return obj;
+  }).filter(r => Object.values(r).some(v => v));
+}
+
+// ---- Tab switching ----
+function pkSwitchTab(tab) {
+  _pkCurrentTab = tab;
+  document.querySelectorAll('.pk-tab').forEach(b => {
+    const isActive = b.dataset.tab === tab;
+    b.style.background = isActive ? '#0B3D2E' : 'transparent';
+    b.style.color = isActive ? '#fff' : '#4a5568';
+    b.style.boxShadow = isActive ? '0 2px 8px rgba(11,61,46,0.2)' : 'none';
+  });
+  ['din7','din8','din9'].forEach(t => {
+    const el = document.getElementById('pkTab-' + t);
+    if (el) el.style.display = t === tab ? 'block' : 'none';
+  });
+  pkApplyFilter();
+}
+
+// ---- Filter ----
+function pkApplyFilter() {
+  const tahun    = (document.getElementById('pkFilterTahun')?.value || '').trim();
+  const triwulan = (document.getElementById('pkFilterTriwulan')?.value || '').trim();
+  const kab      = (document.getElementById('pkFilterKab')?.value || '').trim();
+
+  const filterRow = r => {
+    if (tahun    && (r.TAHUN||'')     !== tahun)    return false;
+    if (triwulan && (r.TRIWULAN||'') !== triwulan)  return false;
+    if (kab) { const nk=(r.KABUPATEN||'').toUpperCase().replace(/KAB\.?\s*/,'').trim(); const nw=kab.replace('Kab. ','').toUpperCase().trim(); if (!nk.includes(nw) && !nw.includes(nk)) return false; }
+    return true;
+  };
+
+  if (_pkCurrentTab === 'din7') {
+    renderDin7(_pkAllData.din7.filter(filterRow));
+  } else if (_pkCurrentTab === 'din8') {
+    renderDin8(_pkAllData.din8.filter(filterRow));
+  } else if (_pkCurrentTab === 'din9') {
+    renderDin9(_pkAllData.din9.filter(filterRow));
+  }
+}
+
+// ---- Populate filter tahun ----
+function pkPopulateTahunFilter(allRows) {
+  const years = [...new Set(allRows.map(r => (r.TAHUN||'').trim()).filter(Boolean))].sort();
+  const sel = document.getElementById('pkFilterTahun');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">Semua Tahun</option>' +
+    years.map(y => `<option value="${y}">${y}</option>`).join('');
+}
+
+// ---- Render D.IN.7 ----
+function renderDin7(data) {
+  const penkum = data.filter(r => (r.JENIS||'').toUpperCase().includes('PENERANGAN'));
+  const luhkum = data.filter(r => (r.JENIS||'').toUpperCase().includes('PENYULUHAN'));
+
+  // Helper: ambil nilai peserta dari berbagai kemungkinan nama kolom
+  const getPeserta = r => {
+    const keys = Object.keys(r);
+    // Cari kolom yang mengandung kata PESERTA
+    const k = keys.find(k => k.includes('PESERTA'));
+    if (k) return parseInt(r[k]) || 0;
+    // Fallback: kolom ke-8 (index 7) jika ada
+    const vals = Object.values(r);
+    return parseInt(vals[7]) || 0;
+  };
+
+  // Stat header
+  const allPenkum = _pkAllData.din7.filter(r => (r.JENIS||'').toUpperCase().includes('PENERANGAN'));
+  const allLuhkum = _pkAllData.din7.filter(r => (r.JENIS||'').toUpperCase().includes('PENYULUHAN'));
+  const totalPeserta = _pkAllData.din7.reduce((s,r) => s + getPeserta(r), 0);
+  setText('pkStatPenkum', allPenkum.length);
+  setText('pkStatLuhkum', allLuhkum.length);
+  setText('pkStatPeserta', totalPeserta.toLocaleString('id-ID'));
+
+  const mkTable = (rows, labelKosong) => {
+    if (!rows.length) return `<div style="color:#aaa;text-align:center;padding:20px;">${labelKosong}</div>`;
+    return `<table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <thead><tr style="background:rgba(11,61,46,0.06);border-bottom:2px solid rgba(11,61,46,0.1);">
+        <th style="padding:7px 8px;text-align:left;color:#0B3D2E;">Tahun</th>
+        <th style="padding:7px 8px;text-align:left;color:#0B3D2E;">Triwulan</th>
+        <th style="padding:7px 8px;text-align:left;color:#0B3D2E;">Tema</th>
+        <th style="padding:7px 8px;text-align:left;color:#0B3D2E;">Tempat</th>
+        <th style="padding:7px 8px;text-align:left;color:#0B3D2E;">Kabupaten</th>
+        <th style="padding:7px 8px;text-align:center;color:#0B3D2E;">Peserta</th>
+      </tr></thead>
+      <tbody>
+        ${rows.map(r => `<tr style="border-bottom:1px solid rgba(0,0,0,0.04);" onmouseover="this.style.background='rgba(11,61,46,0.03)'" onmouseout="this.style.background=''">
+          <td style="padding:7px 8px;">${r.TAHUN||'-'}</td>
+          <td style="padding:7px 8px;"><span style="background:rgba(11,61,46,0.1);color:#0B3D2E;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;">TW ${r.TRIWULAN||'-'}</span></td>
+          <td style="padding:7px 8px;color:#1a2e22;font-weight:500;">${r.TEMA||'-'}</td>
+          <td style="padding:7px 8px;color:#555;">${r.TEMPAT||'-'}</td>
+          <td style="padding:7px 8px;color:#555;">${r.KABUPATEN||'-'}</td>
+          <td style="padding:7px 8px;text-align:center;font-weight:600;color:#0B3D2E;">${getPeserta(r)}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+  };
+
+  const tp = document.getElementById('pkTabelPenkum');
+  const tl = document.getElementById('pkTabelLuhkum');
+  if (tp) tp.innerHTML = mkTable(penkum, 'Belum ada data penerangan hukum');
+  if (tl) tl.innerHTML = mkTable(luhkum, 'Belum ada data penyuluhan hukum');
+  setText('pkPenkumCount', penkum.length + ' kegiatan');
+  setText('pkLuhkumCount', luhkum.length + ' kegiatan');
+
+  // Rekap wilayah
+  const rekapEl = document.getElementById('pkRekapWilayah');
+  if (rekapEl) {
+    rekapEl.innerHTML = PK_WILAYAH.map(kab => {
+      const rows = data.filter(r => { const nk=(r.KABUPATEN||'').toUpperCase().replace(/KAB\.?\s*/,'').trim(); const nw=kab.replace('Kab. ','').toUpperCase().trim(); return nk.includes(nw)||nw.includes(nk); });
+      const pk = rows.filter(r => (r.JENIS||'').toUpperCase().includes('PENERANGAN')).length;
+      const lk = rows.filter(r => (r.JENIS||'').toUpperCase().includes('PENYULUHAN')).length;
+      const ps = rows.reduce((s,r) => s + getPeserta(r), 0);
+      return `<div style="background:rgba(11,61,46,0.04);border-radius:10px;padding:14px;border:1.5px solid rgba(11,61,46,0.08);">
+        <div style="font-weight:700;color:#0B3D2E;font-size:13px;margin-bottom:8px;">${kab}</div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;">
+            <span style="color:#555;">Penerangan Hukum</span>
+            <span style="font-weight:700;color:#0B3D2E;">${pk} keg.</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;">
+            <span style="color:#555;">Penyuluhan Hukum</span>
+            <span style="font-weight:700;color:#2E9A6B;">${lk} keg.</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;border-top:1px solid rgba(11,61,46,0.1);padding-top:5px;margin-top:2px;">
+            <span style="color:#555;">Total Peserta</span>
+            <span style="font-weight:700;color:#B8902E;">${ps.toLocaleString('id-ID')}</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// ---- Render D.IN.8 ----
+function renderDin8(data) {
+  const galeriEl = document.getElementById('pkGaleri');
+  const countEl  = document.getElementById('pkFotoCount');
+  if (countEl) countEl.textContent = data.length + ' foto';
+  if (!galeriEl) return;
+
+  if (!data.length) {
+    galeriEl.innerHTML = '<div style="color:#aaa;text-align:center;padding:40px;grid-column:1/-1;">Belum ada data dokumentasi foto.</div>';
+    return;
+  }
+
+  // Konversi Google Drive share URL ke direct thumbnail URL
+  function pkConvertDriveUrl(url) {
+    if (!url) return '';
+    // Format: https://drive.google.com/file/d/FILE_ID/view  → thumbnail
+    let m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w400`;
+    // Format: https://drive.google.com/open?id=FILE_ID
+    m = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w400`;
+    // Format: https://lh3.googleusercontent.com atau direct http
+    if (url.startsWith('http')) return url;
+    return '';
+  }
+
+  // Cari kolom foto dari berbagai kemungkinan nama
+  function pkGetFotoUrl(r) {
+    const keys = Object.keys(r);
+    const fotoKey = keys.find(k => k.includes('FOTO') || k.includes('URL') || k.includes('GAMBAR') || k.includes('IMAGE'));
+    return fotoKey ? pkConvertDriveUrl(r[fotoKey]) : '';
+  }
+
+  galeriEl.innerHTML = data.map(r => {
+    const isPenkum = (r.JENIS||'').toUpperCase().includes('PENERANGAN');
+    const badgeColor = isPenkum ? '#0B3D2E' : '#2E9A6B';
+    const badgeLabel = isPenkum ? 'Penerangan Hukum' : 'Penyuluhan Hukum';
+    const imgUrl = pkGetFotoUrl(r);
+    const hasImg = !!imgUrl;
+
+    // Untuk link buka foto asli
+    const fotoRawKey = Object.keys(r).find(k => k.includes('FOTO') || k.includes('URL') || k.includes('GAMBAR'));
+    const fotoRawUrl = fotoRawKey ? r[fotoRawKey] : '';
+
+    return `<div style="background:#fff;border-radius:10px;overflow:hidden;border:1.5px solid rgba(11,61,46,0.1);box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+      ${hasImg
+        ? `<a href="${fotoRawUrl||imgUrl}" target="_blank" style="display:block;">
+             <img src="${imgUrl}" alt="${r.KEGIATAN||''}" loading="lazy"
+               style="width:100%;height:160px;object-fit:cover;display:block;transition:opacity .2s;"
+               onerror="this.parentElement.innerHTML='<div style=\'height:160px;display:flex;align-items:center;justify-content:center;background:#f0f4f2;flex-direction:column;gap:6px;\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'#ccc\' stroke-width=\'1.5\' width=\'32\' height=\'32\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/></svg><span style=\'font-size:11px;color:#bbb;\'>Foto gagal dimuat</span></div>'">
+           </a>`
+        : `<div style="height:160px;display:flex;align-items:center;justify-content:center;background:#f0f4f2;flex-direction:column;gap:6px;">
+             <svg viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5" width="32" height="32" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+             <span style="font-size:11px;color:#bbb;">${fotoRawUrl ? 'URL: '+fotoRawUrl.substring(0,30)+'...' : 'Belum ada foto'}</span>
+           </div>`}
+      <div style="padding:10px 12px;">
+        <span style="background:${badgeColor};color:#fff;font-size:10.5px;padding:2px 8px;border-radius:20px;font-weight:600;">${badgeLabel}</span>
+        <div style="font-weight:600;color:#1a2e22;font-size:12.5px;margin-top:6px;">${r.KEGIATAN||r.TEMA||'-'}</div>
+        <div style="color:#8a9490;font-size:11.5px;margin-top:3px;">TW ${r.TRIWULAN||'-'} ${r.TAHUN||''} · ${r.KABUPATEN||'-'}</div>
+        ${r.KETERANGAN ? `<div style="color:#555;font-size:11.5px;margin-top:4px;font-style:italic;">${r.KETERANGAN}</div>` : ''}
+        ${hasImg ? `<a href="${fotoRawUrl||imgUrl}" target="_blank" style="display:inline-block;margin-top:6px;font-size:11px;color:#0B3D2E;text-decoration:none;border:1px solid rgba(11,61,46,0.2);padding:2px 8px;border-radius:20px;">🔍 Lihat Foto</a>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ---- Render D.IN.9 ----
+function renderDin9(data) {
+  const triwulans = ['I','II','III','IV'];
+  const labelsTriw = triwulans.map(t => 'Triwulan ' + t);
+
+  const sumBy = (arr, key) => arr.reduce((s,r) => s + (parseFloat(r[key])||0), 0);
+
+  const penkumPerTW = triwulans.map(tw =>
+    sumBy(data.filter(r => r.TRIWULAN === tw), 'PENERANGAN_HUKUM'));
+  const luhkumPerTW = triwulans.map(tw =>
+    sumBy(data.filter(r => r.TRIWULAN === tw), 'PENYULUHAN_HUKUM'));
+  const targetPerTW = triwulans.map(tw =>
+    sumBy(data.filter(r => r.TRIWULAN === tw), 'TARGET'));
+
+  // Bar chart Triwulan
+  const barCtx = document.getElementById('pkBarChart');
+  if (barCtx) {
+    if (pkBarChartInst) pkBarChartInst.destroy();
+    pkBarChartInst = new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: labelsTriw,
+        datasets: [
+          { label: 'Target',           data: targetPerTW, backgroundColor: '#B8902E40', borderColor: '#B8902E', borderWidth: 1.5, borderRadius: 4 },
+          { label: 'Penerangan Hukum', data: penkumPerTW, backgroundColor: '#0B3D2E',  borderColor: '#0B3D2E', borderWidth: 0,   borderRadius: 4 },
+          { label: 'Penyuluhan Hukum', data: luhkumPerTW, backgroundColor: '#2E9A6B',  borderColor: '#2E9A6B', borderWidth: 0,   borderRadius: 4 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top', labels: { font: { size: 11 }, boxWidth: 12, padding: 12 } },
+          tooltip: { backgroundColor: 'rgba(11,61,46,0.92)', padding: 10, cornerRadius: 8 }
+        },
+        scales: {
+          y: { beginAtZero: true, ticks: { font:{size:11}, color:'#8a9490', stepSize:1 }, grid:{color:'rgba(0,0,0,0.05)'}, border:{display:false} },
+          x: { ticks: { font:{size:11}, color:'#8a9490' }, grid:{display:false}, border:{display:false} }
+        }
+      }
+    });
+  }
+
+  // Bar chart per wilayah
+  const wilayahCtx = document.getElementById('pkWilayahChart');
+  if (wilayahCtx) {
+    if (pkWilayahChartInst) pkWilayahChartInst.destroy();
+    // Normalisasi nama kab untuk matching fleksibel
+    function normKab(s) { return (s||'').toUpperCase().replace(/KAB\.?\s*/,'').replace(/\bBARATB\b/,'BARAT').trim(); }
+    const pkPerWil = PK_WILAYAH.map(w => sumBy(data.filter(r => normKab(r.KABUPATEN||'').includes(normKab(w))), 'PENERANGAN_HUKUM'));
+    const lkPerWil = PK_WILAYAH.map(w => sumBy(data.filter(r => normKab(r.KABUPATEN||'').includes(normKab(w))), 'PENYULUHAN_HUKUM'));
+    pkWilayahChartInst = new Chart(wilayahCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Kab. Muna', 'Muna Barat', 'Buton Utara'],
+        datasets: [
+          { label: 'Penerangan Hukum', data: pkPerWil, backgroundColor: '#0B3D2E', borderRadius: 4 },
+          { label: 'Penyuluhan Hukum', data: lkPerWil, backgroundColor: '#2E9A6B', borderRadius: 4 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top', labels: { font:{size:11}, boxWidth:12, padding:12 } },
+          tooltip: { backgroundColor: 'rgba(11,61,46,0.92)', padding:10, cornerRadius:8 }
+        },
+        scales: {
+          y: { beginAtZero: true, ticks:{font:{size:11},color:'#8a9490',stepSize:1}, grid:{color:'rgba(0,0,0,0.05)'}, border:{display:false} },
+          x: { ticks:{font:{size:11},color:'#8a9490'}, grid:{display:false}, border:{display:false} }
+        }
+      }
+    });
+  }
+
+  // Rekap tahunan
+  const rekapEl = document.getElementById('pkRekapTahunan');
+  if (rekapEl) {
+    const years = [...new Set(data.map(r => r.TAHUN||'').filter(Boolean))].sort();
+    if (!years.length) { rekapEl.innerHTML = '<div style="color:#aaa;padding:20px;text-align:center;">Belum ada data.</div>'; return; }
+    rekapEl.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:12.5px;">
+      <thead><tr style="background:rgba(11,61,46,0.06);border-bottom:2px solid rgba(11,61,46,0.1);">
+        <th style="padding:8px 10px;text-align:left;color:#0B3D2E;">Tahun</th>
+        <th style="padding:8px 10px;text-align:center;color:#B8902E;">Target</th>
+        <th style="padding:8px 10px;text-align:center;color:#0B3D2E;">Penerangan Hukum</th>
+        <th style="padding:8px 10px;text-align:center;color:#2E9A6B;">Penyuluhan Hukum</th>
+        <th style="padding:8px 10px;text-align:center;color:#4a5568;">Total Kegiatan</th>
+        <th style="padding:8px 10px;text-align:center;color:#4a5568;">Capaian</th>
+      </tr></thead>
+      <tbody>
+        ${years.map(y => {
+          const ydata = data.filter(r => r.TAHUN === y);
+          const tgt = sumBy(ydata, 'TARGET');
+          const pk  = sumBy(ydata, 'PENERANGAN_HUKUM');
+          const lk  = sumBy(ydata, 'PENYULUHAN_HUKUM');
+          const tot = pk + lk;
+          const cap = tgt > 0 ? Math.round((tot/tgt)*100) : 0;
+          const capColor = cap>=100?'#2E9A6B':cap>=60?'#B8902E':'#D94A4A';
+          return `<tr style="border-bottom:1px solid rgba(0,0,0,0.05);" onmouseover="this.style.background='rgba(11,61,46,0.03)'" onmouseout="this.style.background=''">
+            <td style="padding:8px 10px;font-weight:700;color:#0B3D2E;">${y}</td>
+            <td style="padding:8px 10px;text-align:center;color:#B8902E;font-weight:600;">${tgt}</td>
+            <td style="padding:8px 10px;text-align:center;color:#0B3D2E;font-weight:600;">${pk}</td>
+            <td style="padding:8px 10px;text-align:center;color:#2E9A6B;font-weight:600;">${lk}</td>
+            <td style="padding:8px 10px;text-align:center;font-weight:600;">${tot}</td>
+            <td style="padding:8px 10px;text-align:center;">
+              <span style="background:${capColor}20;color:${capColor};padding:2px 10px;border-radius:20px;font-weight:700;font-size:12px;">${cap}%</span>
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>`;
+  }
+}
+
+// ---- Helper ----
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function pkShowError(msg) {
+  setText('pkLoading', '');
+  const el = document.getElementById('pkLoading');
+  if (!el) return;
+  el.style.display = 'flex';
+  el.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="#D94A4A" stroke-width="2" width="36" height="36" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <div style="color:#D94A4A;font-size:13px;text-align:center;max-width:340px;line-height:1.6;">${msg}</div>
+    <button onclick="loadPenkumData()" style="padding:8px 18px;background:#0B3D2E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;">↻ Coba Lagi</button>
+    <div style="color:#aaa;font-size:11px;text-align:center;">Pastikan sheet <b>DATA D.IN.7</b>, <b>DATA D.IN.8</b>, <b>DATA D.IN.9</b> tersedia dan dibagikan ke publik.</div>
+  `;
+}
+
+async function loadPenkumData() {
+  const loadingEl = document.getElementById('pkLoading');
+  const contentEl = document.getElementById('pkContent');
+  if (loadingEl) {
+    loadingEl.style.display = 'flex';
+    loadingEl.innerHTML = `
+      <div style="width:36px;height:36px;border:3px solid rgba(11,61,46,0.15);border-top-color:#0B3D2E;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+      <div style="color:#8a9490;font-size:13px;">Memuat data Penerangan Hukum...</div>`;
+  }
+  if (contentEl) contentEl.style.display = 'none';
+
+  try {
+    // Fetch semua 3 sheet sekaligus
+    const [din7, din8, din9] = await Promise.all([
+      pkFetchSheet(PK_SHEETS.din7).catch(() => []),
+      pkFetchSheet(PK_SHEETS.din8).catch(() => []),
+      pkFetchSheet(PK_SHEETS.din9).catch(() => [])
+    ]);
+
+    _pkAllData = { din7, din8, din9 };
+
+    // Populate filter tahun dari gabungan semua sheet
+    const allRows = [...din7, ...din8, ...din9];
+    pkPopulateTahunFilter(allRows);
+
+    if (loadingEl) loadingEl.style.display = 'none';
+    if (contentEl) contentEl.style.display = 'block';
+
+    // Update timestamp
+    const now = new Date();
+    const upEl = document.getElementById('pkLastUpdate');
+    if (upEl) upEl.textContent = 'Update: ' + now.toLocaleString('id-ID', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+
+    // Init tab default
+    pkSwitchTab('din7');
+
+  } catch(err) {
+    console.error('Gagal memuat data Penerangan Hukum:', err);
+    pkShowError(`Gagal memuat data.<br><small>${err.message}</small>`);
+  }
+}
+
+/* ============================================================
+   KALENDER KEGIATAN + NOTIFIKASI WA via FONNTE
+   Data disimpan di localStorage browser
+   ============================================================ */
+
+const KAL_KEY      = 'kalKegiatan_v3';
+const KAL_CFG_KEY  = 'kalConfig_v3';
+
+const KAL_BULAN     = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const KAL_HARI      = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+const KAL_HARI_FULL = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const KAL_WARNA = {
+  'Operasi':            '#D94A4A',
+  'Penerangan Hukum':   '#0B3D2E',
+  'Penyuluhan Hukum':   '#2E9A6B',
+  'Pengamanan':         '#4A90D9',
+  'Penyelidikan':       '#7C5CBF',
+  'Rapat':              '#B8902E',
+  'Lainnya':            '#8a9490'
+};
+
+let _kalData    = [];
+let _kalCfg     = {};
+let _kalView    = 'agenda';
+let _kalEditId  = null;
+let _kalYear    = new Date().getFullYear();
+let _kalTimer   = null;
+
+/* ── Storage ── */
+function kalLoad() {
+  try { _kalData = JSON.parse(localStorage.getItem(KAL_KEY)||'[]'); } catch(e){ _kalData=[]; }
+  _kalData.sort((a,b)=>a.tanggal.localeCompare(b.tanggal));
+}
+function kalSave() { localStorage.setItem(KAL_KEY, JSON.stringify(_kalData)); }
+function kalCfgLoad() {
+  try { _kalCfg = JSON.parse(localStorage.getItem(KAL_CFG_KEY)||'{}'); } catch(e){ _kalCfg={}; }
+}
+function kalCfgSave() { localStorage.setItem(KAL_CFG_KEY, JSON.stringify(_kalCfg)); }
+
+/* ── Stats hero ── */
+function kalUpdateStats() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const m=today.getMonth(), y=today.getFullYear();
+  const total = _kalData.length;
+  const bi = _kalData.filter(k=>{ const d=new Date(k.tanggal); return d.getFullYear()===y&&d.getMonth()===m; }).length;
+  const md = _kalData.filter(k=>{ const d=new Date(k.tanggal); d.setHours(0,0,0,0); return d>=today; }).length;
+  const se = id => document.getElementById(id);
+  if(se('kalStatTotal'))     se('kalStatTotal').textContent     = total;
+  if(se('kalStatBulanIni'))  se('kalStatBulanIni').textContent  = bi;
+  if(se('kalStatMendatang')) se('kalStatMendatang').textContent = md;
+}
+
+/* ── View switch (Agenda / Kalender 12 bulan) ── */
+function kalSwitchView(v) {
+  _kalView = v;
+  document.querySelectorAll('.kal-view-btn').forEach(b=>{
+    const on = b.dataset.view===v;
+    b.style.background = on?'#0B3D2E':'transparent';
+    b.style.color      = on?'#fff':'#4a5568';
+  });
+  const ag = document.getElementById('kalViewAgenda');
+  const ka = document.getElementById('kalViewKalender');
+  if(ag) ag.style.display = v==='agenda'   ? 'block':'none';
+  if(ka) ka.style.display = v==='kalender' ? 'block':'none';
+  if(v==='kalender'){
+    const yl=document.getElementById('kalYearLabel');
+    if(yl) yl.textContent=_kalYear;
+    kalRender12Months();
+  } else {
+    kalRenderAgenda();
+  }
+}
+
+/* Dipanggil oleh filter dropdown (Jenis / Bulan) */
+function kalRender() {
+  kalUpdateStats();
+  if(_kalView==='kalender') kalRender12Months();
+  else kalRenderAgenda();
+  kalRefreshUpcoming();
+}
+
+function kalPrevYear(){ _kalYear--; kalYearRenderRefresh(); }
+function kalNextYear(){ _kalYear++; kalYearRenderRefresh(); }
+function kalGoToday(){ _kalYear=new Date().getFullYear(); kalYearRenderRefresh(); }
+function kalYearRenderRefresh(){
+  const yl=document.getElementById('kalYearLabel');
+  if(yl) yl.textContent=_kalYear;
+  kalRender12Months();
+}
+
+/* ── Agenda render ── */
+function kalRenderAgenda() {
+  const filterJenis = document.getElementById('kalFilterJenis')?.value||'';
+  const filterBln   = document.getElementById('kalFilterBulan')?.value;
+  let data = [..._kalData].filter(k=>!filterJenis||k.jenis===filterJenis);
+  if(filterBln!==''&&filterBln!=null) data=data.filter(k=>new Date(k.tanggal).getMonth()===parseInt(filterBln));
+
+  const el = document.getElementById('kalAgendaList');
+  const ct = document.getElementById('kalAgendaCount');
+  if(ct) ct.textContent = data.length+' kegiatan';
+  if(!el) return;
+
+  if(!data.length){
+    el.innerHTML='<div style="text-align:center;padding:40px;color:#aaa;font-size:13px;">Belum ada kegiatan.<br>Klik <b>+ Tambah Kegiatan</b> untuk menambahkan.</div>';
+    return;
+  }
+
+  const today=new Date(); today.setHours(0,0,0,0);
+  const grouped={};
+  data.forEach(k=>{
+    const d=new Date(k.tanggal);
+    const key=d.getFullYear()+'-'+String(d.getMonth()).padStart(2,'0');
+    if(!grouped[key]) grouped[key]={label:KAL_BULAN[d.getMonth()]+' '+d.getFullYear(),items:[]};
+    grouped[key].items.push(k);
+  });
+
+  el.innerHTML = Object.keys(grouped).sort().map(gk=>{
+    const g=grouped[gk];
+    const hdr=`<div style="padding:9px 14px 5px;font-size:11px;font-weight:700;color:#0B3D2E;letter-spacing:.7px;text-transform:uppercase;background:rgba(11,61,46,0.05);border-bottom:1px solid rgba(11,61,46,0.08);">${g.label}</div>`;
+    const rows=g.items.map(k=>{
+      const d=new Date(k.tanggal);
+      const kd=new Date(k.tanggal); kd.setHours(0,0,0,0);
+      const diff=Math.round((kd-today)/(864e5));
+      const isToday=diff===0, isPast=diff<0;
+      const color=KAL_WARNA[k.jenis]||'#7C5CBF';
+      const badge=isToday?'<span style="background:#B8902E;color:#fff;font-size:10px;padding:1px 7px;border-radius:20px;font-weight:700;margin-left:6px;">HARI INI</span>':'';
+      return `<div style="display:flex;border-bottom:1px solid rgba(0,0,0,0.05);${isPast?'opacity:.6':''}" onmouseover="this.style.background='rgba(11,61,46,0.03)'" onmouseout="this.style.background=''">
+        <div style="width:52px;min-width:52px;padding:11px 6px;text-align:center;border-right:3px solid ${color};">
+          <div style="font-size:19px;font-weight:700;color:${isToday?color:'#1a2e22'};line-height:1;">${String(d.getDate()).padStart(2,'0')}</div>
+          <div style="font-size:10px;color:#8a9490;">${KAL_HARI[d.getDay()]}</div>
+        </div>
+        <div style="flex:1;padding:9px 12px;min-width:0;">
+          <div style="display:flex;align-items:center;flex-wrap:wrap;margin-bottom:3px;">
+            <span style="font-weight:600;color:#1a2e22;font-size:12.5px;">${k.judul}</span>${badge}
+          </div>
+          <div style="font-size:11.5px;color:#8a9490;display:flex;gap:10px;flex-wrap:wrap;">
+            <span>⏰ ${k.waktu||'-'}</span>${k.tempat?`<span>📍 ${k.tempat}</span>`:''}${k.pj?`<span>👤 ${k.pj}</span>`:''}
+          </div>
+          <div style="margin-top:4px;">
+            <span style="background:${color}18;color:${color};font-size:10px;padding:1px 8px;border-radius:20px;font-weight:600;">${k.jenis||'Lainnya'}</span>
+            ${k.keterangan?`<span style="font-size:11px;color:#888;margin-left:8px;font-style:italic;">${k.keterangan.substring(0,55)}${k.keterangan.length>55?'...':''}</span>`:''}
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px;padding:9px 8px 9px 0;justify-content:center;">
+          <button onclick="kalEditKegiatan('${k.id}')" title="Edit" style="padding:4px 8px;border:1.5px solid rgba(11,61,46,0.2);border-radius:6px;background:transparent;cursor:pointer;color:#0B3D2E;font-size:11px;">✏️</button>
+          <button onclick="kalHapusKegiatan('${k.id}')" title="Hapus" style="padding:4px 8px;border:1.5px solid rgba(217,74,74,0.2);border-radius:6px;background:transparent;cursor:pointer;color:#D94A4A;font-size:11px;">🗑️</button>
+        </div>
+      </div>`;
+    }).join('');
+    return hdr+rows;
+  }).join('');
+}
+
+/* ── 12-Month Calendar render ── */
+function kalRender12Months() {
+  const el = document.getElementById('kal12Grid');
+  if(!el) return;
+  const filterJenis = document.getElementById('kalFilterJenis')?.value||'';
+  const today=new Date();
+
+  el.innerHTML = Array.from({length:12},(_,m)=>{
+    const firstDow=new Date(_kalYear,m,1).getDay();
+    const lastDate=new Date(_kalYear,m+1,0).getDate();
+    const evs=_kalData.filter(k=>{
+      const d=new Date(k.tanggal);
+      return d.getFullYear()===_kalYear&&d.getMonth()===m&&(!filterJenis||k.jenis===filterJenis);
+    });
+    const byDay={};
+    evs.forEach(k=>{ const dd=new Date(k.tanggal).getDate(); (byDay[dd]=byDay[dd]||[]).push(k); });
+
+    let cells='';
+    for(let i=0;i<firstDow;i++) cells+='<div></div>';
+    for(let d=1;d<=lastDate;d++){
+      const isToday=today.getFullYear()===_kalYear&&today.getMonth()===m&&today.getDate()===d;
+      const dayEvs=byDay[d]||[];
+      const color=dayEvs.length?(KAL_WARNA[dayEvs[0].jenis]||'#7C5CBF'):'';
+      const title=dayEvs.map(e=>e.judul).join(', ').replace(/"/g,'&quot;');
+      cells+=`<div ${dayEvs.length?`onclick="kalShowDayPopup(${_kalYear},${m},${d})"`:''} title="${title}" style="text-align:center;font-size:10px;padding:1px;border-radius:4px;cursor:${dayEvs.length?'pointer':'default'};${isToday?'background:#0B3D2E;color:#fff;border-radius:50%;font-weight:700;':''}${dayEvs.length&&!isToday?'font-weight:700;color:'+color+';':'color:#555;'}">
+        ${d}
+        <div style="height:3px;width:3px;border-radius:50%;background:${dayEvs.length?color:'transparent'};margin:0 auto;"></div>
+      </div>`;
+    }
+
+    return `<div style="background:rgba(11,61,46,0.03);border-radius:10px;padding:8px;border:1px solid rgba(11,61,46,0.08);">
+      <div style="font-size:11px;font-weight:700;color:#0B3D2E;text-align:center;margin-bottom:5px;">${KAL_BULAN[m]}</div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:0;margin-bottom:2px;">
+        ${KAL_HARI.map(h=>`<div style="font-size:8.5px;text-align:center;color:#8a9490;font-weight:600;">${h}</div>`).join('')}
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;">${cells}</div>
+      ${evs.length?`<div style="font-size:9.5px;color:#0B3D2E;text-align:center;margin-top:3px;font-weight:600;">${evs.length} kegiatan</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function kalShowDayPopup(y,m,d) {
+  const evs=_kalData.filter(k=>{const dt=new Date(k.tanggal);return dt.getFullYear()===y&&dt.getMonth()===m&&dt.getDate()===d;});
+  if(!evs.length) return;
+  const title=document.getElementById('kalDayModalTitle');
+  const content=document.getElementById('kalDayModalContent');
+  if(title) title.textContent = KAL_HARI_FULL[new Date(y,m,d).getDay()]+', '+d+' '+KAL_BULAN[m]+' '+y;
+  if(content){
+    content.innerHTML = evs.map(k=>{
+      const color=KAL_WARNA[k.jenis]||'#7C5CBF';
+      return `<div style="padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.06);">
+        <div style="font-weight:700;color:#1a2e22;font-size:13px;">${k.judul}</div>
+        <div style="font-size:12px;color:#8a9490;margin-top:3px;">⏰ ${k.waktu||'-'} ${k.tempat?'· 📍 '+k.tempat:''}</div>
+        <span style="display:inline-block;margin-top:5px;background:${color}18;color:${color};font-size:10.5px;padding:2px 9px;border-radius:20px;font-weight:600;">${k.jenis||'Lainnya'}</span>
+      </div>`;
+    }).join('');
+  }
+  const modal=document.getElementById('kalDayModal');
+  if(modal) modal.style.display='flex';
+}
+
+/* ── Upcoming sidebar ── */
+function kalRefreshUpcoming() {
+  const today=new Date(); today.setHours(0,0,0,0);
+  const up=_kalData.filter(k=>{const d=new Date(k.tanggal);d.setHours(0,0,0,0);return d>=today;}).slice(0,7);
+  const el=document.getElementById('kalUpcoming');
+  if(!el) return;
+  if(!up.length){ el.innerHTML='<div style="color:#aaa;text-align:center;padding:16px;font-size:12px;">Tidak ada kegiatan mendatang</div>'; return; }
+  el.innerHTML=up.map(k=>{
+    const d=new Date(k.tanggal);
+    const kd=new Date(k.tanggal); kd.setHours(0,0,0,0);
+    const diff=Math.round((kd-today)/864e5);
+    const label=diff===0?'Hari ini':diff===1?'Besok':'H-'+diff;
+    const lc=diff===0?'#D94A4A':diff<=3?'#B8902E':'#2E9A6B';
+    const color=KAL_WARNA[k.jenis]||'#7C5CBF';
+    return `<div style="display:flex;gap:10px;padding:8px 12px;border-bottom:1px solid rgba(0,0,0,0.05);" onmouseover="this.style.background='rgba(11,61,46,0.03)'" onmouseout="this.style.background=''">
+      <div style="min-width:30px;text-align:center;">
+        <div style="font-size:15px;font-weight:700;color:${color};">${String(d.getDate()).padStart(2,'0')}</div>
+        <div style="font-size:9px;color:#8a9490;">${KAL_BULAN[d.getMonth()].substring(0,3)}</div>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:11.5px;font-weight:600;color:#1a2e22;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${k.judul}</div>
+        <div style="font-size:10.5px;color:#8a9490;">${k.waktu||''} ${k.tempat?'· '+k.tempat.substring(0,25):''}</div>
+      </div>
+      <span style="font-size:10px;font-weight:700;color:${lc};white-space:nowrap;">${label}</span>
+    </div>`;
+  }).join('');
+}
+
+/* ── CRUD kegiatan ── */
+function kalShowModal() { kalOpenModal(null); }
+
+function kalOpenModal(id=null) {
+  _kalEditId=id;
+  const k = id ? (_kalData.find(x=>x.id===id)||{}) : {};
+  document.getElementById('kalModalTitle').textContent = id?'✏️ Edit Kegiatan':'➕ Tambah Kegiatan';
+  document.getElementById('kf-judul').value     = k.judul || '';
+  document.getElementById('kf-tanggal').value   = k.tanggal || new Date().toISOString().split('T')[0];
+  document.getElementById('kf-waktu').value     = k.waktu || '08:00';
+  document.getElementById('kf-jenis').value     = k.jenis || 'Rapat';
+  document.getElementById('kf-prioritas').value = k.prioritas || 'normal';
+  document.getElementById('kf-tempat').value    = k.tempat || '';
+  document.getElementById('kf-pj').value        = k.pj || '';
+  document.getElementById('kf-ket').value       = k.keterangan || '';
+  const notifAktif = id ? !!k.notifAktif : true;
+  document.getElementById('kf-notif-aktif').checked = notifAktif;
+  document.getElementById('kf-n-h3').checked    = !!k.notifH3;
+  document.getElementById('kf-n-h1').checked    = id ? !!k.notifH1 : true;
+  document.getElementById('kf-n-h0').checked    = !!k.notifH0;
+  document.getElementById('kf-n-m5').checked    = !!k.notifM5;
+  document.getElementById('kf-notif-nomor').value = k.notifNomor || _kalCfg.nomor || '';
+  const box=document.getElementById('kf-notif-box');
+  if(box) box.style.opacity = notifAktif ? '1':'0.5';
+  document.getElementById('kalModal').style.display='flex';
+}
+
+function kalCloseModal() {
+  document.getElementById('kalModal').style.display='none';
+  _kalEditId=null;
+}
+
+function kalSaveKegiatan() {
+  const judul     = document.getElementById('kf-judul').value.trim();
+  const tanggal   = document.getElementById('kf-tanggal').value;
+  const waktu     = document.getElementById('kf-waktu').value;
+  const jenis     = document.getElementById('kf-jenis').value;
+  const prioritas = document.getElementById('kf-prioritas').value;
+  const tempat    = document.getElementById('kf-tempat').value.trim();
+  const pj        = document.getElementById('kf-pj').value.trim();
+  const ket       = document.getElementById('kf-ket').value.trim();
+  const notifAktif= document.getElementById('kf-notif-aktif').checked;
+  const notifH3   = document.getElementById('kf-n-h3').checked;
+  const notifH1   = document.getElementById('kf-n-h1').checked;
+  const notifH0   = document.getElementById('kf-n-h0').checked;
+  const notifM5   = document.getElementById('kf-n-m5').checked;
+  const notifNomor= document.getElementById('kf-notif-nomor').value.trim();
+
+  if(!judul){alert('Judul kegiatan wajib diisi!');return;}
+  if(!tanggal){alert('Tanggal wajib diisi!');return;}
+
+  const payload = {judul,tanggal,waktu,jenis,prioritas,tempat,pj,keterangan:ket,notifAktif,notifH3,notifH1,notifH0,notifM5,notifNomor};
+
+  if(_kalEditId){
+    const idx=_kalData.findIndex(x=>x.id===_kalEditId);
+    if(idx>=0) _kalData[idx]={..._kalData[idx],...payload};
+  } else {
+    _kalData.push({id:'kal_'+Date.now(),...payload,createdAt:new Date().toISOString()});
+  }
+  _kalData.sort((a,b)=>a.tanggal.localeCompare(b.tanggal));
+  kalSave();
+  kalUpdateStats();
+  kalRenderAgenda();
+  if(_kalView==='kalender') kalRender12Months();
+  kalRefreshUpcoming();
+  kalCloseModal();
+  kalAddLog('✅ Kegiatan "'+judul+'" disimpan','#2E9A6B');
+}
+
+function kalEditKegiatan(id){ kalOpenModal(id); }
+
+function kalHapusKegiatan(id){
+  const k=_kalData.find(x=>x.id===id);
+  if(!k||!confirm('Hapus kegiatan "'+k.judul+'"?')) return;
+  _kalData=_kalData.filter(x=>x.id!==id);
+  kalSave();
+  kalUpdateStats();
+  kalRenderAgenda();
+  if(_kalView==='kalender') kalRender12Months();
+  kalRefreshUpcoming();
+  kalAddLog('🗑️ Kegiatan "'+k.judul+'" dihapus','#D94A4A');
+}
+
+/* ── WA Fonnte ── */
+async function kalSendWAKegiatan(k, nomor) {
+  const token=_kalCfg.token||'';
+  if(!token){ kalAddLog('❌ Token Fonnte belum diatur','#D94A4A'); return; }
+  if(!nomor) return;
+
+  const tpl=_kalCfg.template||kalDefaultTpl();
+  const d=new Date(k.tanggal);
+  const tglStr=String(d.getDate()).padStart(2,'0')+' '+KAL_BULAN[d.getMonth()]+' '+d.getFullYear();
+  const msg=tpl.replace(/{judul}/g,k.judul||'-').replace(/{tanggal}/g,tglStr)
+    .replace(/{waktu}/g,k.waktu||'-').replace(/{tempat}/g,k.tempat||'-')
+    .replace(/{jenis}/g,k.jenis||'-').replace(/{pj}/g,k.pj||'-')
+    .replace(/{hari}/g,KAL_HARI_FULL[d.getDay()]);
+
+  for(const no of nomor.split(',').map(n=>n.trim()).filter(Boolean)){
+    try{
+      const res=await fetch('https://api.fonnte.com/send',{
+        method:'POST',
+        headers:{'Authorization':token},
+        body:new URLSearchParams({target:no,message:msg,countryCode:'62'})
+      });
+      const data=await res.json();
+      if(data.status) kalAddLog('✅ WA terkirim → '+no,'#2E9A6B');
+      else kalAddLog('❌ Gagal → '+no+': '+(data.reason||'?'),'#D94A4A');
+    }catch(e){ kalAddLog('❌ Error: '+e.message,'#D94A4A'); }
+  }
+}
+
+function kalClearLog(){
+  const el=document.getElementById('kalWaLog');
+  if(el) el.innerHTML='<div style="color:#aaa;text-align:center;padding:16px;">Belum ada notifikasi terkirim</div>';
+}
+
+function kalAddLog(msg,color){
+  const el=document.getElementById('kalWaLog');
+  if(!el) return;
+  const time=new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+  const pl=el.querySelector('[style*="color:#aaa"]');
+  if(pl) pl.remove();
+  const d=document.createElement('div');
+  d.style.cssText=`padding:3px 6px;border-radius:4px;margin-bottom:3px;color:${color};background:${color}15;font-size:11px;`;
+  d.innerHTML=`<span style="color:#8a9490;font-size:10px;">${time}</span> ${msg}`;
+  el.insertBefore(d,el.firstChild);
+}
+
+/* ── Pengaturan WA ── */
+function kalOpenWaSetting(){
+  kalCfgLoad();
+  const g=id=>document.getElementById(id);
+  if(g('wa-token'))          g('wa-token').value = _kalCfg.token||'';
+  if(g('wa-default-nomor'))  g('wa-default-nomor').value = _kalCfg.nomor||'';
+  if(g('wa-sender'))         g('wa-sender').value = _kalCfg.sender||'';
+  if(g('wa-template'))       g('wa-template').value = _kalCfg.template||kalDefaultTpl();
+  const st=g('wa-setting-status');
+  if(st){ st.textContent=''; }
+  document.getElementById('kalWaModal').style.display='flex';
+}
+
+function kalCloseWaSetting(){
+  const m=document.getElementById('kalWaModal');
+  if(m) m.style.display='none';
+}
+
+function kalSaveWaSetting(){
+  _kalCfg={
+    token:    document.getElementById('wa-token')?.value.trim()||'',
+    nomor:    document.getElementById('wa-default-nomor')?.value.trim()||'',
+    sender:   document.getElementById('wa-sender')?.value.trim()||'',
+    template: document.getElementById('wa-template')?.value || kalDefaultTpl(),
+  };
+  kalCfgSave();
+  const st=document.getElementById('wa-setting-status');
+  if(st){ st.style.color='#2E9A6B'; st.textContent='✅ Pengaturan tersimpan'; }
+  kalAddLog('⚙️ Pengaturan WA disimpan','#4A90D9');
+  setTimeout(kalCloseWaSetting, 800);
+}
+
+async function kalTestWa(){
+  const token=document.getElementById('wa-token')?.value.trim();
+  const nomor=document.getElementById('wa-default-nomor')?.value.trim();
+  const st=document.getElementById('wa-setting-status');
+  if(!token){ if(st){st.style.color='#D94A4A';st.textContent='Masukkan token Fonnte terlebih dahulu!';} return; }
+  if(!nomor){ if(st){st.style.color='#D94A4A';st.textContent='Masukkan nomor WA tujuan terlebih dahulu!';} return; }
+  if(st){ st.style.color='#8a9490'; st.textContent='Mengirim pesan test...'; }
+  try{
+    const res=await fetch('https://api.fonnte.com/send',{
+      method:'POST',
+      headers:{'Authorization':token},
+      body:new URLSearchParams({target:nomor,message:'✅ *Test Notifikasi Berhasil!*\n\nSistem Informasi Intelijen\nKejaksaan Negeri Muna\n\nKoneksi WhatsApp via Fonnte aktif.',countryCode:'62'})
+    });
+    const data=await res.json();
+    if(data.status){
+      if(st){st.style.color='#2E9A6B';st.textContent='✅ Berhasil! Pesan test terkirim ke '+nomor;}
+      kalAddLog('✅ Test WA terkirim → '+nomor,'#2E9A6B');
+    } else {
+      if(st){st.style.color='#D94A4A';st.textContent='❌ Gagal: '+(data.reason||JSON.stringify(data));}
+    }
+  }catch(e){
+    if(st){st.style.color='#D94A4A';st.textContent='❌ Error: '+e.message;}
+  }
+}
+
+/* ── Auto notifikasi (scheduler, per-kegiatan) ── */
+function kalAutoNotifCheck(){
+  if(!_kalCfg.token) return;
+  const now=new Date();
+  const today=new Date(); today.setHours(0,0,0,0);
+
+  _kalData.forEach(k=>{
+    if(!k.notifAktif) return;
+    const nomor = k.notifNomor||_kalCfg.nomor;
+    if(!nomor) return;
+
+    const kd=new Date(k.tanggal); kd.setHours(0,0,0,0);
+    const diff=Math.round((kd-today)/864e5);
+
+    const sent=id=>!!localStorage.getItem('notif_'+id+'_'+k.id);
+    const mark=id=>localStorage.setItem('notif_'+id+'_'+k.id,'1');
+
+    // H-3: jam 07:00
+    if(k.notifH3&&diff===3&&now.getHours()===7&&now.getMinutes()===0&&!sent('h3')){
+      mark('h3'); kalSendWAKegiatan(k,nomor); kalAddLog('🔔 Auto H-3: '+k.judul,'#2E9A6B');
+    }
+    // H-1: jam 07:00
+    if(k.notifH1&&diff===1&&now.getHours()===7&&now.getMinutes()===0&&!sent('h1')){
+      mark('h1'); kalSendWAKegiatan(k,nomor); kalAddLog('🔔 Auto H-1: '+k.judul,'#2E9A6B');
+    }
+    // Hari H: 30 menit sebelum waktu
+    if(k.notifH0&&diff===0&&k.waktu&&!sent('h0')){
+      const [hh,mm]=k.waktu.split(':').map(Number);
+      const target=new Date(today); target.setHours(hh,(mm||0)-30,0,0);
+      if(now>=target&&now<=new Date(target.getTime()+59000)){
+        mark('h0'); kalSendWAKegiatan(k,nomor); kalAddLog('🔔 Auto Hari-H (30 menit): '+k.judul,'#2E9A6B');
+      }
+    }
+    // 5 menit sebelum waktu
+    if(k.notifM5&&diff===0&&k.waktu&&!sent('m5')){
+      const [hh,mm]=k.waktu.split(':').map(Number);
+      const target=new Date(today); target.setHours(hh,(mm||0)-5,0,0);
+      if(now>=target&&now<=new Date(target.getTime()+59000)){
+        mark('m5'); kalSendWAKegiatan(k,nomor); kalAddLog('🔔 Auto 5 menit sebelum: '+k.judul,'#2E9A6B');
+      }
+    }
+  });
+}
+
+function kalDefaultTpl(){
+  return `🔔 *PENGINGAT KEGIATAN*
+Kejaksaan Negeri Muna
+
+📋 *{judul}*
+📅 {hari}, {tanggal}
+⏰ Waktu: {waktu}
+📍 Tempat: {tempat}
+🗂️ Jenis: {jenis}
+👤 PJ: {pj}
+
+_Sistem Informasi Intelijen Kejari Muna_`;
+}
+
+// ── Override navigate untuk init kalender lazy ──
+(function(){
+  const _prev = navigate;
+  navigate = function(pg) {
+    _prev(pg);
+    if(pg==='kalender') {
+      kalLoad(); kalCfgLoad();
+      kalUpdateStats();
+      kalSwitchView(_kalView||'agenda');
+      kalRefreshUpcoming();
+      if(!_kalTimer) _kalTimer=setInterval(kalAutoNotifCheck,60000);
+    }
+  };
+})();
+</script>
+
+</body>
+</html>
