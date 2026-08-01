@@ -815,7 +815,7 @@ body::after{
   border-color:var(--g100);
 }
 .ap-logo-wrap{
-  width:100px; height:100px;
+  width:500px; height:500px;
   border-radius:16px;
   background:transparent;
   border:none;
