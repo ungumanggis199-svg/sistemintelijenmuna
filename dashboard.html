@@ -1114,11 +1114,32 @@
                 <small>Deadline dihitung otomatis dari tanggal mulai dan durasi, tetapi tetap dapat disesuaikan.</small>
               </div>
 
+              <div class="proj-field">
+                <label>Penerima Notifikasi WhatsApp *</label>
+                <div class="proj-multi-select" id="projRecipientSelect">
+                  <button type="button" class="proj-multi-toggle" id="projRecipientToggle" onclick="projToggleMemberMenu('create', event)" aria-expanded="false">
+                    <span id="projRecipientSummary">Memuat anggota tim...</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                  </button>
+                  <div class="proj-multi-menu" id="projRecipientMenu" style="display:none;">
+                    <label class="proj-member-option proj-member-all">
+                      <input type="checkbox" id="projRecipientAll" checked onchange="projToggleAllMembers('create', this.checked)">
+                      <span><b>Semua Tim</b><small>Kirim ke seluruh anggota pada sheet Data Tim</small></span>
+                    </label>
+                    <div class="proj-member-divider"></div>
+                    <div id="projRecipientOptions" class="proj-member-options">
+                      <div class="proj-member-empty">Memuat daftar anggota...</div>
+                    </div>
+                  </div>
+                </div>
+                <small>Pilih semua tim atau centang beberapa nama. Daftar selalu dibaca dari sheet <b>Data Tim</b>.</small>
+              </div>
+
               <div class="proj-wa-note">
                 <div class="proj-wa-icon">WA</div>
                 <div>
-                  <strong>Notifikasi otomatis ke seluruh tim</strong>
-                  <span>Nomor penerima dibaca dari sheet <b>Data Tim</b> dengan kolom NIP, Nama, dan Nomor WhatsApp.</span>
+                  <strong>Notifikasi proyek baru</strong>
+                  <span>Pesan WhatsApp hanya dikirim kepada anggota yang dipilih di atas.</span>
                 </div>
               </div>
 
@@ -1152,6 +1173,60 @@
         </div>
 
       </section>
+
+      <!-- MODAL REMINDER DEADLINE PROYEK -->
+      <div id="projReminderModal" class="proj-modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="projReminderTitle">
+        <div class="proj-modal-card">
+          <div class="proj-modal-head">
+            <div>
+              <div class="proj-modal-kicker">WhatsApp Reminder</div>
+              <h3 id="projReminderTitle">Kirim Pengingat Deadline</h3>
+            </div>
+            <button type="button" class="proj-modal-close" onclick="projCloseReminder()" aria-label="Tutup">×</button>
+          </div>
+
+          <div class="proj-reminder-project">
+            <span>Proyek</span>
+            <strong id="projReminderProjectName">—</strong>
+            <small id="projReminderProjectMeta">—</small>
+          </div>
+
+          <div class="proj-field">
+            <label>Penerima Reminder WhatsApp *</label>
+            <div class="proj-multi-select" id="projReminderRecipientSelect">
+              <button type="button" class="proj-multi-toggle" id="projReminderRecipientToggle" onclick="projToggleMemberMenu('reminder', event)" aria-expanded="false">
+                <span id="projReminderRecipientSummary">Semua Tim</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="proj-multi-menu" id="projReminderRecipientMenu" style="display:none;">
+                <label class="proj-member-option proj-member-all">
+                  <input type="checkbox" id="projReminderRecipientAll" checked onchange="projToggleAllMembers('reminder', this.checked)">
+                  <span><b>Semua Tim</b><small>Kirim reminder ke seluruh anggota</small></span>
+                </label>
+                <div class="proj-member-divider"></div>
+                <div id="projReminderRecipientOptions" class="proj-member-options"></div>
+              </div>
+            </div>
+            <small>Centang sebanyak anggota yang diperlukan. Nama diambil dari Google Spreadsheet.</small>
+          </div>
+
+          <div class="proj-reminder-preview">
+            <strong>Isi reminder otomatis</strong>
+            <span>Nama proyek, ID proyek, tanggal deadline, sisa waktu, dan nama pengirim reminder.</span>
+          </div>
+
+          <div id="projReminderStatus" class="proj-form-status" aria-live="polite"></div>
+          <div class="proj-modal-actions">
+            <button type="button" class="proj-modal-cancel" onclick="projCloseReminder()">Batal</button>
+            <button type="button" id="projReminderSendBtn" class="proj-reminder-send" onclick="projSendReminder()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="m22 2-7 20-4-9-9-4Z"/></svg>
+              Kirim Reminder WhatsApp
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- /MODAL REMINDER DEADLINE PROYEK -->
+
       <!-- /PAGE MANAJEMEN PROYEK -->
 
 
@@ -3578,11 +3653,15 @@ async function loadPenkumData() {
 
 /* ============================================================
    MANAJEMEN PROYEK — GOOGLE SHEETS + NOTIFIKASI WHATSAPP
+   Fitur: penerima terpilih + reminder deadline per proyek
    Backend: Google Apps Script (endpoint yang sama dengan login)
    ============================================================ */
 const PROJECT_API_URL = 'https://script.google.com/macros/s/AKfycbzMZVV93BH3d_aL1uADw5Whj_bYIXoZn8_2acT9g5HLRHKTuO_rFCUEoV4aa4XPFMNTMg/exec';
 let _projLoaded = false;
 let _projLoading = false;
+let _projTeamMembers = [];
+let _projProjects = [];
+let _projReminderProject = null;
 
 function projSession(){
   try { return JSON.parse(localStorage.getItem('intel_session') || '{}'); }
@@ -3599,6 +3678,13 @@ function projIsoToday(){
   const d = new Date();
   const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
   return local.toISOString().slice(0,10);
+}
+
+function projFormatDateId(value){
+  if(!value) return '-';
+  const date = new Date(value + (String(value).length === 10 ? 'T00:00:00' : ''));
+  if(Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
 }
 
 function projRecalculateDeadline(){
@@ -3641,29 +3727,131 @@ function projStatusFor(p){
   return {label:'Aktif', cls:'aktif'};
 }
 
+function projMemberIds(scope){
+  return scope === 'reminder' ? {
+    all:'projReminderRecipientAll',
+    options:'projReminderRecipientOptions',
+    menu:'projReminderRecipientMenu',
+    toggle:'projReminderRecipientToggle',
+    summary:'projReminderRecipientSummary'
+  } : {
+    all:'projRecipientAll',
+    options:'projRecipientOptions',
+    menu:'projRecipientMenu',
+    toggle:'projRecipientToggle',
+    summary:'projRecipientSummary'
+  };
+}
+
+function projRenderMemberOptions(scope){
+  const ids = projMemberIds(scope);
+  const box = document.getElementById(ids.options);
+  const all = document.getElementById(ids.all);
+  if(!box) return;
+
+  if(!_projTeamMembers.length){
+    box.innerHTML='<div class="proj-member-empty">Belum ada anggota dengan nomor WhatsApp valid pada sheet Data Tim.</div>';
+    if(all){ all.checked=false; all.disabled=true; }
+    projUpdateMemberSummary(scope);
+    return;
+  }
+
+  if(all){ all.disabled=false; all.checked=true; }
+  box.innerHTML = _projTeamMembers.map(member => `
+    <label class="proj-member-option">
+      <input type="checkbox" class="proj-member-check" value="${projEscape(member.key)}" checked onchange="projMemberChanged('${scope}')">
+      <span><b>${projEscape(member.name)}</b><small>${member.nip ? 'NIP ' + projEscape(member.nip) : 'NIP tidak tersedia'}</small></span>
+    </label>`).join('');
+  projUpdateMemberSummary(scope);
+}
+
+function projSetTeamMembers(members){
+  _projTeamMembers = Array.isArray(members) ? members : [];
+  projRenderMemberOptions('create');
+  projRenderMemberOptions('reminder');
+}
+
+function projToggleMemberMenu(scope, event){
+  if(event) event.stopPropagation();
+  const ids = projMemberIds(scope);
+  const menu = document.getElementById(ids.menu);
+  const toggle = document.getElementById(ids.toggle);
+  if(!menu) return;
+
+  const willOpen = menu.style.display === 'none' || !menu.style.display;
+  document.querySelectorAll('.proj-multi-menu').forEach(el => el.style.display='none');
+  document.querySelectorAll('.proj-multi-toggle').forEach(el => el.setAttribute('aria-expanded','false'));
+  menu.style.display = willOpen ? 'block' : 'none';
+  if(toggle) toggle.setAttribute('aria-expanded', String(willOpen));
+}
+
+function projToggleAllMembers(scope, checked){
+  const ids = projMemberIds(scope);
+  document.querySelectorAll(`#${ids.options} .proj-member-check`).forEach(cb => cb.checked=checked);
+  projUpdateMemberSummary(scope);
+}
+
+function projMemberChanged(scope){
+  const ids = projMemberIds(scope);
+  const checks = [...document.querySelectorAll(`#${ids.options} .proj-member-check`)];
+  const all = document.getElementById(ids.all);
+  if(all) all.checked = checks.length > 0 && checks.every(cb => cb.checked);
+  projUpdateMemberSummary(scope);
+}
+
+function projUpdateMemberSummary(scope){
+  const ids = projMemberIds(scope);
+  const checks = [...document.querySelectorAll(`#${ids.options} .proj-member-check`)];
+  const selected = checks.filter(cb => cb.checked).length;
+  const summary = document.getElementById(ids.summary);
+  if(!summary) return;
+
+  if(!checks.length){
+    summary.textContent='Tidak ada anggota tersedia';
+  }else if(selected === checks.length){
+    summary.textContent=`Semua Tim (${selected} anggota)`;
+  }else if(selected === 0){
+    summary.textContent='Belum ada penerima dipilih';
+  }else{
+    summary.textContent=`${selected} dari ${checks.length} anggota dipilih`;
+  }
+}
+
+function projRecipientPayload(scope){
+  const ids = projMemberIds(scope);
+  const checks = [...document.querySelectorAll(`#${ids.options} .proj-member-check`)];
+  const selected = checks.filter(cb => cb.checked).map(cb => cb.value);
+  const notifyAll = checks.length > 0 && selected.length === checks.length;
+  return {notifyAll, recipientKeys: notifyAll ? [] : selected, selectedCount:selected.length};
+}
+
 function projRender(data, teamCount){
   const list = document.getElementById('projList');
   const loading = document.getElementById('projLoading');
   if(loading) loading.style.display='none';
-  if(list) list.style.display='block';
+  if(list) list.style.display='grid';
+  _projProjects = Array.isArray(data) ? data : [];
 
-  const activeCount = data.filter(p => projStatusFor(p).cls === 'aktif').length;
-  document.getElementById('projStatTotal').textContent = data.length;
+  const activeCount = _projProjects.filter(p => projStatusFor(p).cls === 'aktif').length;
+  document.getElementById('projStatTotal').textContent = _projProjects.length;
   document.getElementById('projStatAktif').textContent = activeCount;
   document.getElementById('projStatTim').textContent = Number(teamCount || 0);
   const badge = document.getElementById('projNavBadge');
-  if(badge) badge.textContent = data.length;
+  if(badge) badge.textContent = _projProjects.length;
 
   if(!list) return;
-  if(!data.length){
+  if(!_projProjects.length){
     list.innerHTML = '<div class="proj-empty"><strong>Belum ada proyek.</strong><span>Gunakan formulir di sebelah kiri untuk menambahkan proyek pertama.</span></div>';
     return;
   }
 
-  list.innerHTML = data.map(p => {
+  list.innerHTML = _projProjects.map(p => {
     const st = projStatusFor(p);
     const ok = Number(p.notifikasiBerhasil || 0);
     const fail = Number(p.notifikasiGagal || 0);
+    const reminderOk = Number(p.reminderBerhasil || 0);
+    const reminderFail = Number(p.reminderGagal || 0);
+    const encodedId = encodeURIComponent(p.id || '');
     return `<article class="proj-card">
       <div class="proj-card-top">
         <div>
@@ -3674,15 +3862,26 @@ function projRender(data, teamCount){
       </div>
       ${p.deskripsi ? `<p>${projEscape(p.deskripsi)}</p>` : ''}
       <div class="proj-meta-grid">
-        <div><span>Mulai</span><b>${projEscape(p.tanggalMulai || '-')}</b></div>
+        <div><span>Mulai</span><b>${projEscape(projFormatDateId(p.tanggalMulai))}</b></div>
         <div><span>Durasi</span><b>${projEscape(p.durasi || '0')} hari</b></div>
-        <div><span>Deadline</span><b>${projEscape(p.deadline || '-')}</b></div>
+        <div><span>Deadline</span><b>${projEscape(projFormatDateId(p.deadline))}</b></div>
         <div><span>Dibuat oleh</span><b>${projEscape(p.dibuatOleh || '-')}</b></div>
       </div>
+      <div class="proj-recipient-line" title="${projEscape(p.penerimaNotifikasi || '-')}">
+        <span>Penerima awal</span><b>${projEscape(p.penerimaNotifikasi || '-')}</b>
+      </div>
       <div class="proj-notif-result">
-        <span class="ok">✓ ${ok} WA terkirim</span>
+        <span class="ok">✓ ${ok} WA proyek</span>
         <span class="fail">${fail ? '!' : '✓'} ${fail} gagal</span>
       </div>
+      <div class="proj-reminder-result">
+        <span>Reminder: <b>${reminderOk} terkirim</b>${reminderFail ? ` · ${reminderFail} gagal` : ''}</span>
+        <small>${p.reminderTerakhir ? 'Terakhir ' + projEscape(p.reminderTerakhir) : 'Belum pernah dikirim'}</small>
+      </div>
+      <button type="button" class="proj-reminder-btn" onclick="projOpenReminder(decodeURIComponent('${encodedId}'))">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Kirim Reminder Deadline
+      </button>
     </article>`;
   }).join('');
 }
@@ -3692,10 +3891,14 @@ async function projLoadProjects(force=false){
   _projLoading = true;
   const loading = document.getElementById('projLoading');
   const list = document.getElementById('projList');
-  if(loading) loading.style.display='flex';
+  if(loading){
+    loading.innerHTML='<div class="proj-spinner"></div><span>Memuat proyek dan anggota tim dari Google Sheets...</span>';
+    loading.style.display='flex';
+  }
   if(list) list.style.display='none';
   try{
     const data = await projApi({action:'listProjects'});
+    projSetTeamMembers(data.teamMembers || []);
     projRender(data.projects || [], data.teamCount || 0);
     _projLoaded = true;
   }catch(err){
@@ -3714,6 +3917,7 @@ async function projSubmit(event){
   const button = document.getElementById('projSubmitBtn');
   const status = document.getElementById('projFormStatus');
   const session = projSession();
+  const recipients = projRecipientPayload('create');
   const payload = {
     action:'createProject',
     nama:document.getElementById('projNama').value.trim(),
@@ -3721,12 +3925,19 @@ async function projSubmit(event){
     tanggalMulai:document.getElementById('projMulai').value,
     durasi:Number(document.getElementById('projDurasi').value),
     deadline:document.getElementById('projDeadline').value,
-    dibuatOleh:session.username || 'Pengguna'
+    dibuatOleh:session.username || 'Pengguna',
+    notifyAll:recipients.notifyAll,
+    recipientKeys:recipients.recipientKeys
   };
 
   if(!payload.nama || !payload.tanggalMulai || !payload.deadline || !payload.durasi){
     status.className='proj-form-status error';
     status.textContent='Lengkapi seluruh kolom wajib.';
+    return;
+  }
+  if(recipients.selectedCount < 1){
+    status.className='proj-form-status error';
+    status.textContent='Pilih sekurang-kurangnya satu penerima WhatsApp.';
     return;
   }
   if(new Date(payload.deadline) < new Date(payload.tanggalMulai)){
@@ -3753,6 +3964,7 @@ async function projSubmit(event){
     document.getElementById('projMulai').value=projIsoToday();
     document.getElementById('projDurasi').value='7';
     projRecalculateDeadline();
+    projRenderMemberOptions('create');
     _projLoaded=false;
     await projLoadProjects(true);
   }catch(err){
@@ -3764,19 +3976,105 @@ async function projSubmit(event){
   }
 }
 
+function projOpenReminder(projectId){
+  const project = _projProjects.find(item => String(item.id) === String(projectId));
+  if(!project){
+    alert('Data proyek tidak ditemukan. Silakan refresh daftar proyek.');
+    return;
+  }
+  _projReminderProject = project;
+  document.getElementById('projReminderProjectName').textContent = project.nama || '-';
+  document.getElementById('projReminderProjectMeta').textContent = `${project.id} · Deadline ${projFormatDateId(project.deadline)}`;
+  document.getElementById('projReminderStatus').className='proj-form-status';
+  document.getElementById('projReminderStatus').textContent='';
+  projRenderMemberOptions('reminder');
+  document.getElementById('projReminderModal').style.display='flex';
+  document.body.classList.add('proj-modal-open');
+}
+
+function projCloseReminder(){
+  const modal = document.getElementById('projReminderModal');
+  if(modal) modal.style.display='none';
+  document.body.classList.remove('proj-modal-open');
+  _projReminderProject = null;
+}
+
+async function projSendReminder(){
+  const button = document.getElementById('projReminderSendBtn');
+  const status = document.getElementById('projReminderStatus');
+  const recipients = projRecipientPayload('reminder');
+  if(!_projReminderProject){
+    status.className='proj-form-status error';
+    status.textContent='Proyek reminder tidak tersedia.';
+    return;
+  }
+  if(recipients.selectedCount < 1){
+    status.className='proj-form-status error';
+    status.textContent='Pilih sekurang-kurangnya satu penerima reminder.';
+    return;
+  }
+
+  button.disabled=true;
+  button.innerHTML='<span class="proj-btn-spinner"></span> Mengirim reminder...';
+  status.className='proj-form-status';
+  status.textContent='';
+
+  try{
+    const result = await projApi({
+      action:'sendProjectReminder',
+      projectId:_projReminderProject.id,
+      notifyAll:recipients.notifyAll,
+      recipientKeys:recipients.recipientKeys
+    });
+    const reminder = result.reminder || {};
+    status.className = reminder.failed > 0 || reminder.configured === false ? 'proj-form-status warning' : 'proj-form-status success';
+    if(reminder.configured === false){
+      status.textContent='Reminder belum terkirim karena FONNTE_TOKEN belum dikonfigurasi.';
+    }else{
+      status.textContent=`Reminder diproses. Berhasil: ${reminder.sent || 0}, gagal: ${reminder.failed || 0}.`;
+    }
+    _projLoaded=false;
+    await projLoadProjects(true);
+    if((reminder.failed || 0) === 0 && reminder.configured !== false){
+      setTimeout(projCloseReminder, 900);
+    }
+  }catch(err){
+    status.className='proj-form-status error';
+    status.textContent=err.message;
+  }finally{
+    button.disabled=false;
+    button.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="m22 2-7 20-4-9-9-4Z"/></svg> Kirim Reminder WhatsApp';
+  }
+}
+
 function projInit(){
   const form=document.getElementById('projForm');
   const start=document.getElementById('projMulai');
   const duration=document.getElementById('projDurasi');
+  const reminderModal=document.getElementById('projReminderModal');
   if(!form) return;
   start.value=projIsoToday();
   projRecalculateDeadline();
   start.addEventListener('change',projRecalculateDeadline);
   duration.addEventListener('input',projRecalculateDeadline);
   form.addEventListener('submit',projSubmit);
+
+  document.addEventListener('click', event => {
+    if(!event.target.closest('.proj-multi-select')){
+      document.querySelectorAll('.proj-multi-menu').forEach(el => el.style.display='none');
+      document.querySelectorAll('.proj-multi-toggle').forEach(el => el.setAttribute('aria-expanded','false'));
+    }
+  });
+  if(reminderModal){
+    reminderModal.addEventListener('click', event => {
+      if(event.target === reminderModal) projCloseReminder();
+    });
+  }
+  document.addEventListener('keydown', event => {
+    if(event.key === 'Escape' && reminderModal?.style.display === 'flex') projCloseReminder();
+  });
 }
 projInit();
-
 
 /* ============================================================
    KALENDER KEGIATAN + NOTIFIKASI WA via FONNTE
