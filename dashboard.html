@@ -107,6 +107,17 @@
       <p class="sb-section-label">Lainnya</p>
       <ul class="nav-list">
 
+        <li class="nav-item" data-page="projek">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="7" width="18" height="13" rx="2"/>
+            <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="10" y1="12" x2="14" y2="12"/>
+          </svg>
+          Manajemen Proyek
+          <span class="nav-badge" id="projNavBadge" style="background:#B8902E;color:#fff;">0</span>
+        </li>
+
         <li class="nav-item" data-page="kalender">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -1046,6 +1057,105 @@
 
 
       <!-- ==================
+           PAGE: MANAJEMEN PROYEK
+           ================== -->
+      <section class="page" id="page-projek">
+
+        <div class="hero-banner" style="margin-bottom:14px;">
+          <div class="hb-left">
+            <div class="hb-eyebrow">Dashboard · Manajemen Proyek</div>
+            <div class="hb-title">Proyek Baru &amp;<br>Koordinasi Tim</div>
+            <div class="hb-sub">Setiap proyek baru disimpan ke Google Sheets dan diberitahukan otomatis melalui WhatsApp</div>
+          </div>
+          <div class="hb-right">
+            <div class="hb-stat"><div class="hb-stat-val" id="projStatTotal">0</div><div class="hb-stat-label">Total Proyek</div></div>
+            <div class="hb-stat"><div class="hb-stat-val" id="projStatAktif">0</div><div class="hb-stat-label">Proyek Aktif</div></div>
+            <div class="hb-stat"><div class="hb-stat-val" id="projStatTim">0</div><div class="hb-stat-label">Anggota Tim</div></div>
+          </div>
+        </div>
+
+        <div class="proj-layout">
+          <div class="panel proj-form-panel">
+            <div class="panel-head">
+              <div class="ph-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                <h3>Tambah Proyek Baru</h3>
+              </div>
+              <span class="panel-tag">Google Sheets</span>
+            </div>
+
+            <form id="projForm" class="proj-form">
+              <div class="proj-field">
+                <label for="projNama">Nama Proyek *</label>
+                <input id="projNama" name="nama" type="text" maxlength="120" placeholder="Contoh: Pemetaan Potensi Ancaman Wilayah" required>
+              </div>
+
+              <div class="proj-field">
+                <label for="projDeskripsi">Deskripsi</label>
+                <textarea id="projDeskripsi" name="deskripsi" rows="4" maxlength="1000" placeholder="Tujuan, ruang lingkup, atau catatan singkat proyek"></textarea>
+              </div>
+
+              <div class="proj-date-grid">
+                <div class="proj-field">
+                  <label for="projMulai">Tanggal Mulai *</label>
+                  <input id="projMulai" name="tanggalMulai" type="date" required>
+                </div>
+                <div class="proj-field">
+                  <label for="projDurasi">Durasi (hari) *</label>
+                  <input id="projDurasi" name="durasi" type="number" min="1" max="3650" value="7" required>
+                </div>
+              </div>
+
+              <div class="proj-field">
+                <label for="projDeadline">Deadline *</label>
+                <input id="projDeadline" name="deadline" type="date" required>
+                <small>Deadline dihitung otomatis dari tanggal mulai dan durasi, tetapi tetap dapat disesuaikan.</small>
+              </div>
+
+              <div class="proj-wa-note">
+                <div class="proj-wa-icon">WA</div>
+                <div>
+                  <strong>Notifikasi otomatis ke seluruh tim</strong>
+                  <span>Nomor penerima dibaca dari sheet <b>Data Tim</b> dengan kolom NIP, Nama, dan Nomor WhatsApp.</span>
+                </div>
+              </div>
+
+              <button id="projSubmitBtn" type="submit" class="proj-submit-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 2 11 13"/><path d="m22 2-7 20-4-9-9-4Z"/>
+                </svg>
+                Simpan Proyek &amp; Kirim WhatsApp
+              </button>
+              <div id="projFormStatus" class="proj-form-status" aria-live="polite"></div>
+            </form>
+          </div>
+
+          <div class="panel proj-list-panel">
+            <div class="panel-head">
+              <div class="ph-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                </svg>
+                <h3>Daftar Proyek</h3>
+              </div>
+              <button type="button" onclick="projLoadProjects(true)" class="proj-refresh-btn">↻ Refresh</button>
+            </div>
+
+            <div id="projLoading" class="proj-loading">
+              <div class="proj-spinner"></div>
+              <span>Memuat proyek dari Google Sheets...</span>
+            </div>
+            <div id="projList" class="proj-list" style="display:none;"></div>
+          </div>
+        </div>
+
+      </section>
+      <!-- /PAGE MANAJEMEN PROYEK -->
+
+
+      <!-- ==================
            PAGE: KALENDER
            ================== -->
       <section class="page" id="page-kalender">
@@ -1357,6 +1467,7 @@ function navigate(pageKey){
   document.querySelectorAll('.page').forEach(p => {
     p.classList.toggle('active', p.id === 'page-' + pageKey);
   });
+  if(pageKey === 'projek') projLoadProjects();
 }
 
 document.querySelectorAll('[data-page]').forEach(el => {
@@ -3464,6 +3575,208 @@ async function loadPenkumData() {
     pkShowError(`Gagal memuat data.<br><small>${err.message}</small>`);
   }
 }
+
+/* ============================================================
+   MANAJEMEN PROYEK — GOOGLE SHEETS + NOTIFIKASI WHATSAPP
+   Backend: Google Apps Script (endpoint yang sama dengan login)
+   ============================================================ */
+const PROJECT_API_URL = 'https://script.google.com/macros/s/AKfycbzMZVV93BH3d_aL1uADw5Whj_bYIXoZn8_2acT9g5HLRHKTuO_rFCUEoV4aa4XPFMNTMg/exec';
+let _projLoaded = false;
+let _projLoading = false;
+
+function projSession(){
+  try { return JSON.parse(localStorage.getItem('intel_session') || '{}'); }
+  catch(e){ return {}; }
+}
+
+function projEscape(value){
+  return String(value ?? '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+function projIsoToday(){
+  const d = new Date();
+  const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0,10);
+}
+
+function projRecalculateDeadline(){
+  const start = document.getElementById('projMulai')?.value;
+  const duration = parseInt(document.getElementById('projDurasi')?.value,10);
+  const deadline = document.getElementById('projDeadline');
+  if(!start || !Number.isFinite(duration) || duration < 1 || !deadline) return;
+  const d = new Date(start + 'T00:00:00');
+  d.setDate(d.getDate() + duration);
+  const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+  deadline.value = local.toISOString().slice(0,10);
+}
+
+async function projApi(payload){
+  const session = projSession();
+  if(!session.token){
+    throw new Error('Sesi lama tidak memiliki token. Silakan keluar lalu login kembali.');
+  }
+  const res = await fetch(PROJECT_API_URL, {
+    method:'POST',
+    body:JSON.stringify({...payload, token:session.token})
+  });
+  const text = await res.text();
+  let data;
+  try { data = JSON.parse(text); }
+  catch(e){ throw new Error('Respons server tidak valid.'); }
+  if(!res.ok || data.status === 'error' || data.status === 'failed'){
+    throw new Error(data.message || 'Permintaan ke server gagal.');
+  }
+  return data;
+}
+
+function projStatusFor(p){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const start = new Date((p.tanggalMulai || '') + 'T00:00:00');
+  const end = new Date((p.deadline || '') + 'T00:00:00');
+  if(Number.isNaN(end.getTime())) return {label:p.status || 'Baru', cls:'baru'};
+  if(end < today) return {label:'Melewati Deadline', cls:'terlambat'};
+  if(!Number.isNaN(start.getTime()) && start > today) return {label:'Belum Mulai', cls:'belum'};
+  return {label:'Aktif', cls:'aktif'};
+}
+
+function projRender(data, teamCount){
+  const list = document.getElementById('projList');
+  const loading = document.getElementById('projLoading');
+  if(loading) loading.style.display='none';
+  if(list) list.style.display='block';
+
+  const activeCount = data.filter(p => projStatusFor(p).cls === 'aktif').length;
+  document.getElementById('projStatTotal').textContent = data.length;
+  document.getElementById('projStatAktif').textContent = activeCount;
+  document.getElementById('projStatTim').textContent = Number(teamCount || 0);
+  const badge = document.getElementById('projNavBadge');
+  if(badge) badge.textContent = data.length;
+
+  if(!list) return;
+  if(!data.length){
+    list.innerHTML = '<div class="proj-empty"><strong>Belum ada proyek.</strong><span>Gunakan formulir di sebelah kiri untuk menambahkan proyek pertama.</span></div>';
+    return;
+  }
+
+  list.innerHTML = data.map(p => {
+    const st = projStatusFor(p);
+    const ok = Number(p.notifikasiBerhasil || 0);
+    const fail = Number(p.notifikasiGagal || 0);
+    return `<article class="proj-card">
+      <div class="proj-card-top">
+        <div>
+          <div class="proj-id">${projEscape(p.id)}</div>
+          <h4>${projEscape(p.nama)}</h4>
+        </div>
+        <span class="proj-status ${st.cls}">${st.label}</span>
+      </div>
+      ${p.deskripsi ? `<p>${projEscape(p.deskripsi)}</p>` : ''}
+      <div class="proj-meta-grid">
+        <div><span>Mulai</span><b>${projEscape(p.tanggalMulai || '-')}</b></div>
+        <div><span>Durasi</span><b>${projEscape(p.durasi || '0')} hari</b></div>
+        <div><span>Deadline</span><b>${projEscape(p.deadline || '-')}</b></div>
+        <div><span>Dibuat oleh</span><b>${projEscape(p.dibuatOleh || '-')}</b></div>
+      </div>
+      <div class="proj-notif-result">
+        <span class="ok">✓ ${ok} WA terkirim</span>
+        <span class="fail">${fail ? '!' : '✓'} ${fail} gagal</span>
+      </div>
+    </article>`;
+  }).join('');
+}
+
+async function projLoadProjects(force=false){
+  if(_projLoading || (_projLoaded && !force)) return;
+  _projLoading = true;
+  const loading = document.getElementById('projLoading');
+  const list = document.getElementById('projList');
+  if(loading) loading.style.display='flex';
+  if(list) list.style.display='none';
+  try{
+    const data = await projApi({action:'listProjects'});
+    projRender(data.projects || [], data.teamCount || 0);
+    _projLoaded = true;
+  }catch(err){
+    if(loading){
+      loading.innerHTML = `<div class="proj-load-error">${projEscape(err.message)}<button type="button" onclick="projLoadProjects(true)">Coba lagi</button></div>`;
+      loading.style.display='flex';
+    }
+  }finally{
+    _projLoading = false;
+  }
+}
+
+async function projSubmit(event){
+  event.preventDefault();
+  const form = event.currentTarget;
+  const button = document.getElementById('projSubmitBtn');
+  const status = document.getElementById('projFormStatus');
+  const session = projSession();
+  const payload = {
+    action:'createProject',
+    nama:document.getElementById('projNama').value.trim(),
+    deskripsi:document.getElementById('projDeskripsi').value.trim(),
+    tanggalMulai:document.getElementById('projMulai').value,
+    durasi:Number(document.getElementById('projDurasi').value),
+    deadline:document.getElementById('projDeadline').value,
+    dibuatOleh:session.username || 'Pengguna'
+  };
+
+  if(!payload.nama || !payload.tanggalMulai || !payload.deadline || !payload.durasi){
+    status.className='proj-form-status error';
+    status.textContent='Lengkapi seluruh kolom wajib.';
+    return;
+  }
+  if(new Date(payload.deadline) < new Date(payload.tanggalMulai)){
+    status.className='proj-form-status error';
+    status.textContent='Deadline tidak boleh lebih awal dari tanggal mulai.';
+    return;
+  }
+
+  button.disabled=true;
+  button.innerHTML='<span class="proj-btn-spinner"></span> Menyimpan dan mengirim notifikasi...';
+  status.className='proj-form-status';
+  status.textContent='';
+
+  try{
+    const result = await projApi(payload);
+    const notif = result.notification || {};
+    status.className = notif.failed > 0 || notif.configured === false ? 'proj-form-status warning' : 'proj-form-status success';
+    if(notif.configured === false){
+      status.textContent = 'Proyek tersimpan, tetapi token Fonnte belum dikonfigurasi di Apps Script.';
+    }else{
+      status.textContent = `Proyek tersimpan. WhatsApp berhasil: ${notif.sent || 0}, gagal: ${notif.failed || 0}.`;
+    }
+    form.reset();
+    document.getElementById('projMulai').value=projIsoToday();
+    document.getElementById('projDurasi').value='7';
+    projRecalculateDeadline();
+    _projLoaded=false;
+    await projLoadProjects(true);
+  }catch(err){
+    status.className='proj-form-status error';
+    status.textContent=err.message;
+  }finally{
+    button.disabled=false;
+    button.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="m22 2-7 20-4-9-9-4Z"/></svg> Simpan Proyek &amp; Kirim WhatsApp';
+  }
+}
+
+function projInit(){
+  const form=document.getElementById('projForm');
+  const start=document.getElementById('projMulai');
+  const duration=document.getElementById('projDurasi');
+  if(!form) return;
+  start.value=projIsoToday();
+  projRecalculateDeadline();
+  start.addEventListener('change',projRecalculateDeadline);
+  duration.addEventListener('input',projRecalculateDeadline);
+  form.addEventListener('submit',projSubmit);
+}
+projInit();
+
 
 /* ============================================================
    KALENDER KEGIATAN + NOTIFIKASI WA via FONNTE
