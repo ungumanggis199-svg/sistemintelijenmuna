@@ -3743,6 +3743,15 @@ function projMemberIds(scope){
   };
 }
 
+function projMemberInitials(name){
+  return String(name || 'TM')
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0,2)
+    .map(part => part.charAt(0).toUpperCase())
+    .join('') || 'TM';
+}
+
 function projRenderMemberOptions(scope){
   const ids = projMemberIds(scope);
   const box = document.getElementById(ids.options);
@@ -3757,11 +3766,21 @@ function projRenderMemberOptions(scope){
   }
 
   if(all){ all.disabled=false; all.checked=true; }
-  box.innerHTML = _projTeamMembers.map(member => `
+  box.innerHTML = _projTeamMembers.map(member => {
+    const initials = projMemberInitials(member.name);
+    return `
     <label class="proj-member-option">
       <input type="checkbox" class="proj-member-check" value="${projEscape(member.key)}" checked onchange="projMemberChanged('${scope}')">
-      <span><b>${projEscape(member.name)}</b><small>${member.nip ? 'NIP ' + projEscape(member.nip) : 'NIP tidak tersedia'}</small></span>
-    </label>`).join('');
+      <div class="proj-member-avatar">${projEscape(initials)}</div>
+      <div class="proj-member-main">
+        <div class="proj-member-name-row">
+          <b class="proj-member-name">${projEscape(member.name)}</b>
+          <span class="proj-member-tag">Tim</span>
+        </div>
+        <small class="proj-member-nip">${member.nip ? 'NIP ' + projEscape(member.nip) : 'NIP tidak tersedia'}</small>
+      </div>
+    </label>`;
+  }).join('');
   projUpdateMemberSummary(scope);
 }
 
@@ -3802,7 +3821,8 @@ function projMemberChanged(scope){
 function projUpdateMemberSummary(scope){
   const ids = projMemberIds(scope);
   const checks = [...document.querySelectorAll(`#${ids.options} .proj-member-check`)];
-  const selected = checks.filter(cb => cb.checked).length;
+  const selectedChecks = checks.filter(cb => cb.checked);
+  const selected = selectedChecks.length;
   const summary = document.getElementById(ids.summary);
   if(!summary) return;
 
@@ -3813,7 +3833,13 @@ function projUpdateMemberSummary(scope){
   }else if(selected === 0){
     summary.textContent='Belum ada penerima dipilih';
   }else{
-    summary.textContent=`${selected} dari ${checks.length} anggota dipilih`;
+    const names = selectedChecks.map(cb => {
+      const row = cb.closest('.proj-member-option');
+      return row?.querySelector('.proj-member-name')?.textContent?.trim() || '';
+    }).filter(Boolean);
+    const visible = names.slice(0,2).join(', ');
+    const remaining = names.length - 2;
+    summary.textContent = remaining > 0 ? `${visible} +${remaining} lainnya` : visible;
   }
 }
 
@@ -3879,8 +3905,13 @@ function projRender(data, teamCount){
         <small>${p.reminderTerakhir ? 'Terakhir ' + projEscape(p.reminderTerakhir) : 'Belum pernah dikirim'}</small>
       </div>
       <button type="button" class="proj-reminder-btn" onclick="projOpenReminder(decodeURIComponent('${encodedId}'))">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-        Kirim Reminder Deadline
+        <span class="proj-reminder-btn-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </span>
+        <span class="proj-reminder-btn-text">
+          <strong>Kirim Reminder Deadline</strong>
+          <small>Notifikasi WhatsApp pengingat deadline</small>
+        </span>
       </button>
     </article>`;
   }).join('');
@@ -4002,6 +4033,8 @@ function projOpenReminder(projectId){
   document.getElementById('projReminderStatus').className='proj-form-status';
   document.getElementById('projReminderStatus').textContent='';
   projRenderMemberOptions('reminder');
+  document.querySelectorAll('.proj-multi-menu').forEach(el => el.style.display='none');
+  document.querySelectorAll('.proj-multi-toggle').forEach(el => el.setAttribute('aria-expanded','false'));
   document.getElementById('projReminderModal').style.display='flex';
   document.body.classList.add('proj-modal-open');
 }
@@ -4009,6 +4042,8 @@ function projOpenReminder(projectId){
 function projCloseReminder(){
   const modal = document.getElementById('projReminderModal');
   if(modal) modal.style.display='none';
+  document.getElementById('projReminderRecipientMenu')?.style && (document.getElementById('projReminderRecipientMenu').style.display='none');
+  document.getElementById('projReminderRecipientToggle')?.setAttribute('aria-expanded','false');
   document.body.classList.remove('proj-modal-open');
   _projReminderProject = null;
 }
