@@ -3898,8 +3898,22 @@ async function projLoadProjects(force=false){
   if(list) list.style.display='none';
   try{
     const data = await projApi({action:'listProjects'});
-    projSetTeamMembers(data.teamMembers || []);
-    projRender(data.projects || [], data.teamCount || 0);
+
+    // Backend versi baru mengirim teamMembers bersama daftar proyek.
+    // Fallback ini tetap memanggil endpoint khusus jika respons proyek
+    // belum membawa daftar anggota karena deployment/cache lama.
+    let members = Array.isArray(data.teamMembers) ? data.teamMembers : [];
+    if(!members.length){
+      try{
+        const teamData = await projApi({action:'listTeamMembers'});
+        members = Array.isArray(teamData.teamMembers) ? teamData.teamMembers : [];
+      }catch(teamErr){
+        console.warn('Daftar anggota tim gagal dimuat:', teamErr.message);
+      }
+    }
+
+    projSetTeamMembers(members);
+    projRender(data.projects || [], members.length || data.teamCount || 0);
     _projLoaded = true;
   }catch(err){
     if(loading){
