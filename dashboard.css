@@ -1286,3 +1286,62 @@ body.proj-modal-open{overflow:hidden;}
     max-height:none !important;
   }
 }
+
+
+/* ===== DROPDOWN SELALU DI BAWAH TOMBOL v4 ===== */
+.proj-multi-select{
+  position:relative !important;
+  overflow:visible !important;
+}
+.proj-form-panel,
+.proj-list-panel,
+#page-projek,
+.proj-layout{
+  overflow:visible !important;
+}
+.proj-multi-menu{
+  position:absolute !important;
+  left:0 !important;
+  right:0 !important;
+  top:calc(100% + 8px) !important;
+  bottom:auto !important;
+  width:100% !important;
+  max-height:min(360px,55vh) !important;
+  transform:none !important;
+  z-index:2200 !important;
+}
+.proj-member-options{
+  max-height:280px !important;
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+}
+.proj-modal{
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+}
+.proj-modal-card{
+  overflow:visible !important;
+}
+.proj-modal .proj-multi-menu{
+  z-index:2300 !important;
+}
+@media(max-width:620px){
+  .proj-multi-menu{
+    position:absolute !important;
+    left:0 !important;
+    right:0 !important;
+    top:calc(100% + 8px) !important;
+    bottom:auto !important;
+    width:100% !important;
+    max-height:min(330px,50vh) !important;
+    transform:none !important;
+  }
+  .proj-member-options{
+    max-height:230px !important;
+  }
+  .proj-modal-card{
+    overflow:visible !important;
+  }
+}
