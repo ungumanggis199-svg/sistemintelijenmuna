@@ -3796,23 +3796,16 @@ function projPositionMemberMenu(scope){
   const toggle = document.getElementById(ids.toggle);
   if(!menu || !toggle || menu.style.display === 'none') return;
 
-  const rect = toggle.getBoundingClientRect();
-  const gap = 8;
-  const viewportPadding = 12;
-  const availableBelow = window.innerHeight - rect.bottom - gap - viewportPadding;
-  const availableAbove = rect.top - gap - viewportPadding;
-  const openUp = availableBelow < 260 && availableAbove > availableBelow;
-  const available = Math.max(150, Math.floor(openUp ? availableAbove : availableBelow));
-  const maxHeight = Math.min(420, available);
-
-  menu.classList.toggle('proj-menu-up', openUp);
-  menu.style.position = 'fixed';
-  menu.style.left = Math.max(viewportPadding, rect.left) + 'px';
-  menu.style.right = 'auto';
-  menu.style.width = Math.min(rect.width, window.innerWidth - (viewportPadding * 2)) + 'px';
-  menu.style.maxHeight = maxHeight + 'px';
-  menu.style.top = openUp ? 'auto' : (rect.bottom + gap) + 'px';
-  menu.style.bottom = openUp ? (window.innerHeight - rect.top + gap) + 'px' : 'auto';
+  // Dropdown selalu menempel tepat di bawah tombol pemilih.
+  // Posisi absolute mengikuti kotak .proj-multi-select, bukan viewport.
+  menu.classList.remove('proj-menu-up');
+  menu.style.position = 'absolute';
+  menu.style.left = '0';
+  menu.style.right = '0';
+  menu.style.width = '100%';
+  menu.style.top = 'calc(100% + 8px)';
+  menu.style.bottom = 'auto';
+  menu.style.maxHeight = 'min(360px, 55vh)';
 }
 
 function projCloseMemberMenus(){
