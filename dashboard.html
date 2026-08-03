@@ -3790,6 +3790,46 @@ function projSetTeamMembers(members){
   projRenderMemberOptions('reminder');
 }
 
+function projPositionMemberMenu(scope){
+  const ids = projMemberIds(scope);
+  const menu = document.getElementById(ids.menu);
+  const toggle = document.getElementById(ids.toggle);
+  if(!menu || !toggle || menu.style.display === 'none') return;
+
+  const rect = toggle.getBoundingClientRect();
+  const gap = 8;
+  const viewportPadding = 12;
+  const availableBelow = window.innerHeight - rect.bottom - gap - viewportPadding;
+  const availableAbove = rect.top - gap - viewportPadding;
+  const openUp = availableBelow < 260 && availableAbove > availableBelow;
+  const available = Math.max(150, Math.floor(openUp ? availableAbove : availableBelow));
+  const maxHeight = Math.min(420, available);
+
+  menu.classList.toggle('proj-menu-up', openUp);
+  menu.style.position = 'fixed';
+  menu.style.left = Math.max(viewportPadding, rect.left) + 'px';
+  menu.style.right = 'auto';
+  menu.style.width = Math.min(rect.width, window.innerWidth - (viewportPadding * 2)) + 'px';
+  menu.style.maxHeight = maxHeight + 'px';
+  menu.style.top = openUp ? 'auto' : (rect.bottom + gap) + 'px';
+  menu.style.bottom = openUp ? (window.innerHeight - rect.top + gap) + 'px' : 'auto';
+}
+
+function projCloseMemberMenus(){
+  document.querySelectorAll('.proj-multi-menu').forEach(el => {
+    el.style.display='none';
+    el.style.position='';
+    el.style.left='';
+    el.style.right='';
+    el.style.width='';
+    el.style.maxHeight='';
+    el.style.top='';
+    el.style.bottom='';
+    el.classList.remove('proj-menu-up');
+  });
+  document.querySelectorAll('.proj-multi-toggle').forEach(el => el.setAttribute('aria-expanded','false'));
+}
+
 function projToggleMemberMenu(scope, event){
   if(event) event.stopPropagation();
   const ids = projMemberIds(scope);
@@ -3798,10 +3838,12 @@ function projToggleMemberMenu(scope, event){
   if(!menu) return;
 
   const willOpen = menu.style.display === 'none' || !menu.style.display;
-  document.querySelectorAll('.proj-multi-menu').forEach(el => el.style.display='none');
-  document.querySelectorAll('.proj-multi-toggle').forEach(el => el.setAttribute('aria-expanded','false'));
-  menu.style.display = willOpen ? 'block' : 'none';
-  if(toggle) toggle.setAttribute('aria-expanded', String(willOpen));
+  projCloseMemberMenus();
+  if(willOpen){
+    menu.style.display = 'flex';
+    if(toggle) toggle.setAttribute('aria-expanded','true');
+    requestAnimationFrame(() => projPositionMemberMenu(scope));
+  }
 }
 
 function projToggleAllMembers(scope, checked){
@@ -4033,8 +4075,7 @@ function projOpenReminder(projectId){
   document.getElementById('projReminderStatus').className='proj-form-status';
   document.getElementById('projReminderStatus').textContent='';
   projRenderMemberOptions('reminder');
-  document.querySelectorAll('.proj-multi-menu').forEach(el => el.style.display='none');
-  document.querySelectorAll('.proj-multi-toggle').forEach(el => el.setAttribute('aria-expanded','false'));
+  projCloseMemberMenus();
   document.getElementById('projReminderModal').style.display='flex';
   document.body.classList.add('proj-modal-open');
 }
@@ -4042,8 +4083,7 @@ function projOpenReminder(projectId){
 function projCloseReminder(){
   const modal = document.getElementById('projReminderModal');
   if(modal) modal.style.display='none';
-  document.getElementById('projReminderRecipientMenu')?.style && (document.getElementById('projReminderRecipientMenu').style.display='none');
-  document.getElementById('projReminderRecipientToggle')?.setAttribute('aria-expanded','false');
+  projCloseMemberMenus();
   document.body.classList.remove('proj-modal-open');
   _projReminderProject = null;
 }
@@ -4109,10 +4149,27 @@ function projInit(){
   form.addEventListener('submit',projSubmit);
 
   document.addEventListener('click', event => {
-    if(!event.target.closest('.proj-multi-select')){
-      document.querySelectorAll('.proj-multi-menu').forEach(el => el.style.display='none');
-      document.querySelectorAll('.proj-multi-toggle').forEach(el => el.setAttribute('aria-expanded','false'));
+    if(!event.target.closest('.proj-multi-select') && !event.target.closest('.proj-multi-menu')){
+      projCloseMemberMenus();
     }
+  });
+
+  document.querySelectorAll('.proj-member-options').forEach(box => {
+    box.addEventListener('wheel', event => {
+      event.stopPropagation();
+      const goingDown = event.deltaY > 0;
+      const atTop = box.scrollTop <= 0;
+      const atBottom = Math.ceil(box.scrollTop + box.clientHeight) >= box.scrollHeight;
+      if((goingDown && !atBottom) || (!goingDown && !atTop)){
+        event.preventDefault();
+        box.scrollTop += event.deltaY;
+      }
+    }, {passive:false});
+  });
+
+  window.addEventListener('resize', () => {
+    if(document.getElementById('projRecipientMenu')?.style.display === 'flex') projPositionMemberMenu('create');
+    if(document.getElementById('projReminderRecipientMenu')?.style.display === 'flex') projPositionMemberMenu('reminder');
   });
   if(reminderModal){
     reminderModal.addEventListener('click', event => {
