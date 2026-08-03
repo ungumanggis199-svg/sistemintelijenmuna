@@ -116,6 +116,7 @@
           </svg>
           Kalender Kegiatan
         </li>
+
         <li class="nav-item" data-page="pengaturan">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"/>
@@ -123,97 +124,6 @@
           </svg>
           Pengaturan
         </li>
-<!-- =========================================================
-     1) PASTE INI DI DALAM <ul class="nav-list"> DI SIDEBAR
-        (di antara nav-item lain yang sudah ada)
-     ========================================================= -->
-<li class="nav-item" data-page="project" onclick="switchToPage('project')">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <path d="M3 7l9-4 9 4-9 4-9-4z"/>
-    <path d="M3 7v10l9 4 9-4V7"/>
-    <path d="M12 11v10"/>
-  </svg>
-  <span>Project Baru</span>
-</li>
-
-
-<!-- =========================================================
-     2) PASTE INI SEBAGAI PAGE BARU, SEJAJAR DENGAN
-        <div class="page" id="page-..."> YANG SUDAH ADA
-     ========================================================= -->
-<div class="page" id="page-project">
-
-  <style>
-    #page-project .pj-wrap{display:grid;grid-template-columns:380px 1fr;gap:20px;align-items:start;}
-    #page-project .pj-panel{background:#fff;border:1px solid #E2DFD5;border-radius:16px;padding:22px;}
-    #page-project .pj-panel h3{font-size:15px;font-weight:700;color:#0B3D2E;margin-bottom:16px;}
-    #page-project .pj-field{margin-bottom:14px;display:flex;flex-direction:column;gap:6px;}
-    #page-project .pj-field label{font-size:12.5px;font-weight:600;color:#1B241F;}
-    #page-project .pj-field input,
-    #page-project .pj-field textarea{
-      padding:11px 13px;border:1px solid #E2DFD5;border-radius:10px;
-      font-size:13.5px;font-family:inherit;background:#F4F6F2;
-    }
-    #page-project .pj-field input:focus,
-    #page-project .pj-field textarea:focus{
-      outline:none;border-color:#155A41;background:#fff;
-      box-shadow:0 0 0 3px rgba(21,90,65,.12);
-    }
-    #page-project .pj-field textarea{resize:vertical;min-height:70px;}
-    #page-project .pj-submit{
-      width:100%;padding:12px;background:#0B3D2E;color:#fff;border:none;
-      border-radius:10px;font-size:13.5px;font-weight:600;cursor:pointer;
-      transition:.2s;
-    }
-    #page-project .pj-submit:hover{background:#155A41;}
-    #page-project .pj-submit:disabled{opacity:.6;cursor:not-allowed;}
-    #page-project .pj-msg{font-size:12.5px;margin-top:10px;display:none;padding:9px 11px;border-radius:8px;}
-    #page-project .pj-msg.ok{display:block;background:#E5F2EB;color:#155A41;}
-    #page-project .pj-msg.err{display:block;background:#FBEAEA;color:#B33A3A;}
-    #page-project table{width:100%;border-collapse:collapse;font-size:13px;}
-    #page-project table th{text-align:left;padding:12px 14px;background:#F4F6F2;color:#5B6660;font-weight:600;font-size:11.5px;border-bottom:1px solid #E2DFD5;}
-    #page-project table td{padding:12px 14px;border-bottom:1px solid #E2DFD5;color:#1B241F;}
-    #page-project .pj-status{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600;background:#E5F2EB;color:#155A41;}
-    #page-project .pj-empty{padding:40px;text-align:center;color:#5B6660;font-size:13px;}
-  </style>
-
-  <div class="pj-wrap">
-
-    <!-- FORM TAMBAH PROJECT -->
-    <div class="pj-panel">
-      <h3>➕ Tambah Project Baru</h3>
-      <form id="formProject">
-        <div class="pj-field">
-          <label>Nama Project</label>
-          <input type="text" id="pjNama" required placeholder="Contoh: Audit Dana Desa 2026">
-        </div>
-        <div class="pj-field">
-          <label>Deskripsi (opsional)</label>
-          <textarea id="pjDeskripsi" placeholder="Ringkasan singkat project..."></textarea>
-        </div>
-        <div class="pj-field">
-          <label>Durasi (hari)</label>
-          <input type="number" id="pjDurasi" min="1" required placeholder="Contoh: 14">
-        </div>
-        <div class="pj-field">
-          <label>Deadline</label>
-          <input type="date" id="pjDeadline" required>
-        </div>
-        <button type="submit" class="pj-submit" id="pjSubmitBtn">Simpan &amp; Kirim Notifikasi WA</button>
-        <div class="pj-msg" id="pjMsg"></div>
-      </form>
-    </div>
-
-    <!-- DAFTAR PROJECT -->
-    <div class="pj-panel">
-      <h3>📋 Daftar Project</h3>
-      <div id="pjTableWrap">
-        <div class="pj-empty">Memuat data project...</div>
-      </div>
-    </div>
-
-  </div>
-</div>
 
       </ul>
     </nav>
