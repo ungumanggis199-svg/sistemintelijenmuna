@@ -1232,3 +1232,57 @@ body.proj-modal-open{overflow:hidden;}
   .proj-reminder-btn-text small{white-space:normal;}
 }
 
+
+
+/* ===== FIX SCROLL DROPDOWN ANGGOTA TIM v3 ===== */
+.proj-multi-menu{
+  display:none;
+  flex-direction:column;
+  min-height:0;
+  overflow:hidden;
+  z-index:1700;
+  overscroll-behavior:contain;
+}
+.proj-member-options{
+  flex:1 1 auto;
+  min-height:0;
+  max-height:none !important;
+  overflow-y:auto !important;
+  overflow-x:hidden;
+  overscroll-behavior:contain;
+  touch-action:pan-y;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-gutter:stable;
+}
+.proj-member-all{
+  grid-template-columns:18px minmax(0,1fr) !important;
+  align-items:center;
+}
+.proj-member-all > span{
+  grid-column:2;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  min-width:0;
+}
+.proj-member-all > span b,
+.proj-member-all > span small{
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+.proj-menu-up{
+  transform-origin:bottom center;
+}
+.proj-modal .proj-multi-menu{
+  z-index:1750;
+}
+@media(max-width:620px){
+  .proj-multi-menu{
+    left:10px !important;
+    width:calc(100vw - 20px) !important;
+    max-height:min(72vh, 520px) !important;
+  }
+  .proj-member-options{
+    max-height:none !important;
+  }
+}
