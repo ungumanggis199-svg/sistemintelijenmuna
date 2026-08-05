@@ -349,9 +349,9 @@
               <div class="budget-block-title">
                 <div>
                   <strong>Rincian Pelaksanaan Kegiatan</strong>
-                  <small>Seluruh kegiatan dari spreadsheet, status pelaksanaan, anggaran, dan laporan terakhir</small>
+                  <small>Susunan kolom mengikuti tabel CAPAIAN KINERJA pada Google Sheets. Gunakan menu Edit untuk mencatat pelaksanaan dan mengunggah laporan.</small>
                 </div>
-                <span class="execution-count" id="executionTotalTag">0 pelaksanaan</span>
+                <span class="execution-count" id="executionTotalTag">0 kegiatan</span>
               </div>
               <div class="execution-table-wrap" id="executionDetailTable">
                 <div class="execution-empty">Belum ada rincian pelaksanaan kegiatan.</div>
@@ -388,22 +388,20 @@
               </div>
             </div>
 
-            <!-- Tabel Detail -->
-            <div class="panel" style="flex:1;">
+            <!-- Ringkasan Status Pelaksanaan -->
+            <div class="panel status-overview-panel" style="flex:1;">
               <div class="panel-head">
                 <div class="ph-left">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                    <line x1="16" y1="13" x2="8" y2="13"/>
-                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <path d="M9 11l3 3L22 4"/>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
                   </svg>
-                  <h3>Rincian Kegiatan</h3>
+                  <h3>Status Pelaksanaan</h3>
                 </div>
-                <a href="https://docs.google.com/spreadsheets/d/1MCpf11JdwMze8iGfX1FkLnB7vatgwzmVuwtX2mjEWiY/edit" target="_blank" class="see-all-link">Buka Sheet ↗</a>
+                <a href="https://docs.google.com/spreadsheets/d/1MCpf11JdwMze8iGfX1FkLnB7vatgwzmVuwtX2mjEWiY/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer" class="see-all-link">Buka Sheet ↗</a>
               </div>
-              <div id="tabelKegiatan" style="overflow-x:auto;">
-                <!-- diisi dinamis -->
+              <div id="capaianStatusOverview">
+                <div class="execution-empty">Memuat ringkasan status...</div>
               </div>
             </div>
 
@@ -2031,6 +2029,88 @@ function capRenderBudgetSummary(totalAnggaran, totalRealisasiAnggaran, totalSisa
     </article>`;
 }
 
+function capRenderStatusOverview(data, details) {
+  const element = document.getElementById('capaianStatusOverview');
+  if (!element) return;
+
+  const kegiatan = Array.isArray(data) ? data : [];
+  const riwayat = Array.isArray(details) ? details : [];
+  const totalTarget = kegiatan.reduce((sum, item) => sum + capToNumber(item.target), 0);
+  const totalTerlaksana = kegiatan.reduce((sum, item) => sum + capToNumber(item.terlaksana), 0);
+  const persen = totalTarget > 0 ? Math.min((totalTerlaksana / totalTarget) * 100, 100) : 0;
+  const belumMulai = kegiatan.filter(item => capToNumber(item.terlaksana) <= 0).length;
+  const berjalan = kegiatan.filter(item => {
+    const target = capToNumber(item.target);
+    const realisasi = capToNumber(item.terlaksana);
+    return realisasi > 0 && (target <= 0 || realisasi < target);
+  }).length;
+  const selesai = kegiatan.filter(item => {
+    const target = capToNumber(item.target);
+    return target > 0 && capToNumber(item.terlaksana) >= target;
+  }).length;
+
+  const latest = [...riwayat]
+    .sort((a, b) => {
+      const ta = new Date(a.waktuTerlaksana || a.createdAt || 0).getTime() || 0;
+      const tb = new Date(b.waktuTerlaksana || b.createdAt || 0).getTime() || 0;
+      return tb - ta;
+    })
+    .slice(0, 3);
+
+  element.innerHTML = `
+    <div class="status-progress-card">
+      <div class="status-progress-head">
+        <div>
+          <span>Capaian keseluruhan</span>
+          <strong>${capFormatNumber(totalTerlaksana)} dari ${capFormatNumber(totalTarget)} kegiatan</strong>
+        </div>
+        <b>${capFormatPercent(Math.round(totalTarget > 0 ? (totalTerlaksana / totalTarget) * 100 : 0))}</b>
+      </div>
+      <div class="status-progress-track" aria-label="Capaian keseluruhan">
+        <span style="width:${persen.toFixed(2)}%"></span>
+      </div>
+    </div>
+
+    <div class="status-mini-grid">
+      <article class="status-mini-card status-waiting">
+        <span>Belum Dimulai</span>
+        <strong>${capFormatNumber(belumMulai)}</strong>
+        <small>Kegiatan tanpa realisasi</small>
+      </article>
+      <article class="status-mini-card status-running">
+        <span>Sedang Berjalan</span>
+        <strong>${capFormatNumber(berjalan)}</strong>
+        <small>Target belum terpenuhi</small>
+      </article>
+      <article class="status-mini-card status-finished">
+        <span>Selesai</span>
+        <strong>${capFormatNumber(selesai)}</strong>
+        <small>Target telah tercapai</small>
+      </article>
+      <article class="status-mini-card status-report">
+        <span>Laporan Tersimpan</span>
+        <strong>${capFormatNumber(riwayat.length)}</strong>
+        <small>Dokumen di Google Drive</small>
+      </article>
+    </div>
+
+    <div class="latest-execution-block">
+      <div class="latest-execution-title">Pembaruan Terakhir</div>
+      ${latest.length ? latest.map(record => `
+        <div class="latest-execution-item">
+          <div class="latest-execution-dot"></div>
+          <div class="latest-execution-body">
+            <strong>${capEscapeHtml(record.kegiatan || 'Kegiatan')}</strong>
+            <span>${capEscapeHtml(capFormatDateTime(record.waktuTerlaksana || record.createdAt))}</span>
+          </div>
+          ${record.laporanUrl
+            ? `<a href="${capEscapeHtml(record.laporanUrl)}" target="_blank" rel="noopener noreferrer">Laporan ↗</a>`
+            : '<span class="execution-muted">Tanpa tautan</span>'}
+        </div>`).join('')
+        : '<div class="latest-execution-empty">Belum ada pembaruan melalui menu Edit.</div>'}
+    </div>`;
+}
+
 function capRenderExecutionDetails(details) {
   capaianExecutionCache = Array.isArray(details) ? details : [];
 
@@ -2038,80 +2118,84 @@ function capRenderExecutionDetails(details) {
   if (!element) return;
 
   const kegiatan = Array.isArray(capaianDataCache) ? capaianDataCache : [];
-  const totalPelaksanaan = capaianExecutionCache.length;
   const tag = document.getElementById('executionTotalTag');
   if (tag) {
-    tag.textContent = `${capFormatNumber(kegiatan.length)} kegiatan · ${capFormatNumber(totalPelaksanaan)} pelaksanaan`;
+    tag.textContent = `${capFormatNumber(kegiatan.length)} kegiatan · ${capFormatNumber(capaianExecutionCache.length)} laporan`;
   }
+
+  capRenderStatusOverview(kegiatan, capaianExecutionCache);
 
   if (!kegiatan.length) {
     element.innerHTML = '<div class="execution-empty">Data kegiatan utama belum selesai dimuat.</div>';
     return;
   }
 
-  const normalize = value => String(value ?? '').trim().toLowerCase();
-
-  const historiesFor = item => capaianExecutionCache.filter(record => {
-    const sameNo = normalize(item.no) && normalize(record.no) === normalize(item.no);
-    const sameName = normalize(record.kegiatan) === normalize(item.kegiatan);
-    return sameNo || sameName;
-  });
+  const admin = capIsAdministrator();
+  const totalTarget = kegiatan.reduce((sum, item) => sum + capToNumber(item.target), 0);
+  const totalTerlaksana = kegiatan.reduce((sum, item) => sum + capToNumber(item.terlaksana), 0);
+  const totalAnggaran = kegiatan.reduce((sum, item) => sum + capToNumber(item.anggaran), 0);
+  const totalRealisasiAnggaran = kegiatan.reduce((sum, item) => sum + capToNumber(item.realisasiAnggaran), 0);
+  const totalSisaAnggaran = kegiatan.reduce((sum, item) => sum + capToNumber(item.sisaAnggaran), 0);
+  const totalPersenPencairan = totalAnggaran > 0
+    ? (totalRealisasiAnggaran / totalAnggaran) * 100
+    : 0;
 
   element.innerHTML = `
-    <table class="execution-table execution-overview-table">
+    <table class="execution-table execution-sheet-table">
       <thead>
         <tr>
-          <th>No.</th>
-          <th>Kegiatan</th>
-          <th class="num">Target</th>
-          <th class="num">Terlaksana</th>
-          <th class="num">Sisa target</th>
-          <th>Status</th>
-          <th class="num">Anggaran/kegiatan</th>
-          <th class="num">Sisa anggaran</th>
-          <th>Waktu terakhir</th>
-          <th>Laporan terakhir</th>
-          <th>Administrator</th>
+          <th class="sheet-no-col">No</th>
+          <th class="sheet-activity-col">Kegiatan</th>
+          <th class="num">Target Kegiatan</th>
+          <th class="num">Realisasi Kegiatan</th>
+          <th class="num">Anggaran</th>
+          <th class="num">Realisasi Anggaran</th>
+          <th class="num">Sisa Anggaran</th>
+          <th class="num">% Pencairan</th>
+          <th class="action-col">Aksi</th>
         </tr>
       </thead>
       <tbody>
         ${kegiatan.map((item, index) => {
-          const histories = historiesFor(item);
-          const latest = histories[0] || null;
-          const sisaTarget = Math.max(capToNumber(item.target) - capToNumber(item.terlaksana), 0);
-          const completed = capToNumber(item.target) > 0 && capToNumber(item.terlaksana) >= capToNumber(item.target);
-          const started = capToNumber(item.terlaksana) > 0;
-          const statusText = completed ? 'Selesai' : (started ? 'Berjalan' : 'Belum mulai');
-          const statusColor = completed ? '#2E9A6B' : (started ? '#B8902E' : '#7A8580');
+          const target = capToNumber(item.target);
+          const realisasi = capToNumber(item.terlaksana);
+          const completed = target > 0 && realisasi >= target;
+          const action = admin
+            ? `<button type="button" class="cap-edit-btn ${completed ? 'is-complete' : ''}"
+                 ${completed ? 'disabled' : `onclick="capOpenEditModal(${index})"`}
+                 title="${completed ? 'Target kegiatan sudah terpenuhi' : 'Catat pelaksanaan dan unggah laporan'}">
+                 ${completed ? 'Selesai' : 'Edit'}
+               </button>`
+            : '<span class="execution-muted">Khusus admin</span>';
 
           return `
             <tr>
-              <td>${index + 1}</td>
-              <td>
-                <strong>${capEscapeHtml(item.kegiatan || '—')}</strong>
-                <small class="execution-row-note">${histories.length ? `${capFormatNumber(histories.length)} laporan tercatat` : 'Belum ada laporan tersimpan'}</small>
-              </td>
-              <td class="num">${capFormatNumber(item.target || 0)}</td>
-              <td class="num">${capFormatNumber(item.terlaksana || 0)}</td>
-              <td class="num">${capFormatNumber(sisaTarget)}</td>
-              <td><span class="execution-status" style="--execution-status:${statusColor};">${statusText}</span></td>
-              <td class="num">${capFormatRupiah(item.anggaranPerKegiatan || 0)}</td>
-              <td class="num">${capFormatRupiah(item.sisaAnggaran || 0)}</td>
-              <td>${latest ? capEscapeHtml(capFormatDateTime(latest.waktuTerlaksana)) : '<span class="execution-muted">Belum dicatat</span>'}</td>
-              <td>
-                ${latest && latest.laporanUrl
-                  ? `<a class="execution-report-link" href="${capEscapeHtml(latest.laporanUrl)}" target="_blank" rel="noopener noreferrer">Buka laporan ↗</a>`
-                  : '<span class="execution-muted">Belum ada</span>'}
-              </td>
-              <td>${latest ? capEscapeHtml(latest.administrator || '—') : '<span class="execution-muted">—</span>'}</td>
+              <td class="sheet-no-col">${capEscapeHtml(item.no || index + 1)}</td>
+              <td class="sheet-activity-col"><strong>${capEscapeHtml(item.kegiatan || '—')}</strong></td>
+              <td class="num">${capFormatNumber(target)}</td>
+              <td class="num">${capFormatNumber(realisasi)}</td>
+              <td class="num currency">${capFormatRupiah(item.anggaran || 0)}</td>
+              <td class="num currency">${capFormatRupiah(item.realisasiAnggaran || 0)}</td>
+              <td class="num currency">${capFormatRupiah(item.sisaAnggaran || 0)}</td>
+              <td class="num">${capFormatPercent(item.persenPencairan || 0, 1)}</td>
+              <td class="action-col">${action}</td>
             </tr>`;
         }).join('')}
       </tbody>
-    </table>
-    ${!capApiConfigured() ? `
-      <div class="execution-empty execution-warning" style="margin-top:10px;">
-        Data utama sudah tampil, tetapi riwayat laporan belum dapat dibaca karena URL backend belum dikonfigurasi.
-      </div>` : ''}`;
+      <tfoot>
+        <tr>
+          <td class="sheet-no-col"></td>
+          <td class="sheet-activity-col">TOTAL</td>
+          <td class="num">${capFormatNumber(totalTarget)}</td>
+          <td class="num">${capFormatNumber(totalTerlaksana)}</td>
+          <td class="num currency">${capFormatRupiah(totalAnggaran)}</td>
+          <td class="num currency">${capFormatRupiah(totalRealisasiAnggaran)}</td>
+          <td class="num currency">${capFormatRupiah(totalSisaAnggaran)}</td>
+          <td class="num">${capFormatPercent(totalPersenPencairan, 1)}</td>
+          <td class="action-col">—</td>
+        </tr>
+      </tfoot>
+    </table>`;
 }
 
 async function capLoadExecutionDetails(options = {}) {
@@ -2136,82 +2220,6 @@ async function capLoadExecutionDetails(options = {}) {
     }
     return [];
   }
-}
-
-function capRenderActivityTable(data, totals) {
-  const tabelEl = document.getElementById('tabelKegiatan');
-  if (!tabelEl) return;
-
-  const admin = capIsAdministrator();
-  const {
-    totalTarget,
-    totalTerlaksana,
-    persenCapaianBulat,
-    totalAnggaran,
-    totalRealisasiAnggaran,
-    totalSisaAnggaran,
-    persenPencairan
-  } = totals;
-
-  tabelEl.innerHTML = `
-    <table class="capaian-table">
-      <thead>
-        <tr>
-          <th>Kegiatan</th>
-          <th class="num">Target</th>
-          <th class="num">Terlaksana</th>
-          <th class="num">Capaian</th>
-          <th class="num">Anggaran</th>
-          <th class="num">Anggaran/Kegiatan</th>
-          <th class="num">Realisasi Anggaran</th>
-          <th class="num">Sisa Anggaran</th>
-          <th class="num">Pencairan</th>
-          <th class="action-col">Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${data.map((item, index) => {
-          const capaian = item.target > 0 ? (item.terlaksana / item.target) * 100 : 0;
-          const color = capaian >= 100 ? '#2E9A6B' : (capaian >= 60 ? '#B8902E' : '#D94A4A');
-          const completed = item.target > 0 && item.terlaksana >= item.target;
-          const action = admin
-            ? `<button type="button" class="cap-edit-btn ${completed ? 'is-complete' : ''}"
-                 ${completed ? 'disabled' : `onclick="capOpenEditModal(${index})"`}
-                 title="${completed ? 'Target kegiatan sudah terpenuhi' : 'Catat satu kegiatan terlaksana'}">
-                 ${completed ? 'Selesai' : 'Edit'}
-               </button>`
-            : '<span class="execution-muted">Admin</span>';
-
-          return `
-            <tr>
-              <td><strong>${capEscapeHtml(item.kegiatan)}</strong></td>
-              <td class="num">${capFormatNumber(item.target)}</td>
-              <td class="num">${capFormatNumber(item.terlaksana)}</td>
-              <td class="num"><span class="capaian-badge" style="--badge-color:${color};">${capFormatPercent(Math.round(capaian))}</span></td>
-              <td class="num currency">${capFormatRupiah(item.anggaran)}</td>
-              <td class="num currency">${capFormatRupiah(item.anggaranPerKegiatan)}</td>
-              <td class="num currency">${capFormatRupiah(item.realisasiAnggaran)}</td>
-              <td class="num currency">${capFormatRupiah(item.sisaAnggaran)}</td>
-              <td class="num"><span class="capaian-badge" style="--badge-color:#B8902E;">${capFormatPercent(item.persenPencairan, 1)}</span></td>
-              <td class="action-col">${action}</td>
-            </tr>`;
-        }).join('')}
-      </tbody>
-      <tfoot>
-        <tr>
-          <td>TOTAL</td>
-          <td class="num">${capFormatNumber(totalTarget)}</td>
-          <td class="num">${capFormatNumber(totalTerlaksana)}</td>
-          <td class="num">${capFormatPercent(persenCapaianBulat)}</td>
-          <td class="num currency">${capFormatRupiah(totalAnggaran)}</td>
-          <td class="num">—</td>
-          <td class="num currency">${capFormatRupiah(totalRealisasiAnggaran)}</td>
-          <td class="num currency">${capFormatRupiah(totalSisaAnggaran)}</td>
-          <td class="num">${capFormatPercent(persenPencairan, 1)}</td>
-          <td class="action-col">—</td>
-        </tr>
-      </tfoot>
-    </table>`;
 }
 
 function renderDashboard(data) {
@@ -2391,17 +2399,7 @@ function renderDashboard(data) {
     }).join('');
   }
 
-  capRenderActivityTable(data, {
-    totalTarget,
-    totalTerlaksana,
-    persenCapaianBulat,
-    totalAnggaran,
-    totalRealisasiAnggaran,
-    totalSisaAnggaran,
-    persenPencairan
-  });
-
-  // Tampilkan seluruh kegiatan meskipun sheet riwayat masih kosong.
+  // Tampilkan tabel rincian utama dan ringkasan status di sidebar kanan.
   capRenderExecutionDetails(capaianExecutionCache);
 
   document.getElementById('capaianLoading').style.display = 'none';
