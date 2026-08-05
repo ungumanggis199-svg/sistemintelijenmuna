@@ -1932,3 +1932,32 @@ body.cap-modal-open{
     width:100%;
   }
 }
+
+
+/* ===== RINCIAN PELAKSANAAN — OVERVIEW v2 ===== */
+.execution-overview-table{min-width:1280px;}
+.execution-row-note{
+  display:block;
+  margin-top:4px;
+  font-size:10px;
+  line-height:1.35;
+  color:var(--ink3);
+  font-weight:500;
+}
+.execution-status{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:78px;
+  padding:4px 9px;
+  border-radius:999px;
+  background:color-mix(in srgb, var(--execution-status) 12%, white);
+  color:var(--execution-status);
+  border:1px solid color-mix(in srgb, var(--execution-status) 24%, white);
+  font-size:10px;
+  font-weight:800;
+  white-space:nowrap;
+}
+@supports not (background:color-mix(in srgb, black 10%, white)){
+  .execution-status{background:#f2f5f3;border-color:#dfe6e2;}
+}
