@@ -344,6 +344,19 @@
                 <!-- diisi dinamis -->
               </div>
             </div>
+
+            <div class="execution-block">
+              <div class="budget-block-title">
+                <div>
+                  <strong>Rincian Pelaksanaan Kegiatan</strong>
+                  <small>Riwayat kegiatan yang telah diperbarui administrator dan laporan yang diunggah</small>
+                </div>
+                <span class="execution-count" id="executionTotalTag">0 pelaksanaan</span>
+              </div>
+              <div class="execution-table-wrap" id="executionDetailTable">
+                <div class="execution-empty">Belum ada rincian pelaksanaan kegiatan.</div>
+              </div>
+            </div>
           </div>
 
           <!-- Right column: Donut + Tabel -->
@@ -1516,6 +1529,71 @@
 </div>
 <!-- /APP SHELL -->
 
+<!-- MODAL UPDATE REALISASI CAPAIAN -->
+<div id="capEditModal" class="cap-modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="capEditModalTitle">
+  <div class="cap-modal-card">
+    <div class="cap-modal-head">
+      <div>
+        <div class="cap-modal-kicker">Administrator · Capaian Kinerja</div>
+        <h3 id="capEditModalTitle">Catat Kegiatan Terlaksana</h3>
+      </div>
+      <button type="button" class="cap-modal-close" onclick="capCloseEditModal()" aria-label="Tutup">×</button>
+    </div>
+
+    <form id="capEditForm" class="cap-edit-form" onsubmit="capSubmitExecution(event)">
+      <input type="hidden" id="capEditIndex">
+
+      <div class="cap-activity-card">
+        <span>Kegiatan</span>
+        <strong id="capEditActivityName">—</strong>
+        <small id="capEditActivityMeta">—</small>
+      </div>
+
+      <div class="cap-edit-summary">
+        <div>
+          <span>Realisasi saat ini</span>
+          <strong id="capEditCurrentProgress">—</strong>
+        </div>
+        <div>
+          <span>Anggaran per kegiatan</span>
+          <strong id="capEditUnitBudget">—</strong>
+        </div>
+        <div>
+          <span>Sisa setelah disimpan</span>
+          <strong id="capEditRemainingPreview">—</strong>
+        </div>
+      </div>
+
+      <label class="cap-field">
+        <span>Waktu terlaksana *</span>
+        <input id="capExecutionTime" type="datetime-local" required>
+      </label>
+
+      <label class="cap-field">
+        <span>Upload laporan kegiatan *</span>
+        <input id="capExecutionReport" type="file"
+          accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          required>
+        <small>Format PDF/DOC/DOCX, maksimal 8 MB. Dokumen akan disimpan ke Google Drive.</small>
+      </label>
+
+      <div id="capEditStatus" class="cap-edit-status" aria-live="polite"></div>
+
+      <div class="cap-modal-actions">
+        <button type="button" class="cap-btn-secondary" onclick="capCloseEditModal()">Batal</button>
+        <button id="capEditSubmitBtn" type="submit" class="cap-btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>
+          Simpan Pelaksanaan
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- Chart.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
@@ -1590,6 +1668,10 @@ document.getElementById('logoutBtn').addEventListener('click', function(e){
    F = Realisasi Anggaran
    G = Sisa Anggaran
    H = % Pencairan
+
+   Backend edit & upload:
+   - Deploy file Code_Capaian_Standalone.gs sebagai Web App.
+   - Tempel URL deployment pada CAPAIAN_API_URL.
    ===================== */
 const SHEET_ID = '1MCpf11JdwMze8iGfX1FkLnB7vatgwzmVuwtX2mjEWiY';
 const SHEET_GID = '0';
@@ -1597,12 +1679,18 @@ const SHEET_EDIT_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?
 const SHEET_CSV_BASE = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${SHEET_GID}`;
 const SHEET_GVIZ_BASE = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${SHEET_GID}`;
 
+/* GANTI URL DI BAWAH setelah backend Apps Script capaian dideploy */
+const CAPAIAN_API_URL = 'PASTE_URL_WEB_APP_CAPAIAN_DI_SINI';
+
 const COLORS = ['#0B3D2E','#2E9A6B','#B8902E','#4A90D9','#7C5CBF','#D94A4A','#4AC5C5','#C8A84B','#6B8F71','#C8C8C0'];
 const CAPAIAN_REFRESH_MS = 60 * 1000;
+const CAPAIAN_MAX_FILE_BYTES = 8 * 1024 * 1024;
 
 let barChartInstance = null;
 let donutChartInstance = null;
 let capaianRequestInProgress = false;
+let capaianDataCache = [];
+let capaianExecutionCache = [];
 
 function capCacheBust(url) {
   const separator = url.includes('?') ? '&' : '?';
@@ -1668,6 +1756,19 @@ function capFormatPercent(value, digits = 0) {
   }) + '%';
 }
 
+function capFormatDateTime(value) {
+  if (!value) return '—';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value);
+  return date.toLocaleString('id-ID', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
 function capEscapeHtml(value) {
   return String(value ?? '')
     .replace(/&/g, '&amp;')
@@ -1675,6 +1776,28 @@ function capEscapeHtml(value) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+}
+
+function capGetSession() {
+  try {
+    return JSON.parse(localStorage.getItem('intel_session') || '{}');
+  } catch (error) {
+    return {};
+  }
+}
+
+function capIsAdministrator() {
+  const role = String(capGetSession().role || '').trim().toLowerCase();
+  return ['admin', 'administrator', 'super admin', 'superadmin'].includes(role);
+}
+
+function capApiConfigured() {
+  return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec/i.test(CAPAIAN_API_URL);
+}
+
+function capLocalDateTimeValue(date = new Date()) {
+  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 16);
 }
 
 function capParseCsvRows(text) {
@@ -1730,6 +1853,8 @@ function capRowsToRecords(headers, rows) {
 
     if (!kegiatanValue || marker.includes('TOTAL')) return null;
 
+    const target = capToNumber(row[index.target]);
+    const terlaksana = capToNumber(row[index.terlaksana]);
     const anggaran = capToNumber(row[index.anggaran]);
     const realisasiAnggaran = capToNumber(row[index.realisasiAnggaran]);
     const sisaDariSheet = capToNumber(row[index.sisaAnggaran]);
@@ -1742,9 +1867,10 @@ function capRowsToRecords(headers, rows) {
     return {
       no: noValue,
       kegiatan: kegiatanValue,
-      target: capToNumber(row[index.target]),
-      terlaksana: capToNumber(row[index.terlaksana]),
+      target,
+      terlaksana,
       anggaran,
+      anggaranPerKegiatan: target > 0 ? anggaran / target : 0,
       realisasiAnggaran,
       sisaAnggaran,
       persenPencairan
@@ -1809,12 +1935,61 @@ async function fetchSheetData() {
   return data;
 }
 
+async function capApiRequest(action, payload = {}, timeoutMs = 45000) {
+  if (!capApiConfigured()) {
+    throw new Error('URL backend capaian belum dikonfigurasi pada CAPAIAN_API_URL.');
+  }
+
+  const session = capGetSession();
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(CAPAIAN_API_URL, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action,
+        token: session.token || '',
+        username: session.username || '',
+        role: session.role || '',
+        ...payload
+      }),
+      signal: controller.signal
+    });
+
+    const text = await response.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (error) {
+      throw new Error('Respons backend bukan JSON. Pastikan deployment Apps Script memakai versi terbaru.');
+    }
+
+    const success = data.success === true || data.status === 'success';
+    if (!response.ok || !success) {
+      throw new Error(data.message || data.error || `Permintaan gagal (${response.status}).`);
+    }
+
+    return data.data || data;
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      throw new Error('Permintaan terlalu lama. Periksa koneksi atau ukuran laporan.');
+    }
+    throw error;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 function capSetRefreshButton(isLoading) {
   const button = document.getElementById('capaianRefreshBtn');
   if (!button) return;
   button.disabled = isLoading;
   button.classList.toggle('is-loading', isLoading);
-  button.querySelector('span').textContent = isLoading ? 'Memuat...' : 'Refresh';
+  const label = button.querySelector('span');
+  if (label) label.textContent = isLoading ? 'Memuat...' : 'Refresh';
 }
 
 function capRenderBudgetSummary(totalAnggaran, totalRealisasiAnggaran, totalSisaAnggaran, persenPencairan) {
@@ -1856,7 +2031,161 @@ function capRenderBudgetSummary(totalAnggaran, totalRealisasiAnggaran, totalSisa
     </article>`;
 }
 
+function capRenderExecutionDetails(details) {
+  capaianExecutionCache = Array.isArray(details) ? details : [];
+
+  const tag = document.getElementById('executionTotalTag');
+  if (tag) tag.textContent = `${capFormatNumber(capaianExecutionCache.length)} pelaksanaan`;
+
+  const element = document.getElementById('executionDetailTable');
+  if (!element) return;
+
+  if (!capApiConfigured()) {
+    element.innerHTML = `
+      <div class="execution-empty execution-warning">
+        Backend edit belum dikonfigurasi. Tempel URL Web App Apps Script pada
+        <code>CAPAIAN_API_URL</code> untuk menampilkan riwayat dan mengaktifkan upload laporan.
+      </div>`;
+    return;
+  }
+
+  if (!capaianExecutionCache.length) {
+    element.innerHTML = '<div class="execution-empty">Belum ada kegiatan yang dicatat melalui menu Edit.</div>';
+    return;
+  }
+
+  element.innerHTML = `
+    <table class="execution-table">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Kegiatan</th>
+          <th>Pelaksanaan</th>
+          <th>Waktu terlaksana</th>
+          <th class="num">Anggaran kegiatan</th>
+          <th>Laporan</th>
+          <th>Administrator</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${capaianExecutionCache.map((item, index) => `
+          <tr>
+            <td>${index + 1}</td>
+            <td><strong>${capEscapeHtml(item.kegiatan || '—')}</strong></td>
+            <td>Ke-${capFormatNumber(item.pelaksanaanKe || 0)}</td>
+            <td>${capEscapeHtml(capFormatDateTime(item.waktuTerlaksana))}</td>
+            <td class="num">${capFormatRupiah(item.anggaranPerKegiatan || 0)}</td>
+            <td>
+              ${item.laporanUrl
+                ? `<a class="execution-report-link" href="${capEscapeHtml(item.laporanUrl)}" target="_blank" rel="noopener noreferrer">Buka laporan ↗</a>`
+                : '<span class="execution-muted">Tidak tersedia</span>'}
+            </td>
+            <td>${capEscapeHtml(item.administrator || '—')}</td>
+          </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+async function capLoadExecutionDetails(options = {}) {
+  if (!capApiConfigured()) {
+    capRenderExecutionDetails([]);
+    return [];
+  }
+
+  try {
+    const result = await capApiRequest('listCapaianExecutions', {}, 30000);
+    const details = result.executions || result.items || [];
+    capRenderExecutionDetails(details);
+    return details;
+  } catch (error) {
+    console.warn('Riwayat pelaksanaan gagal dimuat:', error);
+    const element = document.getElementById('executionDetailTable');
+    if (element && !options.silent) {
+      element.innerHTML = `<div class="execution-empty execution-error">${capEscapeHtml(error.message)}</div>`;
+    }
+    return [];
+  }
+}
+
+function capRenderActivityTable(data, totals) {
+  const tabelEl = document.getElementById('tabelKegiatan');
+  if (!tabelEl) return;
+
+  const admin = capIsAdministrator();
+  const {
+    totalTarget,
+    totalTerlaksana,
+    persenCapaianBulat,
+    totalAnggaran,
+    totalRealisasiAnggaran,
+    totalSisaAnggaran,
+    persenPencairan
+  } = totals;
+
+  tabelEl.innerHTML = `
+    <table class="capaian-table">
+      <thead>
+        <tr>
+          <th>Kegiatan</th>
+          <th class="num">Target</th>
+          <th class="num">Terlaksana</th>
+          <th class="num">Capaian</th>
+          <th class="num">Anggaran</th>
+          <th class="num">Anggaran/Kegiatan</th>
+          <th class="num">Realisasi Anggaran</th>
+          <th class="num">Sisa Anggaran</th>
+          <th class="num">Pencairan</th>
+          <th class="action-col">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${data.map((item, index) => {
+          const capaian = item.target > 0 ? (item.terlaksana / item.target) * 100 : 0;
+          const color = capaian >= 100 ? '#2E9A6B' : (capaian >= 60 ? '#B8902E' : '#D94A4A');
+          const completed = item.target > 0 && item.terlaksana >= item.target;
+          const action = admin
+            ? `<button type="button" class="cap-edit-btn ${completed ? 'is-complete' : ''}"
+                 ${completed ? 'disabled' : `onclick="capOpenEditModal(${index})"`}
+                 title="${completed ? 'Target kegiatan sudah terpenuhi' : 'Catat satu kegiatan terlaksana'}">
+                 ${completed ? 'Selesai' : 'Edit'}
+               </button>`
+            : '<span class="execution-muted">Admin</span>';
+
+          return `
+            <tr>
+              <td><strong>${capEscapeHtml(item.kegiatan)}</strong></td>
+              <td class="num">${capFormatNumber(item.target)}</td>
+              <td class="num">${capFormatNumber(item.terlaksana)}</td>
+              <td class="num"><span class="capaian-badge" style="--badge-color:${color};">${capFormatPercent(Math.round(capaian))}</span></td>
+              <td class="num currency">${capFormatRupiah(item.anggaran)}</td>
+              <td class="num currency">${capFormatRupiah(item.anggaranPerKegiatan)}</td>
+              <td class="num currency">${capFormatRupiah(item.realisasiAnggaran)}</td>
+              <td class="num currency">${capFormatRupiah(item.sisaAnggaran)}</td>
+              <td class="num"><span class="capaian-badge" style="--badge-color:#B8902E;">${capFormatPercent(item.persenPencairan, 1)}</span></td>
+              <td class="action-col">${action}</td>
+            </tr>`;
+        }).join('')}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>TOTAL</td>
+          <td class="num">${capFormatNumber(totalTarget)}</td>
+          <td class="num">${capFormatNumber(totalTerlaksana)}</td>
+          <td class="num">${capFormatPercent(persenCapaianBulat)}</td>
+          <td class="num currency">${capFormatRupiah(totalAnggaran)}</td>
+          <td class="num">—</td>
+          <td class="num currency">${capFormatRupiah(totalRealisasiAnggaran)}</td>
+          <td class="num currency">${capFormatRupiah(totalSisaAnggaran)}</td>
+          <td class="num">${capFormatPercent(persenPencairan, 1)}</td>
+          <td class="action-col">—</td>
+        </tr>
+      </tfoot>
+    </table>`;
+}
+
 function renderDashboard(data) {
+  capaianDataCache = data;
+
   const totalTarget = data.reduce((sum, item) => sum + item.target, 0);
   const totalTerlaksana = data.reduce((sum, item) => sum + item.terlaksana, 0);
   const persenCapaian = totalTarget > 0 ? (totalTerlaksana / totalTarget) * 100 : 0;
@@ -1947,42 +2276,32 @@ function renderDashboard(data) {
           }
         },
         scales: {
+          x: {
+            grid: { display: false },
+            ticks: { color: '#78847e', font: { size: 10 }, maxRotation: 0, autoSkip: false }
+          },
           y: {
             beginAtZero: true,
-            ticks: { font: { size: 11 }, color: '#8a9490', precision: 0 },
-            grid: { color: 'rgba(0,0,0,0.05)' },
-            border: { display: false }
-          },
-          x: {
-            ticks: {
-              font: { size: 10 },
-              color: '#8a9490',
-              maxRotation: 30,
-              callback: function(value, index) {
-                const label = data[index].kegiatan;
-                return label.length > 18 ? label.slice(0, 17) + '…' : label;
-              }
-            },
-            grid: { display: false },
-            border: { display: false }
+            grid: { color: 'rgba(0,0,0,0.055)' },
+            ticks: { color: '#78847e', font: { size: 10 }, precision: 0 }
           }
         }
       }
     });
   }
 
-  const summaryEl = document.getElementById('chartSummary');
-  if (summaryEl) {
-    const tercapai = data.filter(item => item.target > 0 && item.terlaksana >= item.target).length;
-    const belum = data.filter(item => item.target > 0 && item.terlaksana < item.target).length;
-    summaryEl.innerHTML = `
+  const tercapai = data.filter(item => item.target > 0 && item.terlaksana >= item.target).length;
+  const belumTercapai = data.length - tercapai;
+  const summary = document.getElementById('chartSummary');
+  if (summary) {
+    summary.innerHTML = `
       <div class="cs-item">
         <div class="cs-label">Kegiatan Tercapai</div>
-        <div class="cs-val">${tercapai} <span class="cs-arrow" style="color:#2E9A6B;">✓</span></div>
+        <div class="cs-val">${capFormatNumber(tercapai)} <span class="cs-arrow">✓</span></div>
       </div>
       <div class="cs-item">
         <div class="cs-label">Belum Tercapai</div>
-        <div class="cs-val">${belum} <span class="cs-arrow" style="color:#D94A4A;">!</span></div>
+        <div class="cs-val">${capFormatNumber(belumTercapai)} <span style="color:#D94A4A;font-size:13px;">!</span></div>
       </div>
       <div class="cs-item">
         <div class="cs-label">Persentase Capaian</div>
@@ -2041,56 +2360,169 @@ function renderDashboard(data) {
     }).join('');
   }
 
-  const tabelEl = document.getElementById('tabelKegiatan');
-  if (tabelEl) {
-    tabelEl.innerHTML = `
-      <table class="capaian-table">
-        <thead>
-          <tr>
-            <th>Kegiatan</th>
-            <th class="num">Target</th>
-            <th class="num">Terlaksana</th>
-            <th class="num">Capaian</th>
-            <th class="num">Anggaran</th>
-            <th class="num">Realisasi Anggaran</th>
-            <th class="num">Sisa Anggaran</th>
-            <th class="num">Pencairan</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${data.map(item => {
-            const capaian = item.target > 0 ? (item.terlaksana / item.target) * 100 : 0;
-            const color = capaian >= 100 ? '#2E9A6B' : (capaian >= 60 ? '#B8902E' : '#D94A4A');
-            return `
-              <tr>
-                <td><strong>${capEscapeHtml(item.kegiatan)}</strong></td>
-                <td class="num">${capFormatNumber(item.target)}</td>
-                <td class="num">${capFormatNumber(item.terlaksana)}</td>
-                <td class="num"><span class="capaian-badge" style="--badge-color:${color};">${capFormatPercent(Math.round(capaian))}</span></td>
-                <td class="num currency">${capFormatRupiah(item.anggaran)}</td>
-                <td class="num currency">${capFormatRupiah(item.realisasiAnggaran)}</td>
-                <td class="num currency">${capFormatRupiah(item.sisaAnggaran)}</td>
-                <td class="num"><span class="capaian-badge" style="--badge-color:#B8902E;">${capFormatPercent(item.persenPencairan, 1)}</span></td>
-              </tr>`;
-          }).join('')}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td>TOTAL</td>
-            <td class="num">${capFormatNumber(totalTarget)}</td>
-            <td class="num">${capFormatNumber(totalTerlaksana)}</td>
-            <td class="num">${capFormatPercent(persenCapaianBulat)}</td>
-            <td class="num currency">${capFormatRupiah(totalAnggaran)}</td>
-            <td class="num currency">${capFormatRupiah(totalRealisasiAnggaran)}</td>
-            <td class="num currency">${capFormatRupiah(totalSisaAnggaran)}</td>
-            <td class="num">${capFormatPercent(persenPencairan, 1)}</td>
-          </tr>
-        </tfoot>
-      </table>`;
-  }
+  capRenderActivityTable(data, {
+    totalTarget,
+    totalTerlaksana,
+    persenCapaianBulat,
+    totalAnggaran,
+    totalRealisasiAnggaran,
+    totalSisaAnggaran,
+    persenPencairan
+  });
 
   document.getElementById('capaianLoading').style.display = 'none';
   document.getElementById('capaianContent').style.display = 'block';
+}
+
+function capOpenEditModal(index) {
+  const item = capaianDataCache[index];
+  const status = document.getElementById('capEditStatus');
+
+  if (!capIsAdministrator()) {
+    alert('Menu ini hanya dapat digunakan oleh administrator.');
+    return;
+  }
+  if (!capApiConfigured()) {
+    alert('Backend capaian belum dikonfigurasi. Tempel URL Web App pada CAPAIAN_API_URL.');
+    return;
+  }
+  if (!item) {
+    alert('Data kegiatan tidak ditemukan. Silakan refresh halaman.');
+    return;
+  }
+  if (item.target <= 0) {
+    alert('Target kegiatan harus lebih besar dari 0 agar anggaran per kegiatan dapat dihitung.');
+    return;
+  }
+  if (item.terlaksana >= item.target) {
+    alert('Target kegiatan ini sudah terpenuhi.');
+    return;
+  }
+
+  const nextExecution = item.terlaksana + 1;
+  const nextRealisasiAnggaran = Math.min(item.anggaran, item.anggaranPerKegiatan * nextExecution);
+  const nextSisaAnggaran = Math.max(item.anggaran - nextRealisasiAnggaran, 0);
+
+  document.getElementById('capEditIndex').value = String(index);
+  document.getElementById('capEditActivityName').textContent = item.kegiatan;
+  document.getElementById('capEditActivityMeta').textContent =
+    `Pelaksanaan berikutnya: ke-${capFormatNumber(nextExecution)} dari target ${capFormatNumber(item.target)}`;
+  document.getElementById('capEditCurrentProgress').textContent =
+    `${capFormatNumber(item.terlaksana)} / ${capFormatNumber(item.target)}`;
+  document.getElementById('capEditUnitBudget').textContent = capFormatRupiah(item.anggaranPerKegiatan);
+  document.getElementById('capEditRemainingPreview').textContent = capFormatRupiah(nextSisaAnggaran);
+  document.getElementById('capExecutionTime').value = capLocalDateTimeValue();
+  document.getElementById('capExecutionReport').value = '';
+  status.className = 'cap-edit-status';
+  status.textContent = '';
+
+  document.getElementById('capEditModal').style.display = 'flex';
+  document.body.classList.add('cap-modal-open');
+}
+
+function capCloseEditModal() {
+  const modal = document.getElementById('capEditModal');
+  if (modal) modal.style.display = 'none';
+  document.body.classList.remove('cap-modal-open');
+}
+
+function capReadFileBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Laporan tidak dapat dibaca.'));
+    reader.onload = () => {
+      const result = String(reader.result || '');
+      const comma = result.indexOf(',');
+      resolve({
+        name: file.name,
+        mimeType: file.type || 'application/octet-stream',
+        size: file.size,
+        base64: comma >= 0 ? result.slice(comma + 1) : result
+      });
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function capSubmitExecution(event) {
+  event.preventDefault();
+
+  const index = Number(document.getElementById('capEditIndex').value);
+  const item = capaianDataCache[index];
+  const waktuTerlaksana = document.getElementById('capExecutionTime').value;
+  const file = document.getElementById('capExecutionReport').files[0];
+  const status = document.getElementById('capEditStatus');
+  const button = document.getElementById('capEditSubmitBtn');
+
+  if (!capIsAdministrator()) {
+    status.className = 'cap-edit-status error';
+    status.textContent = 'Hanya administrator yang dapat menyimpan perubahan.';
+    return;
+  }
+  if (!item) {
+    status.className = 'cap-edit-status error';
+    status.textContent = 'Data kegiatan tidak ditemukan. Tutup form lalu refresh.';
+    return;
+  }
+  if (!waktuTerlaksana) {
+    status.className = 'cap-edit-status error';
+    status.textContent = 'Waktu terlaksana wajib diisi.';
+    return;
+  }
+  if (!file) {
+    status.className = 'cap-edit-status error';
+    status.textContent = 'Laporan kegiatan wajib diunggah.';
+    return;
+  }
+  if (file.size > CAPAIAN_MAX_FILE_BYTES) {
+    status.className = 'cap-edit-status error';
+    status.textContent = 'Ukuran laporan maksimal 8 MB.';
+    return;
+  }
+
+  const allowedExtensions = ['pdf', 'doc', 'docx'];
+  const extension = file.name.split('.').pop().toLowerCase();
+  if (!allowedExtensions.includes(extension)) {
+    status.className = 'cap-edit-status error';
+    status.textContent = 'Format laporan harus PDF, DOC, atau DOCX.';
+    return;
+  }
+
+  button.disabled = true;
+  button.innerHTML = '<span class="cap-btn-spinner"></span> Mengunggah dan menyimpan...';
+  status.className = 'cap-edit-status';
+  status.textContent = 'Menyiapkan laporan kegiatan...';
+
+  try {
+    const filePayload = await capReadFileBase64(file);
+    status.textContent = 'Mengirim laporan ke Google Drive dan memperbarui spreadsheet...';
+
+    const result = await capApiRequest('updateCapaianExecution', {
+      no: item.no,
+      kegiatan: item.kegiatan,
+      waktuTerlaksana,
+      reportFile: filePayload
+    }, 120000);
+
+    status.className = 'cap-edit-status success';
+    status.textContent =
+      `Berhasil. Realisasi menjadi ${capFormatNumber(result.terlaksana || item.terlaksana + 1)} kegiatan dan sisa anggaran ${capFormatRupiah(result.sisaAnggaran || 0)}.`;
+
+    await loadCapaianData({ silent: true, includeExecutions: true });
+    setTimeout(capCloseEditModal, 800);
+  } catch (error) {
+    status.className = 'cap-edit-status error';
+    status.textContent = error.message;
+  } finally {
+    button.disabled = false;
+    button.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+        <polyline points="17 21 17 13 7 13 7 21"/>
+        <polyline points="7 3 7 8 15 8"/>
+      </svg>
+      Simpan Pelaksanaan`;
+  }
 }
 
 function showCapaianError(message, keepContent = false) {
@@ -2146,6 +2578,10 @@ async function loadCapaianData(options = {}) {
     const data = await fetchSheetData();
     if (!data.length) throw new Error('Tidak ada baris kegiatan yang dapat dibaca');
     renderDashboard(data);
+
+    if (options.includeExecutions !== false) {
+      await capLoadExecutionDetails({ silent });
+    }
   } catch (error) {
     console.error('Gagal memuat capaian kinerja:', error);
     showCapaianError(
@@ -2157,6 +2593,13 @@ async function loadCapaianData(options = {}) {
     capSetRefreshButton(false);
   }
 }
+
+document.getElementById('capEditModal')?.addEventListener('click', event => {
+  if (event.target.id === 'capEditModal') capCloseEditModal();
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') capCloseEditModal();
+});
 
 loadCapaianData();
 
