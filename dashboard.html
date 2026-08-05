@@ -318,13 +318,31 @@
                 </svg>
                 <h3>Capaian per Kegiatan</h3>
               </div>
-              <span class="panel-tag" id="lastUpdatedTag">—</span>
+              <div class="capaian-head-actions">
+                <span class="panel-tag" id="lastUpdatedTag">—</span>
+                <button id="capaianRefreshBtn" class="capaian-refresh-btn" type="button" onclick="loadCapaianData()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                  </svg>
+                  <span>Refresh</span>
+                </button>
+              </div>
             </div>
             <div class="chart-wrap" style="height:260px;">
               <canvas id="barChart"></canvas>
             </div>
             <div class="chart-summary" id="chartSummary">
               <!-- diisi dinamis -->
+            </div>
+
+            <div class="budget-block">
+              <div class="budget-block-title">
+                <strong>Ringkasan Anggaran</strong>
+                <span>Dihitung langsung dari kolom E–H Google Sheets</span>
+              </div>
+              <div class="budget-summary" id="budgetSummary">
+                <!-- diisi dinamis -->
+              </div>
             </div>
           </div>
 
@@ -1543,6 +1561,9 @@ function navigate(pageKey){
     p.classList.toggle('active', p.id === 'page-' + pageKey);
   });
   if(pageKey === 'projek') projLoadProjects();
+  if(pageKey === 'capaian' && typeof loadCapaianData === 'function') {
+    loadCapaianData({ silent: true });
+  }
 }
 
 document.querySelectorAll('[data-page]').forEach(el => {
@@ -1560,152 +1581,349 @@ document.getElementById('logoutBtn').addEventListener('click', function(e){
 
 /* =====================
    GOOGLE SHEETS — CAPAIAN KINERJA
-   Kolom: A=KEGIATAN, B=TARGET, C=TERLAKSANA
+   Struktur sheet gid=0:
+   A = No
+   B = Kegiatan
+   C = Target Kegiatan
+   D = Realisasi Kegiatan
+   E = Anggaran
+   F = Realisasi Anggaran
+   G = Sisa Anggaran
+   H = % Pencairan
    ===================== */
-const SHEET_ID    = '1MCpf11JdwMze8iGfX1FkLnB7vatgwzmVuwtX2mjEWiY';
-const SHEET_NAME  = 'CAPAIAN KINERJA';
-// CSV: pakai nama sheet (lebih reliabel daripada GID)
-const CSV_URL     = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
-// gviz JSON fallback
-const GVIZ_URL    = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+const SHEET_ID = '1MCpf11JdwMze8iGfX1FkLnB7vatgwzmVuwtX2mjEWiY';
+const SHEET_GID = '0';
+const SHEET_EDIT_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?gid=${SHEET_GID}#gid=${SHEET_GID}`;
+const SHEET_CSV_BASE = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${SHEET_GID}`;
+const SHEET_GVIZ_BASE = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${SHEET_GID}`;
 
 const COLORS = ['#0B3D2E','#2E9A6B','#B8902E','#4A90D9','#7C5CBF','#D94A4A','#4AC5C5','#C8A84B','#6B8F71','#C8C8C0'];
+const CAPAIAN_REFRESH_MS = 60 * 1000;
 
-let barChartInstance  = null;
+let barChartInstance = null;
 let donutChartInstance = null;
+let capaianRequestInProgress = false;
 
-/* --- Parse CSV teks → array objek --- */
-function parseCSV(text) {
-  const lines = text.trim().split(/\r?\n/);
-  if (lines.length < 2) return [];
-  // Baris pertama = header (KEGIATAN, TARGET, TERLAKSANA), skip
-  const data = [];
-  for (let i = 1; i < lines.length; i++) {
-    const cols = lines[i].split(',');
-    const kegiatan   = (cols[0] || '').replace(/"/g, '').trim();
-    const target     = parseFloat((cols[1] || '0').replace(/"/g, '').trim()) || 0;
-    const terlaksana = parseFloat((cols[2] || '0').replace(/"/g, '').trim()) || 0;
-    if (!kegiatan) continue;
-    data.push({ kegiatan, target, terlaksana });
+function capCacheBust(url) {
+  const separator = url.includes('?') ? '&' : '?';
+  return `${url}${separator}_=${Date.now()}`;
+}
+
+function capNormalizeHeader(value) {
+  return String(value ?? '')
+    .trim()
+    .toLowerCase()
+    .replace(/%/g, 'persen')
+    .replace(/[^a-z0-9]/g, '');
+}
+
+function capFindColumn(headers, aliases, fallbackIndex) {
+  const normalized = headers.map(capNormalizeHeader);
+  for (const alias of aliases) {
+    const index = normalized.indexOf(capNormalizeHeader(alias));
+    if (index !== -1) return index;
   }
-  return data;
+  return fallbackIndex;
 }
 
-/* --- Parse gviz JSON → array objek --- */
-function parseGviz(text) {
-  const clean = text.replace(/^[^(]+\(/, '').replace(/\);\s*$/, '');
-  const json  = JSON.parse(clean);
-  const rows  = (json.table && json.table.rows) ? json.table.rows : [];
-  const data  = [];
-  for (const row of rows) {
-    if (!row || !row.c) continue;
-    const c0 = row.c[0];
-    if (!c0 || c0.v === null || c0.v === undefined) continue;
-    const kegiatan   = String(c0.v).trim();
-    const target     = row.c[1] && row.c[1].v != null ? Number(row.c[1].v) || 0 : 0;
-    const terlaksana = row.c[2] && row.c[2].v != null ? Number(row.c[2].v) || 0 : 0;
-    if (!kegiatan) continue;
-    data.push({ kegiatan, target, terlaksana });
+function capToNumber(value) {
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+
+  let text = String(value ?? '').trim();
+  if (!text) return 0;
+
+  text = text.replace(/rp/gi, '').replace(/\s/g, '').replace(/%/g, '');
+
+  if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(text)) {
+    text = text.replace(/\./g, '').replace(',', '.');
+  } else if (/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(text)) {
+    text = text.replace(/,/g, '');
+  } else if (text.includes(',') && !text.includes('.')) {
+    text = text.replace(',', '.');
   }
-  return data;
+
+  text = text.replace(/[^0-9.-]/g, '');
+  const result = Number(text);
+  return Number.isFinite(result) ? result : 0;
 }
 
-/* --- Fetch dengan timeout agar tidak nge-hang selamanya --- */
-function fetchWithTimeout(url, ms = 8000) {
-  const ctrl = new AbortController();
-  const tid  = setTimeout(() => ctrl.abort(), ms);
-  return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(tid));
+function capFormatNumber(value) {
+  return new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(capToNumber(value));
 }
 
-/* --- Coba CSV dulu, kalau gagal fallback ke gviz --- */
-async function fetchSheetData() {
-  // Metode 1: CSV export (paling reliable, tidak kena CORS di browser modern)
-  try {
-    const res = await fetchWithTimeout(CSV_URL);
-    if (res.ok) {
-      const text = await res.text();
-      // Deteksi redirect ke halaman login Google (bukan CSV beneran)
-      if (!text.includes('<html') && !text.includes('<!DOCTYPE')) {
-        const data = parseCSV(text);
-        if (data.length > 0) return data;
-      }
+function capFormatRupiah(value) {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(capToNumber(value));
+}
+
+function capFormatPercent(value, digits = 0) {
+  const number = Number(value) || 0;
+  return number.toLocaleString('id-ID', {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits
+  }) + '%';
+}
+
+function capEscapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function capParseCsvRows(text) {
+  const rows = [];
+  let row = [];
+  let cell = '';
+  let insideQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const next = text[i + 1];
+
+    if (char === '"' && insideQuotes && next === '"') {
+      cell += '"';
+      i++;
+    } else if (char === '"') {
+      insideQuotes = !insideQuotes;
+    } else if (char === ',' && !insideQuotes) {
+      row.push(cell);
+      cell = '';
+    } else if ((char === '\n' || char === '\r') && !insideQuotes) {
+      if (char === '\r' && next === '\n') i++;
+      row.push(cell);
+      if (row.some(item => String(item).trim() !== '')) rows.push(row);
+      row = [];
+      cell = '';
+    } else {
+      cell += char;
     }
-  } catch (e1) {
-    console.warn('CSV fetch gagal, coba gviz:', e1.message);
   }
 
-  // Metode 2: gviz/tq JSON (fallback)
-  const res2 = await fetchWithTimeout(GVIZ_URL);
-  if (!res2.ok) throw new Error('HTTP ' + res2.status);
-  const text2 = await res2.text();
-  const data2 = parseGviz(text2);
-  if (data2.length === 0) throw new Error('Data kosong dari kedua sumber');
-  return data2;
+  row.push(cell);
+  if (row.some(item => String(item).trim() !== '')) rows.push(row);
+  return rows;
+}
+
+function capRowsToRecords(headers, rows) {
+  const index = {
+    no: capFindColumn(headers, ['No', 'Nomor'], 0),
+    kegiatan: capFindColumn(headers, ['Kegiatan', 'Nama Kegiatan'], 1),
+    target: capFindColumn(headers, ['Target Kegiatan', 'Target'], 2),
+    terlaksana: capFindColumn(headers, ['Realisasi Kegiatan', 'Terlaksana'], 3),
+    anggaran: capFindColumn(headers, ['Anggaran', 'Total Anggaran'], 4),
+    realisasiAnggaran: capFindColumn(headers, ['Realisasi Anggaran', 'Anggaran Terealisasi'], 5),
+    sisaAnggaran: capFindColumn(headers, ['Sisa Anggaran'], 6),
+    persenPencairan: capFindColumn(headers, ['% Pencairan', 'Persentase Pencairan', 'Persen Pencairan'], 7)
+  };
+
+  return rows.map(row => {
+    const noValue = String(row[index.no] ?? '').trim();
+    const kegiatanValue = String(row[index.kegiatan] ?? '').trim();
+    const marker = `${noValue} ${kegiatanValue}`.trim().toUpperCase();
+
+    if (!kegiatanValue || marker.includes('TOTAL')) return null;
+
+    const anggaran = capToNumber(row[index.anggaran]);
+    const realisasiAnggaran = capToNumber(row[index.realisasiAnggaran]);
+    const sisaDariSheet = capToNumber(row[index.sisaAnggaran]);
+    const sisaAnggaran = sisaDariSheet || Math.max(anggaran - realisasiAnggaran, 0);
+    const persenDariSheet = capToNumber(row[index.persenPencairan]);
+    const persenPencairan = anggaran > 0
+      ? (realisasiAnggaran / anggaran) * 100
+      : persenDariSheet;
+
+    return {
+      no: noValue,
+      kegiatan: kegiatanValue,
+      target: capToNumber(row[index.target]),
+      terlaksana: capToNumber(row[index.terlaksana]),
+      anggaran,
+      realisasiAnggaran,
+      sisaAnggaran,
+      persenPencairan
+    };
+  }).filter(Boolean);
+}
+
+function capParseCsv(text) {
+  const rows = capParseCsvRows(text);
+  if (rows.length < 2) return [];
+  return capRowsToRecords(rows[0], rows.slice(1));
+}
+
+function capParseGviz(text) {
+  const clean = text.replace(/^[^(]+\(/, '').replace(/\);?\s*$/, '');
+  const json = JSON.parse(clean);
+  const table = json.table || {};
+  const headers = (table.cols || []).map(col => col.label || col.id || '');
+  const rows = (table.rows || []).map(row => (row.c || []).map(cell => {
+    if (!cell) return '';
+    return cell.v ?? cell.f ?? '';
+  }));
+  return capRowsToRecords(headers, rows);
+}
+
+function capFetchWithTimeout(url, ms = 12000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+
+  return fetch(capCacheBust(url), {
+    signal: controller.signal,
+    cache: 'no-store',
+    credentials: 'omit',
+    redirect: 'follow'
+  }).finally(() => clearTimeout(timer));
+}
+
+async function fetchSheetData() {
+  try {
+    const response = await capFetchWithTimeout(SHEET_GVIZ_BASE);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const text = await response.text();
+    if (/<html|<!doctype/i.test(text)) throw new Error('Google mengembalikan halaman login');
+
+    const data = capParseGviz(text);
+    if (data.length) return data;
+  } catch (gvizError) {
+    console.warn('GViz gagal, mencoba CSV:', gvizError);
+  }
+
+  const response = await capFetchWithTimeout(SHEET_CSV_BASE);
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+  const text = await response.text();
+  if (/<html|<!doctype/i.test(text)) {
+    throw new Error('Spreadsheet belum dapat dibaca publik');
+  }
+
+  const data = capParseCsv(text);
+  if (!data.length) throw new Error('Data kegiatan tidak ditemukan');
+  return data;
+}
+
+function capSetRefreshButton(isLoading) {
+  const button = document.getElementById('capaianRefreshBtn');
+  if (!button) return;
+  button.disabled = isLoading;
+  button.classList.toggle('is-loading', isLoading);
+  button.querySelector('span').textContent = isLoading ? 'Memuat...' : 'Refresh';
+}
+
+function capRenderBudgetSummary(totalAnggaran, totalRealisasiAnggaran, totalSisaAnggaran, persenPencairan) {
+  const element = document.getElementById('budgetSummary');
+  if (!element) return;
+
+  element.innerHTML = `
+    <article class="budget-card">
+      <div class="budget-card-icon">Rp</div>
+      <div>
+        <span>Total Anggaran</span>
+        <strong>${capFormatRupiah(totalAnggaran)}</strong>
+        <small>Akumulasi seluruh kegiatan</small>
+      </div>
+    </article>
+    <article class="budget-card">
+      <div class="budget-card-icon">↗</div>
+      <div>
+        <span>Realisasi Anggaran</span>
+        <strong>${capFormatRupiah(totalRealisasiAnggaran)}</strong>
+        <small>Anggaran yang telah dicairkan</small>
+      </div>
+    </article>
+    <article class="budget-card">
+      <div class="budget-card-icon">−</div>
+      <div>
+        <span>Sisa Anggaran</span>
+        <strong>${capFormatRupiah(totalSisaAnggaran)}</strong>
+        <small>Anggaran yang masih tersedia</small>
+      </div>
+    </article>
+    <article class="budget-card budget-card-accent">
+      <div class="budget-card-icon">%</div>
+      <div>
+        <span>Persentase Pencairan</span>
+        <strong>${capFormatPercent(persenPencairan, 1)}</strong>
+        <small>Realisasi ÷ total anggaran</small>
+      </div>
+    </article>`;
 }
 
 function renderDashboard(data) {
-  const totalTarget     = data.reduce((s, r) => s + r.target, 0);
-  const totalTerlaksana = data.reduce((s, r) => s + r.terlaksana, 0);
-  const persen          = totalTarget > 0 ? Math.round((totalTerlaksana / totalTarget) * 100) : 0;
-  const jenisKegiatan   = data.length;
+  const totalTarget = data.reduce((sum, item) => sum + item.target, 0);
+  const totalTerlaksana = data.reduce((sum, item) => sum + item.terlaksana, 0);
+  const persenCapaian = totalTarget > 0 ? (totalTerlaksana / totalTarget) * 100 : 0;
+  const persenCapaianBulat = Math.round(persenCapaian);
+  const jenisKegiatan = data.length;
 
-  // --- Hero Banner ---
-  document.getElementById('statCapaian').textContent        = persen + '%';
-  document.getElementById('statTotalTarget').textContent    = totalTarget;
-  document.getElementById('statTotalTerlaksana').textContent = totalTerlaksana;
+  const totalAnggaran = data.reduce((sum, item) => sum + item.anggaran, 0);
+  const totalRealisasiAnggaran = data.reduce((sum, item) => sum + item.realisasiAnggaran, 0);
+  const totalSisaAnggaran = Math.max(totalAnggaran - totalRealisasiAnggaran, 0);
+  const persenPencairan = totalAnggaran > 0
+    ? (totalRealisasiAnggaran / totalAnggaran) * 100
+    : 0;
 
-  // --- KPI Cards ---
-  document.getElementById('kpiJenisKegiatan').textContent   = jenisKegiatan;
-  document.getElementById('kpiJenisKegiatanSub').textContent = jenisKegiatan + ' jenis kegiatan aktif';
-  document.getElementById('kpiTotalTarget').textContent     = totalTarget;
-  document.getElementById('kpiTotalTerlaksana').textContent = totalTerlaksana;
+  document.getElementById('statCapaian').textContent = capFormatPercent(persenCapaianBulat);
+  document.getElementById('statTotalTarget').textContent = capFormatNumber(totalTarget);
+  document.getElementById('statTotalTerlaksana').textContent = capFormatNumber(totalTerlaksana);
+
+  document.getElementById('kpiJenisKegiatan').textContent = capFormatNumber(jenisKegiatan);
+  document.getElementById('kpiJenisKegiatanSub').textContent = `${jenisKegiatan} jenis kegiatan aktif`;
+  document.getElementById('kpiTotalTarget').textContent = capFormatNumber(totalTarget);
+  document.getElementById('kpiTotalTerlaksana').textContent = capFormatNumber(totalTerlaksana);
 
   const overDelta = document.getElementById('kpiTerlaksanaDelta');
-  const over = totalTerlaksana - totalTarget;
-  if (over > 0) {
-    overDelta.textContent = '▲ ' + over + ' melebihi target';
+  const selisih = totalTerlaksana - totalTarget;
+  if (selisih > 0) {
+    overDelta.textContent = `▲ ${capFormatNumber(selisih)} melebihi target`;
     overDelta.style.color = '#2E9A6B';
-  } else if (over < 0) {
-    overDelta.textContent = '▼ ' + Math.abs(over) + ' di bawah target';
+  } else if (selisih < 0) {
+    overDelta.textContent = `▼ ${capFormatNumber(Math.abs(selisih))} di bawah target`;
     overDelta.style.color = '#D94A4A';
   } else {
     overDelta.textContent = 'Tepat sesuai target';
     overDelta.style.color = '#B8902E';
   }
 
-  document.getElementById('kpiPersenCapaian').textContent   = persen + '%';
+  document.getElementById('kpiPersenCapaian').textContent = capFormatPercent(persenCapaianBulat);
   const capDelta = document.getElementById('kpiCapaianDelta');
-  capDelta.textContent = persen >= 100 ? '✓ Target tercapai' : (persen + '% dari total target');
-  capDelta.style.color = persen >= 100 ? '#2E9A6B' : (persen >= 70 ? '#B8902E' : '#D94A4A');
+  capDelta.textContent = persenCapaian >= 100 ? '✓ Target tercapai' : `${capFormatPercent(persenCapaianBulat)} dari total target`;
+  capDelta.style.color = persenCapaian >= 100 ? '#2E9A6B' : (persenCapaian >= 70 ? '#B8902E' : '#D94A4A');
 
-  // --- Timestamp tag ---
   const now = new Date();
-  document.getElementById('lastUpdatedTag').textContent =
-    'Update: ' + now.toLocaleString('id-ID', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+  document.getElementById('lastUpdatedTag').textContent = 'Update: ' + now.toLocaleString('id-ID', {
+    day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+  });
 
-  // --- Bar Chart ---
   const barCtx = document.getElementById('barChart');
   if (barCtx) {
     if (barChartInstance) barChartInstance.destroy();
     barChartInstance = new Chart(barCtx, {
       type: 'bar',
       data: {
-        labels: data.map(r => r.kegiatan),
+        labels: data.map(item => item.kegiatan),
         datasets: [
           {
             label: 'Target',
-            data: data.map(r => r.target),
+            data: data.map(item => item.target),
             backgroundColor: 'rgba(11,61,46,0.15)',
             borderColor: '#0B3D2E',
             borderWidth: 1.5,
-            borderRadius: 4,
+            borderRadius: 4
           },
           {
             label: 'Terlaksana',
-            data: data.map(r => r.terlaksana),
-            backgroundColor: data.map(r => r.terlaksana >= r.target ? '#2E9A6B' : '#B8902E'),
+            data: data.map(item => item.terlaksana),
+            backgroundColor: data.map(item => item.terlaksana >= item.target ? '#2E9A6B' : '#B8902E'),
             borderColor: 'transparent',
-            borderRadius: 4,
+            borderRadius: 4
           }
         ]
       },
@@ -1723,14 +1941,15 @@ function renderDashboard(data) {
             padding: 10,
             cornerRadius: 8,
             callbacks: {
-              label: ctx => ' ' + ctx.dataset.label + ': ' + ctx.parsed.y
+              title: items => items[0] ? data[items[0].dataIndex].kegiatan : '',
+              label: context => ` ${context.dataset.label}: ${capFormatNumber(context.parsed.y)}`
             }
           }
         },
         scales: {
           y: {
             beginAtZero: true,
-            ticks: { font: { size: 11 }, color: '#8a9490', stepSize: 1 },
+            ticks: { font: { size: 11 }, color: '#8a9490', precision: 0 },
             grid: { color: 'rgba(0,0,0,0.05)' },
             border: { display: false }
           },
@@ -1739,9 +1958,9 @@ function renderDashboard(data) {
               font: { size: 10 },
               color: '#8a9490',
               maxRotation: 30,
-              callback: function(val, i) {
-                const label = data[i].kegiatan;
-                return label.length > 14 ? label.slice(0, 13) + '…' : label;
+              callback: function(value, index) {
+                const label = data[index].kegiatan;
+                return label.length > 18 ? label.slice(0, 17) + '…' : label;
               }
             },
             grid: { display: false },
@@ -1752,11 +1971,10 @@ function renderDashboard(data) {
     });
   }
 
-  // --- Chart Summary (bawah bar chart) ---
   const summaryEl = document.getElementById('chartSummary');
   if (summaryEl) {
-    const tercapai  = data.filter(r => r.terlaksana >= r.target).length;
-    const belum     = data.filter(r => r.terlaksana < r.target).length;
+    const tercapai = data.filter(item => item.target > 0 && item.terlaksana >= item.target).length;
+    const belum = data.filter(item => item.target > 0 && item.terlaksana < item.target).length;
     summaryEl.innerHTML = `
       <div class="cs-item">
         <div class="cs-label">Kegiatan Tercapai</div>
@@ -1767,15 +1985,15 @@ function renderDashboard(data) {
         <div class="cs-val">${belum} <span class="cs-arrow" style="color:#D94A4A;">!</span></div>
       </div>
       <div class="cs-item">
-        <div class="cs-label">Persentase</div>
-        <div class="cs-val">${persen}% <span class="cs-arrow">↗</span></div>
-      </div>
-    `;
+        <div class="cs-label">Persentase Capaian</div>
+        <div class="cs-val">${capFormatPercent(persenCapaianBulat)} <span class="cs-arrow">↗</span></div>
+      </div>`;
   }
 
-  // --- Donut Chart ---
-  document.getElementById('donutTotalTag').textContent = 'Total ' + totalTerlaksana;
-  document.getElementById('donutCenterNum').textContent = totalTerlaksana;
+  capRenderBudgetSummary(totalAnggaran, totalRealisasiAnggaran, totalSisaAnggaran, persenPencairan);
+
+  document.getElementById('donutTotalTag').textContent = 'Total ' + capFormatNumber(totalTerlaksana);
+  document.getElementById('donutCenterNum').textContent = capFormatNumber(totalTerlaksana);
 
   const donutCtx = document.getElementById('donutChart');
   if (donutCtx) {
@@ -1783,10 +2001,10 @@ function renderDashboard(data) {
     donutChartInstance = new Chart(donutCtx, {
       type: 'doughnut',
       data: {
-        labels: data.map(r => r.kegiatan),
+        labels: data.map(item => item.kegiatan),
         datasets: [{
-          data: data.map(r => r.terlaksana),
-          backgroundColor: COLORS.slice(0, data.length),
+          data: data.map(item => item.terlaksana),
+          backgroundColor: data.map((_, index) => COLORS[index % COLORS.length]),
           borderWidth: 2.5,
           borderColor: '#fff',
           hoverOffset: 5
@@ -1802,7 +2020,7 @@ function renderDashboard(data) {
             padding: 10,
             cornerRadius: 8,
             callbacks: {
-              label: ctx => ' ' + ctx.label + ': ' + ctx.parsed + ' kegiatan'
+              label: context => ` ${context.label}: ${capFormatNumber(context.parsed)} kegiatan`
             }
           }
         }
@@ -1810,134 +2028,152 @@ function renderDashboard(data) {
     });
   }
 
-  // --- Donut Legend ---
   const legendEl = document.getElementById('donutLegend');
   if (legendEl) {
-    legendEl.innerHTML = data.map((r, i) => {
-      const pct = totalTerlaksana > 0 ? Math.round((r.terlaksana / totalTerlaksana) * 100) : 0;
+    legendEl.innerHTML = data.map((item, index) => {
+      const contribution = totalTerlaksana > 0 ? (item.terlaksana / totalTerlaksana) * 100 : 0;
       return `
         <div class="dl-item">
-          <div class="dl-dot" style="background:${COLORS[i % COLORS.length]};"></div>
-          <span class="dl-label">${r.kegiatan}</span>
-          <span class="dl-val">${pct}%</span>
+          <div class="dl-dot" style="background:${COLORS[index % COLORS.length]};"></div>
+          <span class="dl-label" title="${capEscapeHtml(item.kegiatan)}">${capEscapeHtml(item.kegiatan)}</span>
+          <span class="dl-val">${capFormatPercent(Math.round(contribution))}</span>
         </div>`;
     }).join('');
   }
 
-  // --- Tabel Rincian ---
   const tabelEl = document.getElementById('tabelKegiatan');
   if (tabelEl) {
     tabelEl.innerHTML = `
-      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <table class="capaian-table">
         <thead>
-          <tr style="border-bottom:2px solid rgba(11,61,46,0.12);">
-            <th style="text-align:left;padding:8px 10px;color:#4a5568;font-weight:600;">Kegiatan</th>
-            <th style="text-align:center;padding:8px 10px;color:#4a5568;font-weight:600;">Target</th>
-            <th style="text-align:center;padding:8px 10px;color:#4a5568;font-weight:600;">Terlaksana</th>
-            <th style="text-align:center;padding:8px 10px;color:#4a5568;font-weight:600;">Capaian</th>
-            <th style="text-align:left;padding:8px 10px;color:#4a5568;font-weight:600;">Progress</th>
+          <tr>
+            <th>Kegiatan</th>
+            <th class="num">Target</th>
+            <th class="num">Terlaksana</th>
+            <th class="num">Capaian</th>
+            <th class="num">Anggaran</th>
+            <th class="num">Realisasi Anggaran</th>
+            <th class="num">Sisa Anggaran</th>
+            <th class="num">Pencairan</th>
           </tr>
         </thead>
         <tbody>
-          ${data.map(r => {
-            const p = r.target > 0 ? Math.min(Math.round((r.terlaksana / r.target) * 100), 100) : 0;
-            const actual = r.target > 0 ? Math.round((r.terlaksana / r.target) * 100) : 0;
-            const barColor = actual >= 100 ? '#2E9A6B' : (actual >= 60 ? '#B8902E' : '#D94A4A');
-            const badgeStyle = `background:${barColor}20;color:${barColor};padding:2px 8px;border-radius:20px;font-weight:600;font-size:12px;`;
+          ${data.map(item => {
+            const capaian = item.target > 0 ? (item.terlaksana / item.target) * 100 : 0;
+            const color = capaian >= 100 ? '#2E9A6B' : (capaian >= 60 ? '#B8902E' : '#D94A4A');
             return `
-              <tr style="border-bottom:1px solid rgba(0,0,0,0.05);transition:background .15s;" 
-                  onmouseover="this.style.background='rgba(11,61,46,0.03)'" 
-                  onmouseout="this.style.background=''">
-                <td style="padding:9px 10px;color:#1a2e22;font-weight:500;">${r.kegiatan}</td>
-                <td style="text-align:center;padding:9px 10px;color:#4a5568;">${r.target}</td>
-                <td style="text-align:center;padding:9px 10px;color:#4a5568;">${r.terlaksana}</td>
-                <td style="text-align:center;padding:9px 10px;">
-                  <span style="${badgeStyle}">${actual}%</span>
-                </td>
-                <td style="padding:9px 10px;min-width:100px;">
-                  <div style="background:rgba(0,0,0,0.07);border-radius:20px;height:6px;overflow:hidden;">
-                    <div style="background:${barColor};width:${p}%;height:100%;border-radius:20px;transition:width .5s;"></div>
-                  </div>
-                </td>
+              <tr>
+                <td><strong>${capEscapeHtml(item.kegiatan)}</strong></td>
+                <td class="num">${capFormatNumber(item.target)}</td>
+                <td class="num">${capFormatNumber(item.terlaksana)}</td>
+                <td class="num"><span class="capaian-badge" style="--badge-color:${color};">${capFormatPercent(Math.round(capaian))}</span></td>
+                <td class="num currency">${capFormatRupiah(item.anggaran)}</td>
+                <td class="num currency">${capFormatRupiah(item.realisasiAnggaran)}</td>
+                <td class="num currency">${capFormatRupiah(item.sisaAnggaran)}</td>
+                <td class="num"><span class="capaian-badge" style="--badge-color:#B8902E;">${capFormatPercent(item.persenPencairan, 1)}</span></td>
               </tr>`;
           }).join('')}
         </tbody>
         <tfoot>
-          <tr style="border-top:2px solid rgba(11,61,46,0.12);background:rgba(11,61,46,0.03);">
-            <td style="padding:9px 10px;font-weight:700;color:#0B3D2E;">TOTAL</td>
-            <td style="text-align:center;padding:9px 10px;font-weight:700;color:#0B3D2E;">${totalTarget}</td>
-            <td style="text-align:center;padding:9px 10px;font-weight:700;color:#0B3D2E;">${totalTerlaksana}</td>
-            <td style="text-align:center;padding:9px 10px;">
-              <span style="background:${persen>=100?'#2E9A6B':persen>=60?'#B8902E':'#D94A4A'}20;color:${persen>=100?'#2E9A6B':persen>=60?'#B8902E':'#D94A4A'};padding:2px 8px;border-radius:20px;font-weight:700;font-size:12px;">${persen}%</span>
-            </td>
-            <td></td>
+          <tr>
+            <td>TOTAL</td>
+            <td class="num">${capFormatNumber(totalTarget)}</td>
+            <td class="num">${capFormatNumber(totalTerlaksana)}</td>
+            <td class="num">${capFormatPercent(persenCapaianBulat)}</td>
+            <td class="num currency">${capFormatRupiah(totalAnggaran)}</td>
+            <td class="num currency">${capFormatRupiah(totalRealisasiAnggaran)}</td>
+            <td class="num currency">${capFormatRupiah(totalSisaAnggaran)}</td>
+            <td class="num">${capFormatPercent(persenPencairan, 1)}</td>
           </tr>
         </tfoot>
       </table>`;
   }
 
-  // Tampilkan konten, sembunyikan loading
   document.getElementById('capaianLoading').style.display = 'none';
   document.getElementById('capaianContent').style.display = 'block';
 }
 
-function showError(msg) {
+function showCapaianError(message, keepContent = false) {
   const loading = document.getElementById('capaianLoading');
+  const content = document.getElementById('capaianContent');
   if (!loading) return;
+
+  if (keepContent && content && content.style.display !== 'none') {
+    loading.style.display = 'none';
+    const tag = document.getElementById('lastUpdatedTag');
+    if (tag) tag.textContent = 'Refresh gagal — data terakhir tetap ditampilkan';
+    return;
+  }
+
   loading.style.display = 'flex';
   loading.innerHTML = `
     <svg viewBox="0 0 24 24" fill="none" stroke="#D94A4A" stroke-width="2" width="40" height="40" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
     </svg>
-    <div style="color:#D94A4A;font-size:13px;text-align:center;max-width:320px;line-height:1.6;">${msg}</div>
-    <div style="display:flex;gap:10px;margin-top:4px;">
+    <div style="color:#D94A4A;font-size:13px;text-align:center;max-width:420px;line-height:1.6;">${message}</div>
+    <div style="display:flex;gap:10px;margin-top:4px;flex-wrap:wrap;justify-content:center;">
       <button onclick="loadCapaianData()" style="padding:8px 18px;background:#0B3D2E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;">↻ Coba Lagi</button>
-      <a href="https://docs.google.com/spreadsheets/d/1MCpf11JdwMze8iGfX1FkLnB7vatgwzmVuwtX2mjEWiY/edit" target="_blank"
+      <a href="${SHEET_EDIT_URL}" target="_blank" rel="noopener noreferrer"
          style="padding:8px 18px;background:transparent;color:#0B3D2E;border:1.5px solid #0B3D2E;border-radius:8px;cursor:pointer;font-size:13px;text-decoration:none;">
          Buka Sheet ↗
       </a>
     </div>
-    <div style="color:#aaa;font-size:11px;margin-top:6px;">Pastikan sheet diatur: <b>Bagikan → Anyone with the link → Viewer</b></div>
-  `;
+    <div style="color:#aaa;font-size:11px;margin-top:6px;text-align:center;">Pastikan spreadsheet dapat dilihat oleh siapa saja yang memiliki link.</div>`;
 }
 
-async function loadCapaianData() {
+async function loadCapaianData(options = {}) {
+  if (capaianRequestInProgress) return;
+  capaianRequestInProgress = true;
+
+  const silent = Boolean(options.silent);
   const loading = document.getElementById('capaianLoading');
   const content = document.getElementById('capaianContent');
+  const alreadyVisible = content && content.style.display !== 'none';
 
-  // Reset ke spinner
-  if (loading) {
-    loading.style.display = 'flex';
-    loading.innerHTML = `
-      <div style="width:36px;height:36px;border:3px solid rgba(11,61,46,0.15);border-top-color:#0B3D2E;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
-      <div style="color:#8a9490;font-size:13px;">Memuat data dari Google Sheets...</div>
-    `;
+  capSetRefreshButton(true);
+
+  if (!silent || !alreadyVisible) {
+    if (loading) {
+      loading.style.display = 'flex';
+      loading.innerHTML = `
+        <div style="width:36px;height:36px;border:3px solid rgba(11,61,46,0.15);border-top-color:#0B3D2E;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+        <div style="color:#8a9490;font-size:13px;">Memuat data terbaru dari Google Sheets...</div>`;
+    }
+    if (content) content.style.display = 'none';
   }
-  if (content) content.style.display = 'none';
 
   try {
     const data = await fetchSheetData();
-    if (!data || data.length === 0) {
-      showError('Data tidak ditemukan di sheet.<br>Pastikan sheet <b>CAPAIAN KINERJA</b> memiliki data di kolom A, B, C dan sudah dibagikan ke publik.');
-      return;
-    }
+    if (!data.length) throw new Error('Tidak ada baris kegiatan yang dapat dibaca');
     renderDashboard(data);
-  } catch (err) {
-    console.error('Gagal memuat data:', err);
-    showError(`Gagal memuat data dari Google Sheets.<br><small style="opacity:.8;">${err.message}</small>`);
+  } catch (error) {
+    console.error('Gagal memuat capaian kinerja:', error);
+    showCapaianError(
+      `Gagal memuat data dari Google Sheets.<br><small style="opacity:.8;">${capEscapeHtml(error.message)}</small>`,
+      silent && alreadyVisible
+    );
+  } finally {
+    capaianRequestInProgress = false;
+    capSetRefreshButton(false);
   }
 }
 
-// Jalankan saat halaman load
 loadCapaianData();
 
-// Auto-refresh setiap 5 menit
 setInterval(() => {
-  const content = document.getElementById('capaianContent');
-  if (content && content.style.display !== 'none') {
-    loadCapaianData();
+  const page = document.getElementById('page-capaian');
+  if (page && page.classList.contains('active') && document.visibilityState === 'visible') {
+    loadCapaianData({ silent: true });
   }
-}, 5 * 60 * 1000);
+}, CAPAIAN_REFRESH_MS);
+
+document.addEventListener('visibilitychange', () => {
+  const page = document.getElementById('page-capaian');
+  if (document.visibilityState === 'visible' && page && page.classList.contains('active')) {
+    loadCapaianData({ silent: true });
+  }
+});
+
 
 /* =====================================================
    DATA PETA INTELIJEN — GIS (Pulau Muna & Buton)
