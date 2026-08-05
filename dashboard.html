@@ -349,7 +349,7 @@
               <div class="budget-block-title">
                 <div>
                   <strong>Rincian Pelaksanaan Kegiatan</strong>
-                  <small>Riwayat kegiatan yang telah diperbarui administrator dan laporan yang diunggah</small>
+                  <small>Seluruh kegiatan dari spreadsheet, status pelaksanaan, anggaran, dan laporan terakhir</small>
                 </div>
                 <span class="execution-count" id="executionTotalTag">0 pelaksanaan</span>
               </div>
@@ -2034,56 +2034,84 @@ function capRenderBudgetSummary(totalAnggaran, totalRealisasiAnggaran, totalSisa
 function capRenderExecutionDetails(details) {
   capaianExecutionCache = Array.isArray(details) ? details : [];
 
-  const tag = document.getElementById('executionTotalTag');
-  if (tag) tag.textContent = `${capFormatNumber(capaianExecutionCache.length)} pelaksanaan`;
-
   const element = document.getElementById('executionDetailTable');
   if (!element) return;
 
-  if (!capApiConfigured()) {
-    element.innerHTML = `
-      <div class="execution-empty execution-warning">
-        Backend edit belum dikonfigurasi. Tempel URL Web App Apps Script pada
-        <code>CAPAIAN_API_URL</code> untuk menampilkan riwayat dan mengaktifkan upload laporan.
-      </div>`;
+  const kegiatan = Array.isArray(capaianDataCache) ? capaianDataCache : [];
+  const totalPelaksanaan = capaianExecutionCache.length;
+  const tag = document.getElementById('executionTotalTag');
+  if (tag) {
+    tag.textContent = `${capFormatNumber(kegiatan.length)} kegiatan · ${capFormatNumber(totalPelaksanaan)} pelaksanaan`;
+  }
+
+  if (!kegiatan.length) {
+    element.innerHTML = '<div class="execution-empty">Data kegiatan utama belum selesai dimuat.</div>';
     return;
   }
 
-  if (!capaianExecutionCache.length) {
-    element.innerHTML = '<div class="execution-empty">Belum ada kegiatan yang dicatat melalui menu Edit.</div>';
-    return;
-  }
+  const normalize = value => String(value ?? '').trim().toLowerCase();
+
+  const historiesFor = item => capaianExecutionCache.filter(record => {
+    const sameNo = normalize(item.no) && normalize(record.no) === normalize(item.no);
+    const sameName = normalize(record.kegiatan) === normalize(item.kegiatan);
+    return sameNo || sameName;
+  });
 
   element.innerHTML = `
-    <table class="execution-table">
+    <table class="execution-table execution-overview-table">
       <thead>
         <tr>
           <th>No.</th>
           <th>Kegiatan</th>
-          <th>Pelaksanaan</th>
-          <th>Waktu terlaksana</th>
-          <th class="num">Anggaran kegiatan</th>
-          <th>Laporan</th>
+          <th class="num">Target</th>
+          <th class="num">Terlaksana</th>
+          <th class="num">Sisa target</th>
+          <th>Status</th>
+          <th class="num">Anggaran/kegiatan</th>
+          <th class="num">Sisa anggaran</th>
+          <th>Waktu terakhir</th>
+          <th>Laporan terakhir</th>
           <th>Administrator</th>
         </tr>
       </thead>
       <tbody>
-        ${capaianExecutionCache.map((item, index) => `
-          <tr>
-            <td>${index + 1}</td>
-            <td><strong>${capEscapeHtml(item.kegiatan || '—')}</strong></td>
-            <td>Ke-${capFormatNumber(item.pelaksanaanKe || 0)}</td>
-            <td>${capEscapeHtml(capFormatDateTime(item.waktuTerlaksana))}</td>
-            <td class="num">${capFormatRupiah(item.anggaranPerKegiatan || 0)}</td>
-            <td>
-              ${item.laporanUrl
-                ? `<a class="execution-report-link" href="${capEscapeHtml(item.laporanUrl)}" target="_blank" rel="noopener noreferrer">Buka laporan ↗</a>`
-                : '<span class="execution-muted">Tidak tersedia</span>'}
-            </td>
-            <td>${capEscapeHtml(item.administrator || '—')}</td>
-          </tr>`).join('')}
+        ${kegiatan.map((item, index) => {
+          const histories = historiesFor(item);
+          const latest = histories[0] || null;
+          const sisaTarget = Math.max(capToNumber(item.target) - capToNumber(item.terlaksana), 0);
+          const completed = capToNumber(item.target) > 0 && capToNumber(item.terlaksana) >= capToNumber(item.target);
+          const started = capToNumber(item.terlaksana) > 0;
+          const statusText = completed ? 'Selesai' : (started ? 'Berjalan' : 'Belum mulai');
+          const statusColor = completed ? '#2E9A6B' : (started ? '#B8902E' : '#7A8580');
+
+          return `
+            <tr>
+              <td>${index + 1}</td>
+              <td>
+                <strong>${capEscapeHtml(item.kegiatan || '—')}</strong>
+                <small class="execution-row-note">${histories.length ? `${capFormatNumber(histories.length)} laporan tercatat` : 'Belum ada laporan tersimpan'}</small>
+              </td>
+              <td class="num">${capFormatNumber(item.target || 0)}</td>
+              <td class="num">${capFormatNumber(item.terlaksana || 0)}</td>
+              <td class="num">${capFormatNumber(sisaTarget)}</td>
+              <td><span class="execution-status" style="--execution-status:${statusColor};">${statusText}</span></td>
+              <td class="num">${capFormatRupiah(item.anggaranPerKegiatan || 0)}</td>
+              <td class="num">${capFormatRupiah(item.sisaAnggaran || 0)}</td>
+              <td>${latest ? capEscapeHtml(capFormatDateTime(latest.waktuTerlaksana)) : '<span class="execution-muted">Belum dicatat</span>'}</td>
+              <td>
+                ${latest && latest.laporanUrl
+                  ? `<a class="execution-report-link" href="${capEscapeHtml(latest.laporanUrl)}" target="_blank" rel="noopener noreferrer">Buka laporan ↗</a>`
+                  : '<span class="execution-muted">Belum ada</span>'}
+              </td>
+              <td>${latest ? capEscapeHtml(latest.administrator || '—') : '<span class="execution-muted">—</span>'}</td>
+            </tr>`;
+        }).join('')}
       </tbody>
-    </table>`;
+    </table>
+    ${!capApiConfigured() ? `
+      <div class="execution-empty execution-warning" style="margin-top:10px;">
+        Data utama sudah tampil, tetapi riwayat laporan belum dapat dibaca karena URL backend belum dikonfigurasi.
+      </div>` : ''}`;
 }
 
 async function capLoadExecutionDetails(options = {}) {
@@ -2099,9 +2127,12 @@ async function capLoadExecutionDetails(options = {}) {
     return details;
   } catch (error) {
     console.warn('Riwayat pelaksanaan gagal dimuat:', error);
+    capRenderExecutionDetails(capaianExecutionCache);
     const element = document.getElementById('executionDetailTable');
     if (element && !options.silent) {
-      element.innerHTML = `<div class="execution-empty execution-error">${capEscapeHtml(error.message)}</div>`;
+      element.insertAdjacentHTML('beforeend',
+        `<div class="execution-empty execution-error" style="margin-top:10px;">Riwayat laporan belum dapat dimuat: ${capEscapeHtml(error.message)}</div>`
+      );
     }
     return [];
   }
@@ -2369,6 +2400,9 @@ function renderDashboard(data) {
     totalSisaAnggaran,
     persenPencairan
   });
+
+  // Tampilkan seluruh kegiatan meskipun sheet riwayat masih kosong.
+  capRenderExecutionDetails(capaianExecutionCache);
 
   document.getElementById('capaianLoading').style.display = 'none';
   document.getElementById('capaianContent').style.display = 'block';
