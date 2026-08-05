@@ -1345,3 +1345,208 @@ body.proj-modal-open{overflow:hidden;}
     overflow:visible !important;
   }
 }
+
+/* =====================================================
+   CAPAIAN KINERJA — LIVE SHEET + RINGKASAN ANGGARAN
+   ===================================================== */
+.capaian-head-actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.capaian-refresh-btn{
+  width:auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:5px 10px;
+  border:1px solid rgba(11,61,46,.16);
+  border-radius:8px;
+  background:#fff;
+  color:var(--g800);
+  font-size:10.5px;
+  font-weight:700;
+  transition:background .15s,border-color .15s,transform .15s,opacity .15s;
+}
+.capaian-refresh-btn:hover{
+  background:var(--g50);
+  border-color:var(--g200);
+  transform:translateY(-1px);
+}
+.capaian-refresh-btn:disabled{
+  opacity:.65;
+  cursor:wait;
+  transform:none;
+}
+.capaian-refresh-btn svg{
+  width:13px;
+  height:13px;
+}
+.capaian-refresh-btn.is-loading svg{
+  animation:spin .8s linear infinite;
+}
+
+.budget-block{
+  margin-top:16px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+}
+.budget-block-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+.budget-block-title strong{
+  font-size:12px;
+  color:var(--ink);
+}
+.budget-block-title span{
+  font-size:10px;
+  color:var(--ink3);
+}
+.budget-summary{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.budget-card{
+  min-width:0;
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:12px;
+  border:1px solid rgba(11,61,46,.09);
+  border-radius:12px;
+  background:linear-gradient(145deg,#fff,#f8fbf9);
+}
+.budget-card-accent{
+  border-color:rgba(184,144,46,.22);
+  background:linear-gradient(145deg,#fffdf7,#fbf4df);
+}
+.budget-card-icon{
+  width:34px;
+  height:34px;
+  flex:0 0 34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  background:var(--g50);
+  color:var(--g800);
+  font-size:11px;
+  font-weight:800;
+}
+.budget-card-accent .budget-card-icon{
+  background:var(--gold-bg);
+  color:var(--gold);
+}
+.budget-card>div:last-child{
+  min-width:0;
+}
+.budget-card span{
+  display:block;
+  margin-bottom:3px;
+  font-size:10px;
+  color:var(--ink3);
+}
+.budget-card strong{
+  display:block;
+  color:var(--g800);
+  font-size:14px;
+  line-height:1.25;
+  overflow-wrap:anywhere;
+}
+.budget-card small{
+  display:block;
+  margin-top:3px;
+  color:var(--ink3);
+  font-size:9px;
+  line-height:1.35;
+}
+
+.capaian-table{
+  width:100%;
+  min-width:980px;
+  border-collapse:collapse;
+  font-size:11.5px;
+}
+.capaian-table th{
+  padding:8px 9px;
+  border-bottom:2px solid rgba(11,61,46,.12);
+  color:#4a5568;
+  font-size:10px;
+  font-weight:700;
+  white-space:nowrap;
+}
+.capaian-table td{
+  padding:9px;
+  border-bottom:1px solid rgba(0,0,0,.05);
+  color:#4a5568;
+  white-space:nowrap;
+}
+.capaian-table tbody tr:hover td{
+  background:rgba(11,61,46,.03);
+}
+.capaian-table td:first-child,
+.capaian-table th:first-child{
+  position:sticky;
+  left:0;
+  z-index:1;
+  background:#fff;
+}
+.capaian-table tbody tr:hover td:first-child{
+  background:#f8fbf9;
+}
+.capaian-table th:first-child{
+  z-index:2;
+}
+.capaian-table .num{
+  text-align:right;
+}
+.capaian-table .currency{
+  font-size:10.5px;
+}
+.capaian-table tfoot td{
+  border-top:2px solid rgba(11,61,46,.12);
+  border-bottom:none;
+  background:rgba(11,61,46,.04);
+  color:var(--g800);
+  font-weight:800;
+}
+.capaian-table tfoot td:first-child{
+  background:#f3f7f5;
+}
+.capaian-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:3px 7px;
+  border-radius:999px;
+  background:color-mix(in srgb,var(--badge-color) 14%,white);
+  color:var(--badge-color);
+  font-size:10px;
+  font-weight:800;
+}
+
+@media(max-width:720px){
+  .panel-head{
+    align-items:flex-start;
+    gap:10px;
+  }
+  .capaian-head-actions{
+    align-items:flex-end;
+    flex-direction:column;
+  }
+  .budget-summary{
+    grid-template-columns:1fr;
+  }
+  .budget-block-title{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+}
