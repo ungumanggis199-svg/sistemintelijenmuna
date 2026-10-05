@@ -1365,7 +1365,7 @@ body.proj-modal-open{overflow:hidden;}
 .dipa-spinner{width:32px;height:32px;border:3px solid rgba(11,61,46,.15);border-top-color:var(--g800);border-radius:50%;animation:spin .8s linear infinite;}
 .dipa-error{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;max-width:480px;line-height:1.55;}
 .dipa-error b{color:#B23B3B;}
-.dipa-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px;}
+.dipa-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:14px;}
 .dipa-kpi{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:4px;box-shadow:var(--shadow-sm);min-width:0;}
 .dipa-kpi-label{font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;}
 .dipa-kpi-val{font-size:20px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -1388,7 +1388,8 @@ body.proj-modal-open{overflow:hidden;}
 .dipa-mini{width:70px;height:6px;background:rgba(0,0,0,.07);border-radius:20px;overflow:hidden;}
 .dipa-mini>div{height:100%;border-radius:20px;}
 .dipa-total-pct{display:inline-block;padding:2px 9px;border-radius:20px;background:var(--g50);color:var(--g800);}
-@media(max-width:1100px){.dipa-kpis{grid-template-columns:repeat(2,1fr);}.dipa-charts{grid-template-columns:1fr;}}
+@media(max-width:1250px){.dipa-kpis{grid-template-columns:repeat(3,minmax(0,1fr));}}
+@media(max-width:820px){.dipa-kpis{grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media(max-width:560px){.dipa-kpis{grid-template-columns:1fr;}.dipa-head{padding:16px;}}
 
 /* Peralatan Intelijen */
@@ -1608,4 +1609,64 @@ body.proj-modal-open{overflow:hidden;}
   .kal-month-nav h2{min-width:0;font-size:16px;}
   .kal-row2,.kal-detail-grid{grid-template-columns:1fr;}
   .kal-reminder-banner{flex-wrap:wrap;}
+}
+
+.dipa-kpi-keg{background:linear-gradient(135deg,var(--g50),#fff);border-color:var(--g100);}
+.dipa-kpi-keg .dipa-kpi-val{color:var(--g700);}
+
+/* Progres target & realisasi per kegiatan */
+.ang-panel{margin-bottom:14px;}
+.ang-panel-head{flex-wrap:wrap;gap:10px;}
+.ang-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.ang-filters{display:flex;gap:4px;padding:3px;background:rgba(11,61,46,.06);border-radius:9px;}
+.ang-filter{padding:5px 10px;border:none;border-radius:7px;background:transparent;font:600 11.5px Inter,sans-serif;color:var(--ink2);cursor:pointer;}
+.ang-filter b{display:inline-block;min-width:16px;padding:0 4px;border-radius:10px;background:rgba(0,0,0,.07);font-size:10px;text-align:center;}
+.ang-filter.active{background:#fff;color:var(--g800);box-shadow:0 1px 3px rgba(0,0,0,.1);}
+.ang-filter.done.active b{background:#D4EDE2;color:#1E6B4C;}
+.ang-filter.run.active b{background:var(--gold-pale);color:#7A5A12;}
+.ang-filter.none.active b{background:#F8DADA;color:#A23232;}
+.ang-sort{padding:6px 10px;border:1.5px solid rgba(11,61,46,.18);border-radius:8px;font:500 12px Inter,sans-serif;color:var(--ink);background:#fff;cursor:pointer;outline:none;}
+.ang-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--ink3);margin:-4px 0 10px;}
+.ang-legend span{display:flex;align-items:center;gap:6px;}
+.ang-legend .seg{width:14px;height:10px;}
+.ang-legend .bar{display:inline-block;width:18px;height:8px;border-radius:4px;background:#0B3D2E;}
+.ang-head-row,.ang-row{display:grid;grid-template-columns:minmax(150px,1.15fr) minmax(170px,1.4fr) minmax(170px,1.4fr) 68px;gap:18px;align-items:center;}
+.ang-head-row{padding:0 10px 8px;border-bottom:2px solid rgba(11,61,46,.1);font-size:10.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;}
+.ang-head-row span:last-child{text-align:right;}
+.ang-row{padding:11px 10px;border-bottom:1px solid rgba(0,0,0,.05);transition:background var(--t);}
+.ang-row:hover{background:rgba(11,61,46,.03);}
+.ang-name{display:flex;flex-direction:column;gap:4px;min-width:0;}
+.ang-name b{font-size:13px;color:var(--ink);line-height:1.3;}
+.ang-pill{align-self:flex-start;padding:1px 8px;border-radius:20px;font-size:10px;font-weight:700;}
+.ang-pill.done{background:#E3F4EA;color:#1E6B4C;}
+.ang-pill.run{background:var(--gold-bg);color:#7A5A12;border:1px solid var(--gold-pale);}
+.ang-pill.none{background:#FCEAEA;color:#A23232;}
+.ang-cell{display:flex;flex-direction:column;gap:5px;min-width:0;}
+.ang-segs{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:3px;max-width:100%;}
+.seg{display:inline-block;height:12px;border-radius:3px;background:#E4E8E5;box-shadow:inset 0 0 0 1px rgba(11,61,46,.08);}
+.seg.done{background:#2E9A6B;box-shadow:none;}
+.seg.over{background:#B8902E;box-shadow:none;}
+.ang-track{height:12px;border-radius:6px;background:#E4E8E5;overflow:hidden;}
+.ang-fill{height:100%;border-radius:6px;transition:width .6s ease;}
+.ang-fill.keg{background:#2E9A6B;}
+.ang-cap{font-size:11.5px;color:var(--ink2);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ang-cap b{color:var(--ink);}
+.ang-cap span{color:var(--ink3);}
+.ang-pct{justify-self:end;font-size:13px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;padding:3px 8px;border-radius:8px;
+  background:color-mix(in srgb, var(--c) 12%, #fff);border:1px solid color-mix(in srgb, var(--c) 30%, #fff);}
+.ang-empty{padding:28px;text-align:center;font-size:12.5px;color:var(--ink3);}
+.ang-details{padding:0;overflow:hidden;}
+.ang-details summary{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;cursor:pointer;font-size:13px;color:var(--ink2);list-style:none;}
+.ang-details summary::-webkit-details-marker{display:none;}
+.ang-details summary::before{content:'▸';color:var(--g700);margin-right:2px;transition:transform var(--t);}
+.ang-details[open] summary::before{transform:rotate(90deg);}
+.ang-details summary>span:first-of-type{flex:1;}
+.ang-sum-hint{font-size:11px;color:var(--ink3);}
+.ang-details .dipa-table-wrap{padding:0 18px 16px;}
+@media(max-width:900px){
+  .ang-head-row{display:none;}
+  .ang-row{grid-template-columns:1fr auto;gap:8px 12px;}
+  .ang-name{grid-column:1 / 2;}
+  .ang-pct{grid-column:2;grid-row:1;}
+  .ang-cell{grid-column:1 / -1;}
 }
