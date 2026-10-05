@@ -2692,19 +2692,25 @@ async function fetchPrkData() {
 }
 
 /* ── Peta dasar ── */
+// Semua peta dasar di bawah ini gratis & tanpa API key
+const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
+const ESRI_ATTR = 'Esri, HERE, Garmin, &copy; OpenStreetMap contributors';
 const PRK_BASEMAPS = {
   terang: {
-    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-    opt: { subdomains: 'abcd', maxZoom: 19, attribution: '&copy; OpenStreetMap &copy; CARTO' }
+    url: ESRI + 'Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    opt: { maxZoom: 17, maxNativeZoom: 13, attribution: ESRI_ATTR },
+    labels: ESRI + 'Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
+    labelOpt: { maxZoom: 17, maxNativeZoom: 13 }
   },
   jalan: {
     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     opt: { subdomains: 'abc', maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }
   },
   satelit: {
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    opt: { maxZoom: 18, attribution: 'Citra &copy; Esri' },
-    labels: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png'
+    url: ESRI + 'World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    opt: { maxZoom: 18, attribution: 'Citra &copy; Esri, Maxar, Earthstar Geographics' },
+    labels: ESRI + 'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+    labelOpt: { maxZoom: 18 }
   }
 };
 let prkBaseLayer = null;
@@ -2737,7 +2743,19 @@ function prkSetBase(name) {
   if (prkLabelLayer) { prkMap.removeLayer(prkLabelLayer); prkLabelLayer = null; }
   prkBaseLayer = L.tileLayer(b.url, b.opt).addTo(prkMap);
   prkBaseLayer.bringToBack();
-  if (b.labels) prkLabelLayer = L.tileLayer(b.labels, { subdomains:'abcd', maxZoom:19, pane:'overlayPane', opacity:.9 }).addTo(prkMap);
+  // Bila peta dasar gagal dimuat berulang kali, otomatis beralih ke OpenStreetMap
+  let errs = 0;
+  prkBaseLayer.on('tileerror', () => {
+    if (++errs === 8 && name !== 'jalan') { console.warn('Peta dasar ' + name + ' gagal dimuat, beralih ke OSM'); prkSetBase('jalan'); }
+  });
+  if (b.labels) {
+    if (!prkMap.getPane('prkLabels')) {
+      prkMap.createPane('prkLabels');
+      prkMap.getPane('prkLabels').style.zIndex = 450;        // di atas peta, di bawah penanda
+      prkMap.getPane('prkLabels').style.pointerEvents = 'none';
+    }
+    prkLabelLayer = L.tileLayer(b.labels, { ...(b.labelOpt || {}), pane:'prkLabels' }).addTo(prkMap);
+  }
   document.querySelectorAll('.prk-ov-layers button').forEach(btn => btn.classList.toggle('active', btn.dataset.base === name));
   document.querySelector('.prk-map-card')?.classList.toggle('is-sat', name === 'satelit');
 }
