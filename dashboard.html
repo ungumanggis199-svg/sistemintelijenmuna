@@ -4900,12 +4900,90 @@ function aiNotice() {
   if (!el) return false;
   kalCfgLoad();
   if (!kalApiUrl()) {
-    el.style.display = 'flex';
-    el.innerHTML = '<span>🔌</span><div><b>Belum terhubung ke Apps Script.</b> Fitur AI membutuhkan URL Web App <b>code_intel.gs</b> dan <b>ANTHROPIC_API_KEY</b> di Script properties. Isi URL di <a href="#" onclick="navigate(\'kalender\');kalOpenWaSetting();return false;">Kalender Kegiatan → Pengaturan</a>.</div>';
+    el.style.display = 'block';
+    el.className = 'ai-connect';
+    el.innerHTML = `
+      <div class="ai-connect-head">
+        <span class="ai-connect-ic">🔌</span>
+        <div><b>Hubungkan fitur AI ke Apps Script</b>
+          <small>Tempel URL Web App dari deployment <b>code_intel.gs</b> (berakhiran <code>/exec</code>), lalu uji koneksinya.</small></div>
+      </div>
+      <div class="ai-connect-row">
+        <input id="aiConnUrl" type="url" placeholder="https://script.google.com/macros/s/AKfy.../exec">
+        <button type="button" class="kal-btn-primary" id="aiConnBtn" onclick="aiConnect()">Hubungkan &amp; Uji</button>
+      </div>
+      <div id="aiConnResult" class="ai-conn-result"></div>
+      <details class="ai-connect-guide">
+        <summary>Belum punya URL? Lihat langkah singkatnya</summary>
+        <ol>
+          <li>Buka <a href="https://script.google.com" target="_blank" rel="noopener">script.google.com</a> → proyek backend capaian → ganti isi <b>Code.gs</b> dengan <b>code_intel.gs</b> terbaru.</li>
+          <li><b>Project Settings → Script properties</b> → tambah <code>ANTHROPIC_API_KEY</code> (dari platform.claude.com).</li>
+          <li>Pilih fungsi <code>setupDokumenAiModule</code> → <b>Run</b> → izinkan akses.</li>
+          <li><b>Deploy → New deployment → Web app</b>; Execute as: <b>Me</b>; Who has access: <b>Anyone</b> → <b>Deploy</b>.</li>
+          <li>Salin <b>Web app URL</b> (berakhiran <code>/exec</code>) dan tempel di kotak atas.</li>
+        </ol>
+      </details>`;
     return false;
   }
   el.style.display = 'none';
   return true;
+}
+
+async function aiConnect(urlArg) {
+  const input = document.getElementById('aiConnUrl');
+  const url = (urlArg || input?.value || '').trim();
+  const out = document.getElementById('aiConnResult');
+  const btn = document.getElementById('aiConnBtn');
+  const show = (html, cls) => { if (out) { out.className = 'ai-conn-result ' + (cls || ''); out.innerHTML = html; } };
+  if (!/^https:\/\/script\.google(usercontent)?\.com\/macros\/s\/[^/]+\/(exec|dev)/.test(url)) {
+    show('URL tidak valid. Gunakan <b>Web app URL</b> dari Deploy → Manage deployments, contoh <code>https://script.google.com/macros/s/AKfy.../exec</code>.', 'error');
+    return;
+  }
+  if (/\/dev(\?|$)/.test(url)) {
+    show('Ini URL <b>/dev</b> (hanya untuk pemilik script). Gunakan URL <b>/exec</b> dari New deployment.', 'error');
+    return;
+  }
+  if (btn) { btn.disabled = true; btn.textContent = 'Menguji...'; }
+  show('<span class="dipa-spinner" style="width:16px;height:16px;border-width:2px;display:inline-block;vertical-align:-3px;"></span> Menghubungi Apps Script dan menguji Claude...', '');
+  let data;
+  try {
+    const res = await fetch(url, { method:'POST', body: JSON.stringify({ action:'health', testAi:true, username: kalUser() }) });
+    const text = await res.text();
+    try { data = JSON.parse(text); }
+    catch (e) {
+      const login = /accounts\.google|ServiceLogin|Sign in/i.test(text);
+      throw new Error(login
+        ? 'Apps Script meminta login Google. Ubah deployment: <b>Who has access → Anyone</b>, lalu Deploy ulang.'
+        : 'Respons bukan JSON. Pastikan URL berasal dari deployment <b>code_intel.gs</b> terbaru (bukan script lain).');
+    }
+  } catch (err) {
+    show('✗ ' + (err.message.includes('Failed to fetch') ? 'Tidak dapat menghubungi URL. Periksa koneksi internet dan pastikan akses deployment <b>Anyone</b>.' : err.message), 'error');
+    if (btn) { btn.disabled = false; btn.innerHTML = 'Hubungkan &amp; Uji'; }
+    return;
+  }
+  const d = data && data.data ? data.data : {};
+  const hasAi = Array.isArray(d.features) && d.features.includes('ai');
+  const rows = [
+    ['Apps Script terhubung', !!(data && data.success), data && data.success ? '' : (data && data.message) || 'Tidak merespons'],
+    ['Versi backend memiliki fitur AI', hasAi, hasAi ? '' : 'Ganti isi script dengan code_intel.gs terbaru lalu buat <b>versi deployment baru</b>.'],
+    ['ANTHROPIC_API_KEY tersimpan', !!d.aiKey, d.aiKey ? '' : 'Tambahkan di Project Settings → Script properties, lalu uji lagi.'],
+    ['Claude merespons', d.aiTest === 'ok', d.aiTest === 'ok' ? (d.aiModel || '') : (d.aiTest || (d.aiKey ? 'Belum diuji' : 'Menunggu API key'))]
+  ];
+  const allOk = rows.every(r => r[1]);
+  show(`<ul>${rows.map(r => `<li class="${r[1] ? 'ok' : 'bad'}"><b>${r[1] ? '✓' : '✗'}</b> ${r[0]}${r[2] ? `<small>${r[2]}</small>` : ''}</li>`).join('')}</ul>`, allOk ? 'success' : 'warn');
+  if (btn) { btn.disabled = false; btn.innerHTML = 'Hubungkan &amp; Uji'; }
+
+  // URL disimpan bila Apps Script terhubung dan sudah versi baru; AI siap bila semua centang hijau.
+  if (data && data.success && hasAi) {
+    kalCfgLoad();
+    const changed = _kalCfg.apiUrl !== url;
+    _kalCfg.apiUrl = url;
+    kalCfgSave();
+    if (changed) kalReload(false);
+    if (allOk) {
+      setTimeout(() => { _aiLoaded = false; aiLoad(true); }, 900);
+    }
+  }
 }
 
 async function aiLoad(force=false) {
@@ -4920,7 +4998,7 @@ async function aiLoad(force=false) {
     _aiLoaded = true;
     if (_aiTpl) _aiTpl = _aiTemplates.find(t => t.id === _aiTpl.id) || null;
   } catch (err) {
-    if (list) list.innerHTML = `<div class="kal-empty" style="color:#C0392B;">${aiEsc(err.message)}</div>`;
+    if (list) list.innerHTML = `<div class="kal-empty" style="color:#C0392B;">${aiEsc(err.message)}<button type="button" class="kal-btn-ghost" onclick="aiForgetUrl()">Ganti URL / uji ulang</button></div>`;
     return;
   }
   aiRenderTemplates();
@@ -4975,6 +5053,17 @@ function aiPickFile(file) {
   if (!nm.value) nm.value = file.name.replace(/\.(docx|pdf)$/i, '').replace(/[_-]+/g, ' ');
   document.getElementById('aiAnalyzeBtn').disabled = false;
   st.className = 'kal-form-status'; st.textContent = '';
+}
+
+function aiForgetUrl() {
+  kalCfgLoad();
+  const old = _kalCfg.apiUrl || '';
+  _kalCfg.apiUrl = '';
+  kalCfgSave();
+  _aiLoaded = false;
+  aiLoad(true);
+  const i = document.getElementById('aiConnUrl');
+  if (i) i.value = old;
 }
 
 async function aiAnalyze() {
