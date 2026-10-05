@@ -290,84 +290,6 @@
         </div>
         <!-- /KPI Grid -->
 
-        <!-- Panel Grid: Bar Chart + Tabel -->
-        <div class="panel-grid">
-
-          <!-- Bar Chart Capaian per Kegiatan -->
-          <div class="panel">
-            <div class="panel-head">
-              <div class="ph-left">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="18" y1="20" x2="18" y2="10"/>
-                  <line x1="12" y1="20" x2="12" y2="4"/>
-                  <line x1="6" y1="20" x2="6" y2="14"/>
-                </svg>
-                <h3>Capaian per Kegiatan</h3>
-              </div>
-              <span class="panel-tag" id="lastUpdatedTag">—</span>
-            </div>
-            <div class="chart-wrap" style="height:260px;">
-              <canvas id="barChart"></canvas>
-            </div>
-            <div class="chart-summary" id="chartSummary">
-              <!-- diisi dinamis -->
-            </div>
-          </div>
-
-          <!-- Right column: Donut + Tabel -->
-          <div style="display:flex;flex-direction:column;gap:14px;">
-
-            <!-- Donut Chart -->
-            <div class="panel">
-              <div class="panel-head">
-                <div class="ph-left">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 2a10 10 0 0 1 10 10"/>
-                  </svg>
-                  <h3>Distribusi Kegiatan</h3>
-                </div>
-                <span class="panel-tag" id="donutTotalTag">Total —</span>
-              </div>
-              <div class="donut-wrap">
-                <div class="donut-canvas-wrap">
-                  <canvas id="donutChart" width="128" height="128"></canvas>
-                  <div class="donut-center">
-                    <div class="dc-num" id="donutCenterNum">—</div>
-                    <div class="dc-label">Terlaksana</div>
-                  </div>
-                </div>
-                <div class="donut-legend" id="donutLegend">
-                  <!-- diisi dinamis -->
-                </div>
-              </div>
-            </div>
-
-            <!-- Tabel Detail -->
-            <div class="panel" style="flex:1;">
-              <div class="panel-head">
-                <div class="ph-left">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                    <line x1="16" y1="13" x2="8" y2="13"/>
-                    <line x1="16" y1="17" x2="8" y2="17"/>
-                  </svg>
-                  <h3>Rincian Kegiatan</h3>
-                </div>
-                <a href="https://docs.google.com/spreadsheets/d/1MCpf11JdwMze8iGfX1FkLnB7vatgwzmVuwtX2mjEWiY/edit" target="_blank" class="see-all-link">Buka Sheet ↗</a>
-              </div>
-              <div id="tabelKegiatan" style="overflow-x:auto;">
-                <!-- diisi dinamis -->
-              </div>
-            </div>
-
-          </div>
-          <!-- /right column -->
-
-        </div>
-        <!-- /Panel Grid -->
-
         <!-- ==== ANGGARAN CAPAIAN KINERJA (sheet CAPAIAN KINERJA) ==== -->
         <section class="dipa-section" id="capAnggaranSection" aria-label="Anggaran Capaian Kinerja"></section>
 
@@ -1642,7 +1564,8 @@ function renderDashboard(data) {
 
   // --- Timestamp tag ---
   const now = new Date();
-  document.getElementById('lastUpdatedTag').textContent =
+  const _lastTag = document.getElementById('lastUpdatedTag');
+  if (_lastTag) _lastTag.textContent =
     'Update: ' + now.toLocaleString('id-ID', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
 
   // --- Bar Chart ---
@@ -1736,8 +1659,10 @@ function renderDashboard(data) {
   }
 
   // --- Donut Chart ---
-  document.getElementById('donutTotalTag').textContent = 'Total ' + totalTerlaksana;
-  document.getElementById('donutCenterNum').textContent = totalTerlaksana;
+  const _dTag = document.getElementById('donutTotalTag');
+  if (_dTag) _dTag.textContent = 'Total ' + totalTerlaksana;
+  const _dNum = document.getElementById('donutCenterNum');
+  if (_dNum) _dNum.textContent = totalTerlaksana;
 
   const donutCtx = document.getElementById('donutChart');
   if (donutCtx) {
