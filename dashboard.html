@@ -108,6 +108,16 @@
           <span class="nav-badge kal-nav-badge" id="kalNavBadge" style="display:none;background:#D94A4A;">0</span>
         </li>
 
+        <li class="nav-item" data-page="dokumen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <path d="M12 18v-6"/><path d="M9 15l3-3 3 3"/>
+          </svg>
+          Buat Dokumen AI
+          <span class="nav-badge" style="background:#7C5CBF;">AI</span>
+        </li>
+
         <li class="nav-item" data-page="pengaturan">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"/>
@@ -1270,6 +1280,87 @@
           </div>
         </div>
 
+      </section>
+
+
+      <!-- ==================
+           PAGE: BUAT DOKUMEN AI
+           ================== -->
+      <section class="page" id="page-dokumen">
+
+        <div class="hero-banner" style="margin-bottom:14px;">
+          <div class="hb-left">
+            <div class="hb-eyebrow">Dashboard · Buat Dokumen AI</div>
+            <div class="hb-title">Laporan &amp; Surat Tugas<br>Otomatis dengan AI</div>
+            <div class="hb-sub">Unggah contoh dokumen, AI menandai bagian yang perlu diubah, lalu isi lewat chat atau formulir</div>
+          </div>
+          <div class="hb-right">
+            <div class="hb-stat"><div class="hb-stat-val" id="aiStatTpl">0</div><div class="hb-stat-label">Template</div></div>
+            <div class="hb-stat"><div class="hb-stat-val" id="aiStatDoc">0</div><div class="hb-stat-label">Dokumen Dibuat</div></div>
+          </div>
+        </div>
+
+        <div id="aiNotice" class="kal-mode-notice" style="display:none;"></div>
+
+        <ol class="ai-steps" id="aiSteps">
+          <li data-step="1"><b>1</b><span>Unggah contoh</span></li>
+          <li data-step="2"><b>2</b><span>Periksa kolom</span></li>
+          <li data-step="3"><b>3</b><span>Isi lewat chat / form</span></li>
+          <li data-step="4"><b>4</b><span>Unduh dokumen</span></li>
+        </ol>
+
+        <div class="ai-layout">
+          <!-- Kolom kiri: template -->
+          <aside class="ai-side">
+            <div class="panel">
+              <div class="panel-head">
+                <div class="ph-left">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  <h3>Unggah Contoh Dokumen</h3>
+                </div>
+              </div>
+              <div class="kal-form">
+                <div class="kal-field">
+                  <label for="aiTplName">Nama template</label>
+                  <input id="aiTplName" type="text" maxlength="120" placeholder="Contoh: Surat Tugas Penyuluhan Hukum">
+                </div>
+                <label class="kal-dropzone" id="aiDrop" for="aiFile"
+                       ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')"
+                       ondrop="event.preventDefault();this.classList.remove('drag');aiPickFile(event.dataTransfer.files[0])">
+                  <input id="aiFile" type="file" accept=".docx,.pdf" onchange="aiPickFile(this.files[0])">
+                  <b id="aiFileLabel">⬆ Pilih file DOCX atau PDF</b>
+                  <span>Surat tugas, laporan kegiatan, dll. · PDF hasil scan juga bisa · maks. 8 MB</span>
+                </label>
+                <button type="button" id="aiAnalyzeBtn" class="kal-btn-primary ai-wide" onclick="aiAnalyze()" disabled>✨ Analisis dengan AI</button>
+                <div id="aiAnalyzeStatus" class="kal-form-status" aria-live="polite"></div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div class="ph-left">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <h3>Template Saya</h3>
+                </div>
+                <button type="button" class="kal-refresh-btn" onclick="aiLoad(true)" title="Muat ulang">↻</button>
+              </div>
+              <div id="aiTplList" class="ai-tpl-list"></div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div class="ph-left">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <h3>Riwayat Dokumen</h3>
+                </div>
+              </div>
+              <div id="aiDocList" class="ai-doc-list"></div>
+            </div>
+          </aside>
+
+          <!-- Kolom kanan: ruang kerja -->
+          <div class="ai-main" id="aiWorkspace"></div>
+        </div>
       </section>
 
 
@@ -4777,6 +4868,413 @@ async function kalInit(){
 })();
 
 kalInit();
+
+/* =====================================================
+   BUAT DOKUMEN AI (Claude Haiku via Apps Script)
+   Memakai URL Web App yang sama dengan Kalender Kegiatan.
+   API key Claude TIDAK disimpan di sini, hanya di Script Properties.
+   ===================================================== */
+let _aiTemplates = [];
+let _aiDocs = [];
+let _aiTpl = null;          // template aktif
+let _aiValues = {};         // nilai kolom
+let _aiMessages = [];       // riwayat chat {role, content}
+let _aiFile = null;
+let _aiLoaded = false;
+let _aiBusy = false;
+let _aiResult = null;
+const AI_DRAFT_KEY = 'aiDraft_';
+
+function aiEsc(v) { return projEscape(v); }
+
+function aiSetStep(n) {
+  document.querySelectorAll('#aiSteps li').forEach(li => {
+    const s = Number(li.dataset.step);
+    li.classList.toggle('done', s < n);
+    li.classList.toggle('active', s === n);
+  });
+}
+
+function aiNotice() {
+  const el = document.getElementById('aiNotice');
+  if (!el) return false;
+  kalCfgLoad();
+  if (!kalApiUrl()) {
+    el.style.display = 'flex';
+    el.innerHTML = '<span>🔌</span><div><b>Belum terhubung ke Apps Script.</b> Fitur AI membutuhkan URL Web App <b>code_intel.gs</b> dan <b>ANTHROPIC_API_KEY</b> di Script properties. Isi URL di <a href="#" onclick="navigate(\'kalender\');kalOpenWaSetting();return false;">Kalender Kegiatan → Pengaturan</a>.</div>';
+    return false;
+  }
+  el.style.display = 'none';
+  return true;
+}
+
+async function aiLoad(force=false) {
+  if (!aiNotice()) { aiRenderTemplates(); aiRenderWorkspace(); return; }
+  if (_aiLoaded && !force) return;
+  const list = document.getElementById('aiTplList');
+  if (list) list.innerHTML = '<div class="kal-empty"><div class="dipa-spinner"></div>Memuat template...</div>';
+  try {
+    const data = await kalApi({ action:'aiListTemplates' });
+    _aiTemplates = data.templates || [];
+    _aiDocs = data.documents || [];
+    _aiLoaded = true;
+    if (_aiTpl) _aiTpl = _aiTemplates.find(t => t.id === _aiTpl.id) || null;
+  } catch (err) {
+    if (list) list.innerHTML = `<div class="kal-empty" style="color:#C0392B;">${aiEsc(err.message)}</div>`;
+    return;
+  }
+  aiRenderTemplates();
+  aiRenderDocs();
+  aiRenderWorkspace();
+}
+
+function aiRenderTemplates() {
+  const el = document.getElementById('aiTplList');
+  document.getElementById('aiStatTpl').textContent = _aiTemplates.length;
+  document.getElementById('aiStatDoc').textContent = _aiDocs.length;
+  if (!el) return;
+  if (!_aiTemplates.length) {
+    el.innerHTML = '<div class="kal-empty">Belum ada template.<br>Unggah contoh surat tugas atau laporan di atas.</div>';
+    return;
+  }
+  el.innerHTML = _aiTemplates.map(t => `
+    <div class="ai-tpl ${_aiTpl && _aiTpl.id === t.id ? 'active' : ''}" onclick="aiSelect('${aiEsc(t.id)}')">
+      <div class="ai-tpl-ic">${aiEsc((t.jenis || 'DOK').split(/\s+/).map(w => w[0]).join('').slice(0,2).toUpperCase())}</div>
+      <div class="ai-tpl-main">
+        <b>${aiEsc(t.nama)}</b>
+        <small>${aiEsc(t.jenis)} · ${t.fields.length} kolom · ${aiEsc(t.sumber.split(' · ')[0] || '')}</small>
+      </div>
+      <button type="button" class="kal-icon-btn danger" title="Hapus template" onclick="event.stopPropagation();aiDeleteTemplate('${aiEsc(t.id)}')">🗑️</button>
+    </div>`).join('');
+}
+
+function aiRenderDocs() {
+  const el = document.getElementById('aiDocList');
+  if (!el) return;
+  if (!_aiDocs.length) { el.innerHTML = '<div class="kal-empty">Belum ada dokumen yang dibuat.</div>'; return; }
+  el.innerHTML = _aiDocs.slice(0, 10).map(d => `
+    <div class="ai-doc">
+      <span class="ai-doc-fmt ${d.format === 'PDF' ? 'pdf' : ''}">${aiEsc(d.format)}</span>
+      <div class="ai-doc-main">
+        <a href="${aiEsc(d.fileUrl)}" target="_blank" rel="noopener">${aiEsc(d.fileName)}</a>
+        <small>${aiEsc(d.createdBy)} · ${d.createdAt ? new Date(d.createdAt).toLocaleString('id-ID',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : ''}</small>
+      </div>
+      <a class="ai-doc-edit" href="${aiEsc(d.docUrl)}" target="_blank" rel="noopener" title="Edit di Google Docs">✏️</a>
+    </div>`).join('');
+}
+
+function aiPickFile(file) {
+  if (!file) return;
+  const ext = String(file.name.split('.').pop() || '').toLowerCase();
+  const st = document.getElementById('aiAnalyzeStatus');
+  if (!['docx','pdf'].includes(ext)) { st.className = 'kal-form-status error'; st.textContent = 'Format harus DOCX atau PDF. File .doc lama: simpan ulang sebagai .docx.'; return; }
+  if (file.size > 8 * 1024 * 1024) { st.className = 'kal-form-status error'; st.textContent = 'Ukuran file maksimal 8 MB.'; return; }
+  _aiFile = file;
+  document.getElementById('aiFileLabel').textContent = '📄 ' + file.name;
+  const nm = document.getElementById('aiTplName');
+  if (!nm.value) nm.value = file.name.replace(/\.(docx|pdf)$/i, '').replace(/[_-]+/g, ' ');
+  document.getElementById('aiAnalyzeBtn').disabled = false;
+  st.className = 'kal-form-status'; st.textContent = '';
+}
+
+async function aiAnalyze() {
+  if (!_aiFile || _aiBusy) return;
+  if (!aiNotice()) return;
+  const btn = document.getElementById('aiAnalyzeBtn');
+  const st = document.getElementById('aiAnalyzeStatus');
+  _aiBusy = true; btn.disabled = true;
+  btn.innerHTML = '<span class="proj-btn-spinner"></span> AI sedang membaca dokumen...';
+  st.className = 'kal-form-status';
+  st.textContent = _aiFile.name.toLowerCase().endsWith('.pdf')
+    ? 'PDF dibaca dan disusun ulang menjadi template. Biasanya 30–90 detik.'
+    : 'Menandai bagian yang perlu diubah. Biasanya 20–60 detik.';
+  try {
+    const base64 = await kalReadFile(_aiFile, false);
+    const data = await kalApi({
+      action:'aiAnalyzeTemplate',
+      nama: document.getElementById('aiTplName').value.trim(),
+      file: { name:_aiFile.name, mimeType:_aiFile.type || '', size:_aiFile.size, base64 }
+    });
+    const tpl = data.template;
+    _aiTemplates.unshift(tpl);
+    _aiFile = null;
+    document.getElementById('aiFile').value = '';
+    document.getElementById('aiFileLabel').textContent = '⬆ Pilih file DOCX atau PDF';
+    document.getElementById('aiTplName').value = '';
+    st.className = 'kal-form-status success';
+    st.textContent = `✓ ${tpl.fields.length} kolom terdeteksi. Periksa kolom di sebelah kanan.`;
+    aiRenderTemplates();
+    aiSelect(tpl.id, true);
+  } catch (err) {
+    st.className = 'kal-form-status error'; st.textContent = err.message;
+  } finally {
+    _aiBusy = false;
+    btn.innerHTML = '✨ Analisis dengan AI';
+    btn.disabled = !_aiFile;
+  }
+}
+
+async function aiDeleteTemplate(id) {
+  const t = _aiTemplates.find(x => x.id === id);
+  if (!t || !confirm('Hapus template "' + t.nama + '"? Dokumen yang sudah dibuat tidak ikut terhapus.')) return;
+  try {
+    await kalApi({ action:'aiDeleteTemplate', id });
+    _aiTemplates = _aiTemplates.filter(x => x.id !== id);
+    if (_aiTpl && _aiTpl.id === id) _aiTpl = null;
+    localStorage.removeItem(AI_DRAFT_KEY + id);
+    aiRenderTemplates(); aiRenderWorkspace();
+  } catch (err) { alert(err.message); }
+}
+
+/* ── Draft per template (nilai + chat) ── */
+function aiSaveDraft() {
+  if (!_aiTpl) return;
+  try { localStorage.setItem(AI_DRAFT_KEY + _aiTpl.id, JSON.stringify({ values:_aiValues, messages:_aiMessages.slice(-30) })); } catch(e) {}
+}
+function aiLoadDraft(tpl) {
+  let d = null;
+  try { d = JSON.parse(localStorage.getItem(AI_DRAFT_KEY + tpl.id) || 'null'); } catch(e) {}
+  _aiValues = {};
+  tpl.fields.forEach(f => { _aiValues[f.key] = f.default || ''; });
+  _aiMessages = [];
+  if (d) { Object.assign(_aiValues, d.values || {}); _aiMessages = d.messages || []; }
+}
+
+function aiSelect(id, fresh=false) {
+  const tpl = _aiTemplates.find(t => t.id === id);
+  if (!tpl) return;
+  _aiTpl = tpl;
+  _aiResult = null;
+  aiLoadDraft(tpl);
+  if (fresh) _aiMessages = [];
+  aiRenderTemplates();
+  aiRenderWorkspace(fresh);
+}
+
+function aiResetDraft() {
+  if (!_aiTpl || !confirm('Kosongkan semua isian dan riwayat chat untuk template ini?')) return;
+  localStorage.removeItem(AI_DRAFT_KEY + _aiTpl.id);
+  aiSelect(_aiTpl.id, true);
+}
+
+/* ── Ruang kerja ── */
+function aiRenderWorkspace(justAnalyzed=false) {
+  const ws = document.getElementById('aiWorkspace');
+  if (!ws) return;
+  if (!_aiTpl) {
+    aiSetStep(1);
+    ws.innerHTML = `<div class="panel ai-empty">
+      <div class="ai-empty-ic">✨</div>
+      <h3>Mulai dari contoh dokumen</h3>
+      <p>Unggah contoh <b>surat tugas</b> atau <b>laporan kegiatan</b> (DOCX/PDF). AI akan menandai bagian yang berubah — nomor, tanggal, nama petugas, uraian — dan menjadikannya template.</p>
+      <p>Setelah itu, ceritakan kegiatannya di kotak chat; AI mengisi kolom dan Anda tinggal mengunduh hasilnya dalam format DOCX atau PDF.</p>
+      ${_aiTemplates.length ? '<p class="ai-empty-hint">Atau pilih template yang sudah ada di sebelah kiri.</p>' : ''}
+    </div>`;
+    return;
+  }
+  const t = _aiTpl;
+  const notPlaced = t.fields.filter(f => f.ditempatkan === false);
+  aiSetStep(justAnalyzed ? 2 : 3);
+  ws.innerHTML = `
+    <div class="panel ai-tpl-head">
+      <div>
+        <div class="kal-modal-kicker">${aiEsc(t.jenis)} · ${aiEsc(t.sumber)}</div>
+        <h3>${aiEsc(t.nama)}</h3>
+        ${t.ringkasan ? `<p>${aiEsc(t.ringkasan)}</p>` : ''}
+        ${justAnalyzed ? `<div class="ai-callout">✓ AI menemukan <b>${t.fields.length} kolom</b> yang berubah. Periksa daftar kolom beserta contohnya, lalu isi lewat chat atau langsung di formulir.</div>` : ''}
+        ${notPlaced.length ? `<div class="ai-callout warn">⚠ ${notPlaced.length} kolom (${notPlaced.map(f => aiEsc(f.label)).join(', ')}) tidak ditemukan posisinya di dokumen. Tambahkan penanda <code>{{nama_kolom}}</code> secara manual lewat tombol "Edit template".</div>` : ''}
+      </div>
+      <div class="ai-head-actions">
+        <a class="kal-btn-ghost" href="${aiEsc(t.docUrl)}" target="_blank" rel="noopener">Edit template ↗</a>
+        <button type="button" class="kal-btn-ghost" onclick="aiResetDraft()">Kosongkan</button>
+      </div>
+    </div>
+
+    <div class="ai-work">
+      <div class="panel ai-chat">
+        <div class="panel-head"><div class="ph-left"><span class="ai-dot"></span><h3>Asisten AI</h3></div><span class="panel-tag">Claude Haiku</span></div>
+        <div id="aiChatLog" class="ai-chat-log"></div>
+        <div class="ai-chips">
+          <button type="button" onclick="aiQuick('Isi kolom berdasarkan rencana kegiatan terdekat di kalender.')">📅 Dari rencana kegiatan</button>
+          <button type="button" onclick="aiQuick('Kolom apa saja yang masih kosong?')">❓ Apa yang kurang?</button>
+          <button type="button" onclick="aiQuick('Rapikan dan perbaiki bahasa semua kolom uraian agar formal.')">✍️ Rapikan bahasa</button>
+        </div>
+        <form class="ai-chat-input" onsubmit="event.preventDefault();aiSend();">
+          <textarea id="aiChatText" rows="2" placeholder="Contoh: Surat tugas untuk Andi (NIP 1987...) dan Budi ke Desa Lohia, 12 Oktober 2026, penyuluhan hukum tentang dana desa" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();aiSend();}"></textarea>
+          <button type="submit" id="aiSendBtn" class="kal-btn-primary" title="Kirim">➤</button>
+        </form>
+      </div>
+
+      <div class="panel ai-form">
+        <div class="panel-head">
+          <div class="ph-left"><h3>Isi Dokumen</h3></div>
+          <span class="panel-tag" id="aiFillTag">—</span>
+        </div>
+        <div id="aiFields" class="ai-fields"></div>
+      </div>
+    </div>
+
+    <div class="panel ai-output">
+      <div class="ai-out-grid">
+        <div class="kal-field">
+          <label for="aiOutName">Nama file</label>
+          <input id="aiOutName" type="text" maxlength="120" value="${aiEsc(t.nama + ' ' + projIsoToday())}">
+        </div>
+        <div class="kal-field">
+          <label>Format</label>
+          <div class="ai-format">
+            <label><input type="radio" name="aiFmt" value="docx" checked> DOCX (Word)</label>
+            <label><input type="radio" name="aiFmt" value="pdf"> PDF</label>
+          </div>
+        </div>
+        <div class="kal-field">
+          <label for="aiOutRencana">Lampirkan ke rencana kegiatan (opsional)</label>
+          <select id="aiOutRencana">
+            <option value="">— Tidak dilampirkan —</option>
+            ${[..._kalData].sort((a,b) => (kalIsPending(b) - kalIsPending(a)) || a.tanggal.localeCompare(b.tanggal)).map(k =>
+              `<option value="${aiEsc(k.id)}">${kalIsPending(k) ? '⏰ ' : ''}${aiEsc(kalFmtDate(k.tanggal, false))} — ${aiEsc(k.judul)}</option>`).join('')}
+          </select>
+        </div>
+        <button type="button" id="aiGenBtn" class="kal-btn-primary ai-gen-btn" onclick="aiGenerate()">📄 Buat Dokumen</button>
+      </div>
+      <div id="aiGenStatus" class="kal-form-status" aria-live="polite"></div>
+      <div id="aiResult"></div>
+    </div>`;
+  aiRenderFields();
+  aiRenderChat();
+}
+
+function aiRenderFields(changed=[]) {
+  const box = document.getElementById('aiFields');
+  if (!box || !_aiTpl) return;
+  box.innerHTML = _aiTpl.fields.map(f => {
+    const v = _aiValues[f.key] || '';
+    const big = f.tipe === 'paragraph' || f.tipe === 'list';
+    const input = big
+      ? `<textarea id="aif_${f.key}" rows="${f.tipe === 'paragraph' ? 4 : 3}" oninput="aiFieldInput('${f.key}', this.value)">${aiEsc(v)}</textarea>`
+      : `<input id="aif_${f.key}" type="text" value="${aiEsc(v)}" oninput="aiFieldInput('${f.key}', this.value)" placeholder="${f.tipe === 'date' ? 'mis. 12 Oktober 2026' : ''}">`;
+    return `<div class="ai-field ${changed.includes(f.key) ? 'flash' : ''} ${!v && f.wajib ? 'empty' : ''}" data-key="${f.key}">
+      <label for="aif_${f.key}">${aiEsc(f.label)}${f.wajib ? ' <i>*</i>' : ''}${f.ditempatkan === false ? ' <em title="Posisi belum ditemukan di template">tidak di template</em>' : ''}</label>
+      ${input}
+      ${f.contoh || f.petunjuk ? `<small>${f.petunjuk ? aiEsc(f.petunjuk) : ''}${f.contoh ? `${f.petunjuk ? ' · ' : ''}Di contoh: <span>${aiEsc(f.contoh.length > 140 ? f.contoh.slice(0,140) + '…' : f.contoh)}</span>` : ''}</small>` : ''}
+    </div>`;
+  }).join('');
+  aiUpdateFillTag();
+}
+
+function aiFieldInput(key, value) {
+  _aiValues[key] = value;
+  const el = document.querySelector(`.ai-field[data-key="${key}"]`);
+  const f = _aiTpl.fields.find(x => x.key === key);
+  if (el && f) el.classList.toggle('empty', !value && f.wajib);
+  aiUpdateFillTag();
+  aiSaveDraft();
+}
+
+function aiMissing() {
+  return _aiTpl ? _aiTpl.fields.filter(f => f.wajib && !String(_aiValues[f.key] || '').trim()) : [];
+}
+
+function aiUpdateFillTag() {
+  const tag = document.getElementById('aiFillTag');
+  if (!tag || !_aiTpl) return;
+  const wajib = _aiTpl.fields.filter(f => f.wajib).length;
+  const miss = aiMissing().length;
+  tag.textContent = (wajib - miss) + ' / ' + wajib + ' kolom wajib terisi';
+  tag.classList.toggle('ok', miss === 0);
+}
+
+function aiRenderChat(typing=false) {
+  const log = document.getElementById('aiChatLog');
+  if (!log) return;
+  const intro = { role:'assistant', content:`Halo! Saya akan membantu mengisi **${_aiTpl.nama}**. Ceritakan detail kegiatannya — siapa yang ditugaskan, kapan, di mana, dan apa hasilnya. Saya akan mengisi kolom di sebelah kanan dan menanyakan yang masih kurang.` };
+  const msgs = [intro, ..._aiMessages];
+  log.innerHTML = msgs.map(m => `<div class="ai-msg ${m.role}">${aiFormatMsg(m.content)}</div>`).join('')
+    + (typing ? '<div class="ai-msg assistant typing"><i></i><i></i><i></i></div>' : '');
+  log.scrollTop = log.scrollHeight;
+}
+
+function aiFormatMsg(t) {
+  return aiEsc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+}
+
+function aiQuick(text) {
+  const ta = document.getElementById('aiChatText');
+  if (ta) { ta.value = text; aiSend(); }
+}
+
+async function aiSend() {
+  const ta = document.getElementById('aiChatText');
+  const text = (ta?.value || '').trim();
+  if (!text || _aiBusy || !_aiTpl) return;
+  _aiBusy = true;
+  ta.value = '';
+  _aiMessages.push({ role:'user', content:text });
+  aiRenderChat(true);
+  aiSetStep(3);
+  const btn = document.getElementById('aiSendBtn'); if (btn) btn.disabled = true;
+  try {
+    const data = await kalApi({ action:'aiChat', templateId:_aiTpl.id, messages:_aiMessages, values:_aiValues });
+    const changed = Object.keys(data.nilai || {});
+    changed.forEach(k => { _aiValues[k] = data.nilai[k]; });
+    let reply = data.balasan || 'Kolom sudah diperbarui.';
+    if (changed.length) reply += `\n\n✓ Diisi/diubah: ${changed.map(k => (_aiTpl.fields.find(f => f.key === k) || {}).label || k).join(', ')}`;
+    _aiMessages.push({ role:'assistant', content:reply });
+    aiRenderFields(changed);
+  } catch (err) {
+    _aiMessages.push({ role:'assistant', content:'⚠ ' + err.message });
+  } finally {
+    _aiBusy = false;
+    if (btn) btn.disabled = false;
+    aiRenderChat();
+    aiSaveDraft();
+    ta?.focus();
+  }
+}
+
+async function aiGenerate() {
+  if (!_aiTpl || _aiBusy) return;
+  const miss = aiMissing();
+  if (miss.length && !confirm(`${miss.length} kolom wajib masih kosong (${miss.map(f => f.label).slice(0,4).join(', ')}${miss.length > 4 ? ', …' : ''}).\nTetap buat dokumen? Bagian kosong akan dibiarkan kosong.`)) return;
+  const btn = document.getElementById('aiGenBtn');
+  const st = document.getElementById('aiGenStatus');
+  const format = document.querySelector('input[name="aiFmt"]:checked')?.value || 'docx';
+  const rencanaId = document.getElementById('aiOutRencana').value;
+  _aiBusy = true; btn.disabled = true; btn.innerHTML = '<span class="proj-btn-spinner"></span> Membuat dokumen...';
+  st.className = 'kal-form-status'; st.textContent = 'Mengisi template dan menyiapkan file ' + format.toUpperCase() + '...';
+  try {
+    const r = await kalApi({ action:'aiGenerate', templateId:_aiTpl.id, values:_aiValues, format,
+                             fileName: document.getElementById('aiOutName').value.trim(), rencanaId });
+    _aiResult = r;
+    st.className = 'kal-form-status success'; st.textContent = '✓ Dokumen berhasil dibuat.';
+    document.getElementById('aiResult').innerHTML = `
+      <div class="ai-result">
+        <div class="ai-result-ic ${r.format === 'pdf' ? 'pdf' : ''}">${r.format.toUpperCase()}</div>
+        <div class="ai-result-main"><b>${aiEsc(r.fileName)}</b>
+          <small>Tersimpan di Google Drive${r.rencana ? ' · dilampirkan ke rencana "' + aiEsc(r.rencana.judul) + '"' : ''}</small></div>
+        <a class="kal-btn-primary" href="${aiEsc(r.downloadUrl)}" target="_blank" rel="noopener">⬇ Unduh</a>
+        <a class="kal-btn-ghost" href="${aiEsc(r.fileUrl)}" target="_blank" rel="noopener">Lihat</a>
+        <a class="kal-btn-ghost" href="${aiEsc(r.docUrl)}" target="_blank" rel="noopener">Edit di Docs</a>
+      </div>`;
+    aiSetStep(4);
+    _aiDocs.unshift({ id:r.id, fileName:r.fileName, format:r.format.toUpperCase(), fileUrl:r.fileUrl, docUrl:r.docUrl, createdBy:kalUser(), createdAt:new Date().toISOString() });
+    aiRenderDocs(); aiRenderTemplates();
+    if (r.rencana) { kalReplaceLocal(r.rencana); kalRender(); kalReminderRefreshUi(); kalAddLog('📎 Dokumen AI dilampirkan: ' + kalEsc(r.rencana.judul), '#2E9A6B'); }
+  } catch (err) {
+    st.className = 'kal-form-status error'; st.textContent = err.message;
+  } finally {
+    _aiBusy = false; btn.disabled = false; btn.innerHTML = '📄 Buat Dokumen';
+  }
+}
+
+(function(){
+  const _prev = navigate;
+  navigate = function(pg){
+    _prev(pg);
+    if (pg === 'dokumen') aiLoad(false);
+  };
+})();
+
 
 /* =====================================================
    APLIKASI INTELIJEN
