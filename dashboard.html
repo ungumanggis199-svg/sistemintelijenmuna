@@ -221,6 +221,10 @@
               <div class="hb-stat-val" id="statTotalTerlaksana">—</div>
               <div class="hb-stat-label">Total Terlaksana</div>
             </div>
+            <div class="hb-stat">
+              <div class="hb-stat-val" id="statSerapan">—</div>
+              <div class="hb-stat-label">Serapan Anggaran</div>
+            </div>
           </div>
         </div>
 
@@ -364,87 +368,11 @@
         </div>
         <!-- /Panel Grid -->
 
-        <!-- ==== ANGGARAN DIPA KEJATI 2026 ==== -->
-        <section class="dipa-section" id="dipaSection" aria-labelledby="dipaTitle">
-          <div class="dipa-head">
-            <div class="dipa-head-text">
-              <div class="dipa-eyebrow">Informasi Anggaran · Sheet "DIPA KEJATI 2026"</div>
-              <h2 id="dipaTitle">Anggaran DIPA KEJATI 2026</h2>
-              <p>Realisasi kegiatan dan pencairan anggaran per kegiatan</p>
-            </div>
-            <div class="dipa-actions">
-              <span class="panel-tag" id="dipaUpdated">—</span>
-              <button type="button" class="dipa-btn" onclick="loadDipaData()">↻ Refresh</button>
-              <a href="https://docs.google.com/spreadsheets/d/1MCpf11JdwMze8iGfX1FkLnB7vatgwzmVuwtX2mjEWiY/edit" target="_blank" rel="noopener" class="see-all-link">Buka Sheet ↗</a>
-            </div>
-          </div>
+        <!-- ==== ANGGARAN CAPAIAN KINERJA (sheet CAPAIAN KINERJA) ==== -->
+        <section class="dipa-section" id="capAnggaranSection" aria-label="Anggaran Capaian Kinerja"></section>
 
-          <div id="dipaLoading" class="dipa-loading">
-            <div class="dipa-spinner"></div>
-            <span>Memuat data anggaran DIPA KEJATI 2026...</span>
-          </div>
-
-          <div id="dipaContent" style="display:none;">
-            <div class="dipa-kpis">
-              <div class="dipa-kpi">
-                <span class="dipa-kpi-label">Pagu Anggaran</span>
-                <strong class="dipa-kpi-val" id="dipaPagu">—</strong>
-                <small id="dipaPaguSub">—</small>
-              </div>
-              <div class="dipa-kpi">
-                <span class="dipa-kpi-label">Realisasi Anggaran</span>
-                <strong class="dipa-kpi-val" id="dipaReal">—</strong>
-                <small id="dipaRealSub">—</small>
-              </div>
-              <div class="dipa-kpi">
-                <span class="dipa-kpi-label">Sisa Anggaran</span>
-                <strong class="dipa-kpi-val" id="dipaSisa">—</strong>
-                <small id="dipaSisaSub">—</small>
-              </div>
-              <div class="dipa-kpi dipa-kpi-accent">
-                <span class="dipa-kpi-label">Persentase Pencairan</span>
-                <strong class="dipa-kpi-val" id="dipaPersen">—</strong>
-                <div class="dipa-meter" aria-hidden="true"><div id="dipaMeterFill"></div></div>
-                <small id="dipaPersenSub">—</small>
-              </div>
-            </div>
-
-            <div class="dipa-charts">
-              <div class="panel">
-                <div class="panel-head">
-                  <div class="ph-left">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                    <h3>Realisasi vs Sisa Anggaran per Kegiatan</h3>
-                  </div>
-                  <span class="panel-tag">Rupiah</span>
-                </div>
-                <div class="chart-wrap" id="dipaBudgetWrap" style="height:300px;"><canvas id="dipaBudgetChart" aria-label="Grafik realisasi dan sisa anggaran per kegiatan"></canvas></div>
-              </div>
-              <div class="panel">
-                <div class="panel-head">
-                  <div class="ph-left">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-                    <h3>Target vs Realisasi Kegiatan</h3>
-                  </div>
-                  <span class="panel-tag" id="dipaKegTag">—</span>
-                </div>
-                <div class="chart-wrap" id="dipaKegWrap" style="height:300px;"><canvas id="dipaKegChart" aria-label="Grafik target dan realisasi kegiatan"></canvas></div>
-              </div>
-            </div>
-
-            <div class="panel">
-              <div class="panel-head">
-                <div class="ph-left">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                  <h3>Rincian Anggaran per Kegiatan</h3>
-                </div>
-                <span class="panel-tag" id="dipaRowsTag">—</span>
-              </div>
-              <div id="dipaTable" class="dipa-table-wrap"></div>
-            </div>
-          </div>
-        </section>
-        <!-- /ANGGARAN DIPA KEJATI 2026 -->
+        <!-- ==== ANGGARAN DIPA KEJATI 2026 (sheet DIPA KEJATI 2026) ==== -->
+        <section class="dipa-section" id="dipaSection" aria-label="Anggaran DIPA KEJATI 2026"></section>
 
         <!-- Quick Access -->
         <div class="qa-section">
@@ -1910,6 +1838,14 @@ function renderDashboard(data) {
       </table>`;
   }
 
+  // --- Anggaran dari sheet CAPAIAN KINERJA ---
+  const paguCap = data.reduce((s, r) => s + (r.anggaran || 0), 0);
+  const realCap = data.reduce((s, r) => s + (r.realisasiAnggaran || 0), 0);
+  const serapEl = document.getElementById('statSerapan');
+  if (serapEl) serapEl.textContent = paguCap > 0 ? Math.round(realCap / paguCap * 100) + '%' : '—';
+  if (paguCap > 0) renderAnggaran('cap', data);
+  else angShowError('cap', '<b>Kolom anggaran tidak ditemukan pada sheet CAPAIAN KINERJA.</b><span>Pastikan ada kolom Anggaran, Realisasi anggaran, Sisa Anggaran, dan % Pencairan.</span>');
+
   // Tampilkan konten, sembunyikan loading
   document.getElementById('capaianLoading').style.display = 'none';
   document.getElementById('capaianContent').style.display = 'block';
@@ -1964,15 +1900,21 @@ async function loadCapaianData() {
 
 
 /* =====================================================
-   ANGGARAN DIPA KEJATI 2026 (sheet "DIPA KEJATI 2026")
+   KOMPONEN ANGGARAN & PROGRES KEGIATAN
+   Dipakai untuk sheet "CAPAIAN KINERJA" (prefix cap) dan
+   sheet "DIPA KEJATI 2026" (prefix dipa)
    ===================================================== */
-let dipaBudgetChartInst = null;
-let dipaKegChartInst   = null;
+const ANG_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1MCpf11JdwMze8iGfX1FkLnB7vatgwzmVuwtX2mjEWiY/edit';
+const ANG_CFG = {
+  cap:  { eyebrow:'Informasi Anggaran · Sheet "CAPAIAN KINERJA"', title:'Anggaran Capaian Kinerja',
+          sub:'Target, realisasi kegiatan, dan serapan anggaran per kegiatan', refresh:'loadCapaianData()' },
+  dipa: { eyebrow:'Informasi Anggaran · Sheet "DIPA KEJATI 2026"', title:'Anggaran DIPA KEJATI 2026',
+          sub:'Target, realisasi kegiatan, dan pencairan anggaran per kegiatan', refresh:'loadDipaData()' }
+};
+const _angState = { cap:{ data:[], sort:'sheet', filter:'all' }, dipa:{ data:[], sort:'sheet', filter:'all' } };
 let _dipaLoading = false;
 
-function dipaRp(n) {
-  return 'Rp ' + Math.round(n || 0).toLocaleString('id-ID');
-}
+function dipaRp(n) { return 'Rp ' + Math.round(n || 0).toLocaleString('id-ID'); }
 function dipaRpShort(n) {
   const v = Math.abs(n || 0);
   if (v >= 1e9) return 'Rp ' + (n / 1e9).toLocaleString('id-ID', {maximumFractionDigits:1}) + ' M';
@@ -1980,17 +1922,168 @@ function dipaRpShort(n) {
   if (v >= 1e3) return 'Rp ' + (n / 1e3).toLocaleString('id-ID', {maximumFractionDigits:0}) + ' rb';
   return 'Rp ' + Math.round(n || 0);
 }
-function dipaPct(n) {
-  return (Number(n) || 0).toLocaleString('id-ID', {minimumFractionDigits:1, maximumFractionDigits:1}) + '%';
-}
-function dipaEsc(s) {
-  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
-}
-function dipaStatusColor(p) {
-  return p >= 100 ? '#2E9A6B' : (p >= 50 ? '#B8902E' : '#D94A4A');
+function dipaPct(n) { return (Number(n) || 0).toLocaleString('id-ID', {minimumFractionDigits:1, maximumFractionDigits:1}) + '%'; }
+function dipaEsc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+function dipaStatusColor(p) { return p >= 100 ? '#2E9A6B' : (p >= 50 ? '#B8902E' : '#D94A4A'); }
+
+function angStatus(r) {
+  if (r.target > 0 && r.terlaksana >= r.target) return { key:'done', label:'Tercapai' };
+  if (r.terlaksana > 0) return { key:'run', label:'Berjalan' };
+  return { key:'none', label:'Belum terlaksana' };
 }
 
-function renderDipa(data) {
+/* Kerangka HTML satu blok anggaran */
+function angShell(p) {
+  const c = ANG_CFG[p];
+  const el = document.getElementById(p === 'cap' ? 'capAnggaranSection' : 'dipaSection');
+  if (!el || el.dataset.ready) return;
+  el.dataset.ready = '1';
+  el.innerHTML = `
+    <div class="dipa-head">
+      <div class="dipa-head-text">
+        <div class="dipa-eyebrow">${c.eyebrow}</div>
+        <h2>${c.title}</h2>
+        <p>${c.sub}</p>
+      </div>
+      <div class="dipa-actions">
+        <span class="panel-tag" id="${p}Updated">—</span>
+        <button type="button" class="dipa-btn" onclick="${c.refresh}">↻ Refresh</button>
+        <a href="${ANG_SHEET_URL}" target="_blank" rel="noopener" class="see-all-link">Buka Sheet ↗</a>
+      </div>
+    </div>
+    <div id="${p}Loading" class="dipa-loading"><div class="dipa-spinner"></div><span>Memuat data anggaran...</span></div>
+    <div id="${p}Content" style="display:none;">
+      <div class="dipa-kpis">
+        <div class="dipa-kpi dipa-kpi-keg">
+          <span class="dipa-kpi-label">Realisasi Kegiatan</span>
+          <strong class="dipa-kpi-val" id="${p}Keg">—</strong>
+          <div class="dipa-meter" aria-hidden="true"><div id="${p}KegMeter"></div></div>
+          <small id="${p}KegSub">—</small>
+        </div>
+        <div class="dipa-kpi">
+          <span class="dipa-kpi-label">Pagu Anggaran</span>
+          <strong class="dipa-kpi-val" id="${p}Pagu">—</strong>
+          <small id="${p}PaguSub">—</small>
+        </div>
+        <div class="dipa-kpi">
+          <span class="dipa-kpi-label">Realisasi Anggaran</span>
+          <strong class="dipa-kpi-val" id="${p}Real">—</strong>
+          <small id="${p}RealSub">—</small>
+        </div>
+        <div class="dipa-kpi">
+          <span class="dipa-kpi-label">Sisa Anggaran</span>
+          <strong class="dipa-kpi-val" id="${p}Sisa">—</strong>
+          <small id="${p}SisaSub">—</small>
+        </div>
+        <div class="dipa-kpi dipa-kpi-accent">
+          <span class="dipa-kpi-label">Persentase Pencairan</span>
+          <strong class="dipa-kpi-val" id="${p}Persen">—</strong>
+          <div class="dipa-meter" aria-hidden="true"><div id="${p}Meter"></div></div>
+          <small id="${p}PersenSub">—</small>
+        </div>
+      </div>
+
+      <div class="panel ang-panel">
+        <div class="panel-head ang-panel-head">
+          <div class="ph-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <h3>Progres Target &amp; Realisasi per Kegiatan</h3>
+          </div>
+          <div class="ang-controls">
+            <div class="ang-filters" id="${p}Filters" role="tablist"></div>
+            <select class="ang-sort" onchange="angSetSort('${p}', this.value)" aria-label="Urutkan">
+              <option value="sheet">Urutan sheet</option>
+              <option value="low">Capaian terendah</option>
+              <option value="gap">Sisa kegiatan terbanyak</option>
+              <option value="budget">Anggaran terbesar</option>
+            </select>
+          </div>
+        </div>
+        <div class="ang-legend">
+          <span><i class="seg done"></i>Kegiatan terlaksana</span>
+          <span><i class="seg"></i>Target belum terlaksana</span>
+          <span><i class="seg over"></i>Melebihi target</span>
+          <span><i class="bar"></i>Realisasi anggaran</span>
+        </div>
+        <div class="ang-head-row" aria-hidden="true">
+          <span>Kegiatan</span><span>Target vs Realisasi Kegiatan</span><span>Realisasi vs Pagu Anggaran</span><span>Pencairan</span>
+        </div>
+        <div id="${p}Rows" class="ang-rows"></div>
+      </div>
+
+      <details class="panel ang-details">
+        <summary>
+          <span><b>Tabel rincian anggaran</b> · <span id="${p}RowsTag">—</span></span>
+          <span class="ang-sum-hint">Klik untuk buka/tutup</span>
+        </summary>
+        <div id="${p}Table" class="dipa-table-wrap"></div>
+      </details>
+    </div>`;
+}
+
+function angSegments(r) {
+  const t = Math.max(0, Math.round(r.target)), d = Math.max(0, Math.round(r.terlaksana));
+  if (t > 0 && Math.max(t, d) <= 16) {
+    let html = '';
+    for (let i = 0; i < Math.max(t, d); i++) {
+      const cls = i < Math.min(d, t) ? 'done' : (i >= t ? 'over' : '');
+      html += `<i class="seg ${cls}"></i>`;
+    }
+    return `<div class="ang-segs" style="--n:${Math.max(t, d)}">${html}</div>`;
+  }
+  const pct = t > 0 ? Math.min(d / t * 100, 100) : 0;
+  return `<div class="ang-track"><div class="ang-fill keg" style="width:${pct}%"></div></div>`;
+}
+
+function angRowsHtml(p) {
+  const st = _angState[p];
+  let rows = st.data.map((r, i) => ({ ...r, _i:i, _pct: r.target > 0 ? r.terlaksana / r.target * 100 : 0, _st: angStatus(r) }));
+  if (st.filter !== 'all') rows = rows.filter(r => r._st.key === st.filter);
+  if (st.sort === 'low') rows.sort((a, b) => a._pct - b._pct || b.anggaran - a.anggaran);
+  if (st.sort === 'gap') rows.sort((a, b) => (b.target - b.terlaksana) - (a.target - a.terlaksana));
+  if (st.sort === 'budget') rows.sort((a, b) => b.anggaran - a.anggaran);
+  if (!rows.length) return '<div class="ang-empty">Tidak ada kegiatan pada kategori ini.</div>';
+  return rows.map(r => {
+    const sisaKeg = Math.max(r.target - r.terlaksana, 0);
+    const over = Math.max(r.terlaksana - r.target, 0);
+    const angPct = Math.min(r.persenPencairan, 100);
+    const color = dipaStatusColor(r.persenPencairan);
+    const tip = `${r.kegiatan}: ${r.terlaksana} dari ${r.target} kegiatan; anggaran ${dipaRp(r.realisasiAnggaran)} dari ${dipaRp(r.anggaran)} (${dipaPct(r.persenPencairan)})`;
+    return `<div class="ang-row" title="${dipaEsc(tip)}">
+      <div class="ang-name">
+        <b>${dipaEsc(r.kegiatan)}</b>
+        <span class="ang-pill ${r._st.key}">${r._st.label}</span>
+      </div>
+      <div class="ang-cell">
+        ${angSegments(r)}
+        <div class="ang-cap"><b>${r.terlaksana}</b> / ${r.target} kegiatan
+          <span>${over ? '· melebihi ' + over : (sisaKeg ? '· sisa ' + sisaKeg : '· lengkap')}</span></div>
+      </div>
+      <div class="ang-cell">
+        <div class="ang-track"><div class="ang-fill" style="width:${angPct}%;background:#0B3D2E"></div></div>
+        <div class="ang-cap"><b>${dipaRpShort(r.realisasiAnggaran)}</b> / ${dipaRpShort(r.anggaran)}
+          <span>${r.sisaAnggaran > 0 ? '· sisa ' + dipaRpShort(r.sisaAnggaran) : '· terserap'}</span></div>
+      </div>
+      <div class="ang-pct" style="--c:${color}">${dipaPct(r.persenPencairan)}</div>
+    </div>`;
+  }).join('');
+}
+
+function angRenderFilters(p) {
+  const st = _angState[p];
+  const count = k => k === 'all' ? st.data.length : st.data.filter(r => angStatus(r).key === k).length;
+  const items = [['all','Semua'],['done','Tercapai'],['run','Berjalan'],['none','Belum']];
+  const el = document.getElementById(p + 'Filters');
+  if (el) el.innerHTML = items.map(([k, l]) =>
+    `<button type="button" class="ang-filter ${k} ${st.filter === k ? 'active' : ''}" onclick="angSetFilter('${p}','${k}')">${l} <b>${count(k)}</b></button>`).join('');
+}
+
+function angSetFilter(p, f) { _angState[p].filter = f; angRenderFilters(p); document.getElementById(p + 'Rows').innerHTML = angRowsHtml(p); }
+function angSetSort(p, s) { _angState[p].sort = s; document.getElementById(p + 'Rows').innerHTML = angRowsHtml(p); }
+
+function renderAnggaran(p, data) {
+  angShell(p);
+  _angState[p].data = data;
   const pagu   = data.reduce((s, r) => s + r.anggaran, 0);
   const real   = data.reduce((s, r) => s + r.realisasiAnggaran, 0);
   const sisa   = data.reduce((s, r) => s + r.sisaAnggaran, 0);
@@ -1998,111 +2091,47 @@ function renderDipa(data) {
   const keg    = data.reduce((s, r) => s + r.terlaksana, 0);
   const persen = pagu > 0 ? real / pagu * 100 : 0;
   const persenKeg = target > 0 ? keg / target * 100 : 0;
+  const nDone  = data.filter(r => angStatus(r).key === 'done').length;
+  const nNone  = data.filter(r => angStatus(r).key === 'none').length;
   const lunas  = data.filter(r => r.anggaran > 0 && r.sisaAnggaran <= 0).length;
-  const belum  = data.filter(r => r.realisasiAnggaran <= 0).length;
 
-  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-  set('dipaPagu', dipaRp(pagu));
-  set('dipaPaguSub', data.length + ' kegiatan dalam DIPA');
-  set('dipaReal', dipaRp(real));
-  set('dipaRealSub', 'Kegiatan terlaksana ' + keg + ' dari ' + target);
-  set('dipaSisa', dipaRp(sisa));
-  set('dipaSisaSub', belum ? belum + ' kegiatan belum ada pencairan' : 'Semua kegiatan sudah ada pencairan');
-  set('dipaPersen', dipaPct(persen));
-  set('dipaPersenSub', lunas + ' kegiatan terserap 100%');
-  set('dipaKegTag', keg + ' / ' + target + ' · ' + dipaPct(persenKeg));
-  set('dipaRowsTag', data.length + ' kegiatan');
-  set('dipaUpdated', 'Update: ' + new Date().toLocaleString('id-ID', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}));
-  const meter = document.getElementById('dipaMeterFill');
+  const set = (id, v) => { const el = document.getElementById(p + id); if (el) el.textContent = v; };
+  set('Keg', keg + ' / ' + target);
+  set('KegSub', dipaPct(persenKeg) + ' · ' + nDone + ' dari ' + data.length + ' kegiatan tercapai');
+  set('Pagu', dipaRp(pagu));
+  set('PaguSub', data.length + ' kegiatan');
+  set('Real', dipaRp(real));
+  set('RealSub', lunas + ' kegiatan terserap 100%');
+  set('Sisa', dipaRp(sisa));
+  set('SisaSub', nNone ? nNone + ' kegiatan belum terlaksana' : 'Semua kegiatan sudah berjalan');
+  set('Persen', dipaPct(persen));
+  set('PersenSub', persen >= 100 ? '✓ Anggaran terserap penuh' : 'Sisa ' + dipaPct(100 - persen));
+  set('RowsTag', data.length + ' kegiatan');
+  set('Updated', 'Update: ' + new Date().toLocaleString('id-ID', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}));
+  const meter = document.getElementById(p + 'Meter');
   if (meter) { meter.style.width = Math.min(persen, 100) + '%'; meter.style.background = dipaStatusColor(persen); }
+  const km = document.getElementById(p + 'KegMeter');
+  if (km) { km.style.width = Math.min(persenKeg, 100) + '%'; km.style.background = '#2E9A6B'; }
 
-  const labels = data.map(r => r.kegiatan);
-  const h = Math.max(240, data.length * 38 + 70);
-  ['dipaBudgetWrap','dipaKegWrap'].forEach(id => { const w = document.getElementById(id); if (w) w.style.height = h + 'px'; });
+  angRenderFilters(p);
+  document.getElementById(p + 'Rows').innerHTML = angRowsHtml(p);
 
-  const tooltipBase = { backgroundColor:'rgba(11,61,46,0.92)', padding:10, cornerRadius:8 };
-  const legendBase  = { display:true, position:'top', align:'start', labels:{ font:{size:11}, color:'#3D4D47', boxWidth:12, padding:14 } };
-  const yTicks = { font:{size:11}, color:'#3D4D47', callback: function(v){ const l = this.getLabelForValue(v); return l.length > 24 ? l.slice(0,23) + '…' : l; } };
-
-  // Grafik 1: stacked horizontal — realisasi + sisa = pagu
-  const c1 = document.getElementById('dipaBudgetChart');
-  if (c1) {
-    if (dipaBudgetChartInst) dipaBudgetChartInst.destroy();
-    dipaBudgetChartInst = new Chart(c1, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [
-          { label:'Realisasi Anggaran', data:data.map(r => r.realisasiAnggaran), backgroundColor:'#0B3D2E', borderColor:'#fff', borderWidth:{right:2}, borderSkipped:false, borderRadius:4, barThickness:18 },
-          { label:'Sisa Anggaran',      data:data.map(r => r.sisaAnggaran),      backgroundColor:'#C9D9CF', borderColor:'#fff', borderWidth:{left:2},  borderSkipped:false, borderRadius:4, barThickness:18 }
-        ]
-      },
-      options: {
-        indexAxis:'y', responsive:true, maintainAspectRatio:false,
-        interaction:{ mode:'index', intersect:false },
-        plugins: {
-          legend: legendBase,
-          tooltip: { ...tooltipBase, callbacks: {
-            label: ctx => ' ' + ctx.dataset.label + ': ' + dipaRp(ctx.parsed.x),
-            footer: items => {
-              const r = data[items[0].dataIndex];
-              return 'Pagu: ' + dipaRp(r.anggaran) + '  ·  Pencairan: ' + dipaPct(r.persenPencairan);
-            }
-          } }
-        },
-        scales: {
-          x: { stacked:true, beginAtZero:true, ticks:{ font:{size:10}, color:'#5B6660', callback:v => dipaRpShort(v) }, grid:{ color:'rgba(0,0,0,0.05)' }, border:{display:false} },
-          y: { stacked:true, ticks:yTicks, grid:{display:false}, border:{display:false} }
-        }
-      }
-    });
-  }
-
-  // Grafik 2: target vs realisasi kegiatan
-  const c2 = document.getElementById('dipaKegChart');
-  if (c2) {
-    if (dipaKegChartInst) dipaKegChartInst.destroy();
-    dipaKegChartInst = new Chart(c2, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [
-          { label:'Target Kegiatan',    data:data.map(r => r.target),     backgroundColor:'#E4C77A', borderRadius:4, barThickness:12 },
-          { label:'Realisasi Kegiatan', data:data.map(r => r.terlaksana), backgroundColor:'#2E9A6B', borderRadius:4, barThickness:12 }
-        ]
-      },
-      options: {
-        indexAxis:'y', responsive:true, maintainAspectRatio:false,
-        interaction:{ mode:'index', intersect:false },
-        plugins: {
-          legend: legendBase,
-          tooltip: { ...tooltipBase, callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + ctx.parsed.x + ' kegiatan' } }
-        },
-        scales: {
-          x: { beginAtZero:true, ticks:{ font:{size:10}, color:'#5B6660', stepSize:1, precision:0 }, grid:{ color:'rgba(0,0,0,0.05)' }, border:{display:false} },
-          y: { ticks:yTicks, grid:{display:false}, border:{display:false} }
-        }
-      }
-    });
-  }
-
-  // Tabel rincian
-  const tbl = document.getElementById('dipaTable');
+  const tbl = document.getElementById(p + 'Table');
   if (tbl) {
     tbl.innerHTML = `
       <table class="dipa-table">
         <thead><tr>
-          <th>No</th><th class="l">Kegiatan</th><th>Target</th><th>Realisasi</th>
+          <th>No</th><th class="l">Kegiatan</th><th>Target</th><th>Realisasi</th><th>Capaian</th>
           <th class="r">Anggaran</th><th class="r">Realisasi Anggaran</th><th class="r">Sisa Anggaran</th><th>Pencairan</th>
         </tr></thead>
         <tbody>
           ${data.map((r, i) => {
             const c = dipaStatusColor(r.persenPencairan);
+            const kp = r.target > 0 ? r.terlaksana / r.target * 100 : 0;
             return `<tr>
               <td>${dipaEsc(r.no || (i + 1))}</td>
               <td class="l"><b>${dipaEsc(r.kegiatan)}</b></td>
-              <td>${r.target}</td>
-              <td>${r.terlaksana}</td>
+              <td>${r.target}</td><td>${r.terlaksana}</td><td>${dipaPct(kp)}</td>
               <td class="r">${dipaRp(r.anggaran)}</td>
               <td class="r">${dipaRp(r.realisasiAnggaran)}</td>
               <td class="r">${dipaRp(r.sisaAnggaran)}</td>
@@ -2114,37 +2143,40 @@ function renderDipa(data) {
           }).join('')}
         </tbody>
         <tfoot><tr>
-          <td></td><td class="l">TOTAL</td><td>${target}</td><td>${keg}</td>
+          <td></td><td class="l">TOTAL</td><td>${target}</td><td>${keg}</td><td>${dipaPct(persenKeg)}</td>
           <td class="r">${dipaRp(pagu)}</td><td class="r">${dipaRp(real)}</td><td class="r">${dipaRp(sisa)}</td>
           <td><span class="dipa-total-pct">${dipaPct(persen)}</span></td>
         </tr></tfoot>
       </table>`;
   }
 
-  document.getElementById('dipaLoading').style.display = 'none';
-  document.getElementById('dipaContent').style.display = 'block';
+  document.getElementById(p + 'Loading').style.display = 'none';
+  document.getElementById(p + 'Content').style.display = 'block';
+}
+
+function angShowError(p, msg) {
+  angShell(p);
+  const loading = document.getElementById(p + 'Loading');
+  const content = document.getElementById(p + 'Content');
+  if (content) content.style.display = 'none';
+  if (loading) {
+    loading.style.display = 'flex';
+    loading.innerHTML = `<div class="dipa-error">${msg}<button type="button" class="dipa-btn" onclick="${ANG_CFG[p].refresh}">↻ Coba Lagi</button></div>`;
+  }
 }
 
 async function loadDipaData() {
   if (_dipaLoading) return;
   _dipaLoading = true;
+  angShell('dipa');
   const loading = document.getElementById('dipaLoading');
-  const content = document.getElementById('dipaContent');
-  if (loading) {
-    loading.style.display = 'flex';
-    loading.innerHTML = '<div class="dipa-spinner"></div><span>Memuat data anggaran DIPA KEJATI 2026...</span>';
-  }
-  if (content) content.style.display = 'none';
+  if (loading) { loading.style.display = 'flex'; loading.innerHTML = '<div class="dipa-spinner"></div><span>Memuat data anggaran DIPA KEJATI 2026...</span>'; }
   try {
-    const data = await fetchSheetData(DIPA_SHEET_NAME);
-    renderDipa(data);
+    renderAnggaran('dipa', await fetchSheetData(DIPA_SHEET_NAME));
   } catch (err) {
     console.error('Gagal memuat DIPA KEJATI 2026:', err);
-    if (loading) loading.innerHTML = `<div class="dipa-error">
-      <b>Data anggaran DIPA KEJATI 2026 belum dapat dimuat.</b>
-      <span>${dipaEsc(err.message)}. Pastikan sheet <b>DIPA KEJATI 2026</b> ada pada spreadsheet capaian dan dibagikan ke publik (Viewer).</span>
-      <button type="button" class="dipa-btn" onclick="loadDipaData()">↻ Coba Lagi</button>
-    </div>`;
+    angShowError('dipa', `<b>Data anggaran DIPA KEJATI 2026 belum dapat dimuat.</b>
+      <span>${dipaEsc(err.message)}. Pastikan sheet <b>DIPA KEJATI 2026</b> ada pada spreadsheet capaian dan dibagikan ke publik (Viewer).</span>`);
   } finally {
     _dipaLoading = false;
   }
