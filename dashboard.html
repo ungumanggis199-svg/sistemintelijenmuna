@@ -650,104 +650,115 @@
           </div>
         </div>
 
-        <!-- Filter Bar -->
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center;">
-          <select id="prkFilterKabupaten" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+        <!-- Toolbar filter -->
+        <div class="prk-toolbar">
+          <div class="prk-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input id="prkSearch" type="text" placeholder="Cari tersangka, kecamatan, lokasi, atau no. SPDP...">
+          </div>
+          <select id="prkFilterKabupaten" class="prk-select" aria-label="Kabupaten">
             <option value="">Semua Kabupaten</option>
             <option value="MUNA">Kab. Muna</option>
             <option value="MUNA BARAT">Kab. Muna Barat</option>
             <option value="BUTON UTARA">Kab. Buton Utara</option>
           </select>
-          <select id="prkFilterStatus" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
-            <option value="">Semua Status Laporan</option>
+          <select id="prkFilterStatus" class="prk-select" aria-label="Status laporan">
+            <option value="">Semua Status</option>
             <option value="TAHAP 1">Tahap 1</option>
             <option value="TAHAP 2">Tahap 2</option>
             <option value="PENGEMBALIAN SPDP">Pengembalian SPDP</option>
             <option value="DIHENTIKAN (SP-3)">Dihentikan (SP-3)</option>
           </select>
-          <select id="prkFilterPidana" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;max-width:220px;">
+          <select id="prkFilterPidana" class="prk-select" style="max-width:210px;" aria-label="Jenis pidana">
             <option value="">Semua Jenis Pidana</option>
           </select>
-          <select id="prkFilterBulan" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+          <select id="prkFilterBulan" class="prk-select" aria-label="Bulan">
             <option value="">Semua Bulan</option>
-            <option value="1">Januari</option>
-            <option value="2">Februari</option>
-            <option value="3">Maret</option>
-            <option value="4">April</option>
-            <option value="5">Mei</option>
-            <option value="6">Juni</option>
-            <option value="7">Juli</option>
-            <option value="8">Agustus</option>
-            <option value="9">September</option>
-            <option value="10">Oktober</option>
-            <option value="11">November</option>
-            <option value="12">Desember</option>
+            <option value="1">Januari</option><option value="2">Februari</option><option value="3">Maret</option>
+            <option value="4">April</option><option value="5">Mei</option><option value="6">Juni</option>
+            <option value="7">Juli</option><option value="8">Agustus</option><option value="9">September</option>
+            <option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option>
           </select>
-          <select id="prkFilterTahun" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+          <select id="prkFilterTahun" class="prk-select" aria-label="Tahun">
             <option value="">Semua Tahun</option>
           </select>
-          <input id="prkSearch" type="text" placeholder="Cari nama tersangka / kecamatan / no. SPDP..." style="flex:1;min-width:200px;padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;outline:none;">
-          <button id="prkRefreshBtn" onclick="loadPrkData()" style="padding:8px 16px;background:#0B3D2E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:6px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-            </svg>
-            Refresh Data
+          <button type="button" class="prk-btn-ghost" onclick="prkResetFilter()" title="Hapus semua filter">✕ Reset</button>
+          <button type="button" id="prkRefreshBtn" class="prk-btn" onclick="loadPrkData()" title="Muat ulang data">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Refresh
           </button>
-          <span id="prkLastUpdate" style="font-size:12px;color:#8a9490;margin-left:4px;"></span>
         </div>
+        <div class="prk-active" id="prkActive"></div>
 
-        <!-- Map + Sidebar Layout -->
-        <div style="display:grid;grid-template-columns:1fr 320px;gap:14px;align-items:start;">
+        <!-- Kartu status (klik untuk memfilter) -->
+        <div class="prk-status-cards" id="prkStatusCards"></div>
 
-          <!-- Leaflet Map -->
-          <div class="panel" style="padding:0;overflow:hidden;border-radius:14px;">
-            <div id="prkLoadingMap" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:520px;gap:12px;background:#f8faf9;">
-              <div style="width:36px;height:36px;border:3px solid rgba(11,61,46,0.15);border-top-color:#0B3D2E;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
-              <div style="color:#8a9490;font-size:13px;">Memuat peta dan data perkara...</div>
+        <!-- Peta + daftar -->
+        <div class="prk-layout">
+          <div class="prk-map-card">
+            <div id="prkLoadingMap" class="prk-map-loading">
+              <div class="dipa-spinner"></div>
+              <div>Memuat peta dan data perkara...</div>
             </div>
-            <div id="prkMap" style="height:520px;display:none;border-radius:14px;"></div>
+            <div id="prkMap" style="display:none;"></div>
+
+            <div class="prk-ov prk-ov-title">
+              <b>Sebaran Perkara per Kecamatan</b>
+              <span id="prkMapSub">—</span>
+            </div>
+            <div class="prk-ov prk-ov-layers" role="group" aria-label="Peta dasar">
+              <button type="button" data-base="terang" class="active" onclick="prkSetBase('terang')">Terang</button>
+              <button type="button" data-base="jalan" onclick="prkSetBase('jalan')">Jalan</button>
+              <button type="button" data-base="satelit" onclick="prkSetBase('satelit')">Satelit</button>
+            </div>
+            <button type="button" class="prk-ov prk-ov-fit" onclick="prkFitData()" title="Tampilkan semua titik">⤢ Semua titik</button>
+            <div class="prk-ov prk-ov-legend">
+              <div class="prk-legend-title">Status laporan <small>klik untuk memfilter</small></div>
+              <div id="prkLegend"></div>
+              <div class="prk-legend-size"><i></i><i></i><i></i> Ukuran lingkaran = jumlah perkara · cincin = komposisi status</div>
+            </div>
+            <span id="prkLastUpdate" class="prk-ov prk-ov-update"></span>
           </div>
 
-          <!-- Sidebar: Legend + Table -->
-          <div style="display:flex;flex-direction:column;gap:12px;">
-
-            <!-- Legenda Status -->
-            <div class="panel">
-              <div class="panel-head">
-                <div class="ph-left">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
-                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
-                  </svg>
-                  <h3>Legenda Status Laporan</h3>
-                </div>
-              </div>
-              <div id="prkLegend" style="font-size:12px;line-height:1.6;">
-                <!-- diisi dinamis -->
-              </div>
+          <aside class="prk-side">
+            <div class="prk-side-tabs" role="tablist">
+              <button type="button" class="active" data-tab="list" onclick="prkSideTab('list')">Daftar Perkara <b id="prkDataCount">0</b></button>
+              <button type="button" data-tab="kec" onclick="prkSideTab('kec')">Per Kecamatan <b id="prkKecCount">0</b></button>
             </div>
-
-            <!-- Tabel Data -->
-            <div class="panel" style="flex:1;">
-              <div class="panel-head">
-                <div class="ph-left">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
-                    <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
-                    <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
-                  </svg>
-                  <h3>Daftar Perkara</h3>
-                </div>
-                <span id="prkDataCount" class="panel-tag">0 data</span>
-              </div>
-              <div id="prkTabel" style="font-size:12px;">
-                <div style="color:#aaa;text-align:center;padding:20px;">Memuat data...</div>
-              </div>
-            </div>
-
-          </div>
-          <!-- /sidebar -->
-
+            <div id="prkTabel" class="prk-list"></div>
+            <div id="prkKecList" class="prk-list" style="display:none;"></div>
+          </aside>
         </div>
-        <!-- /map layout -->
+
+        <!-- ==== Statistik & Analisis ==== -->
+        <div class="panel prk-stats">
+          <div class="panel-head">
+            <div class="ph-left">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              <h3>Statistik &amp; Analisis Data Perkara</h3>
+            </div>
+            <span class="panel-tag">Mengikuti filter aktif</span>
+          </div>
+          <div class="prk-chart-grid">
+            <div class="prk-chart-card">
+              <div class="prk-chart-title">Tren perkara per bulan</div>
+              <div class="prk-chart-box" style="height:250px;"><canvas id="prkChartTren"></canvas></div>
+            </div>
+            <div class="prk-chart-card">
+              <div class="prk-chart-title">Distribusi status laporan</div>
+              <div class="prk-chart-box" style="height:250px;"><canvas id="prkChartStatus"></canvas></div>
+            </div>
+            <div class="prk-chart-card">
+              <div class="prk-chart-title">10 kecamatan dengan perkara terbanyak</div>
+              <div class="prk-chart-box" style="height:300px;"><canvas id="prkChartKecamatan"></canvas></div>
+            </div>
+            <div class="prk-chart-card">
+              <div class="prk-chart-title">10 jenis pidana terbanyak</div>
+              <div class="prk-chart-box" style="height:300px;"><canvas id="prkChartPidana"></canvas></div>
+            </div>
+          </div>
+        </div>
+        <!-- /Statistik & Analisis -->
 
         <!-- ==== Ekspor Infografis ==== -->
         <div class="panel" style="margin-top:14px;">
@@ -760,23 +771,23 @@
             </div>
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:4px 2px 8px;">
-            <select id="expFilterBulan" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+            <select id="expFilterBulan" class="prk-select">
               <option value="">Semua Bulan</option>
               <option value="1">Januari</option><option value="2">Februari</option><option value="3">Maret</option>
               <option value="4">April</option><option value="5">Mei</option><option value="6">Juni</option>
               <option value="7">Juli</option><option value="8">Agustus</option><option value="9">September</option>
               <option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option>
             </select>
-            <select id="expFilterTahun" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+            <select id="expFilterTahun" class="prk-select">
               <option value="">Semua Tahun</option>
             </select>
-            <select id="expFilterKabupaten" style="padding:8px 14px;border:1.5px solid rgba(11,61,46,0.18);border-radius:8px;font-size:13px;color:#1a2e22;background:#fff;cursor:pointer;outline:none;">
+            <select id="expFilterKabupaten" class="prk-select">
               <option value="">Semua Kabupaten</option>
               <option value="MUNA">Kab. Muna</option>
               <option value="MUNA BARAT">Kab. Muna Barat</option>
               <option value="BUTON UTARA">Kab. Buton Utara</option>
             </select>
-            <button id="expDownloadBtn" onclick="prkDownloadInfografis()" style="padding:8px 18px;background:#B8902E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px;">
+            <button id="expDownloadBtn" onclick="prkDownloadInfografis()" style="padding:9px 18px;border-radius:10px;background:#B8902E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px;">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
               </svg>
@@ -787,55 +798,7 @@
         </div>
         <!-- /Ekspor Infografis -->
 
-        <!-- ==== Statistik & Analisis ==== -->
-        <div class="panel" style="margin-top:14px;">
-          <div class="panel-head">
-            <div class="ph-left">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
-                <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
-              </svg>
-              <h3>Statistik &amp; Analisis Data Perkara</h3>
-            </div>
-            <span style="font-size:11.5px;color:#8a9490;">Mengikuti filter aktif di atas</span>
-          </div>
 
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:4px 2px 8px;">
-
-            <!-- Top 10 Kecamatan -->
-            <div style="background:#f8faf9;border-radius:12px;padding:14px;">
-              <div style="font-size:12.5px;font-weight:700;color:#1a2e22;margin-bottom:8px;">🏘️ 10 Kecamatan Perkara Terbanyak</div>
-              <div style="position:relative;height:280px;">
-                <canvas id="prkChartKecamatan"></canvas>
-              </div>
-            </div>
-
-            <!-- Top 10 Jenis Pidana -->
-            <div style="background:#f8faf9;border-radius:12px;padding:14px;">
-              <div style="font-size:12.5px;font-weight:700;color:#1a2e22;margin-bottom:8px;">⚖️ 10 Jenis Pidana Terbanyak</div>
-              <div style="position:relative;height:280px;">
-                <canvas id="prkChartPidana"></canvas>
-              </div>
-            </div>
-
-            <!-- Distribusi Status Laporan -->
-            <div style="background:#f8faf9;border-radius:12px;padding:14px;">
-              <div style="font-size:12.5px;font-weight:700;color:#1a2e22;margin-bottom:8px;">📌 Distribusi Status Laporan</div>
-              <div style="position:relative;height:260px;display:flex;align-items:center;justify-content:center;">
-                <canvas id="prkChartStatus"></canvas>
-              </div>
-            </div>
-
-            <!-- Tren per Bulan -->
-            <div style="background:#f8faf9;border-radius:12px;padding:14px;">
-              <div style="font-size:12.5px;font-weight:700;color:#1a2e22;margin-bottom:8px;">📈 Tren Perkara per Bulan</div>
-              <div style="position:relative;height:260px;">
-                <canvas id="prkChartTren"></canvas>
-              </div>
-            </div>
-
-          </div>
-        </div>
-        <!-- /Statistik & Analisis -->
 
       </section>
       <!-- /PAGE DATA PERKARA -->
@@ -2484,7 +2447,7 @@ async function loadGisData() {
     `;
   }
   if (mapEl) mapEl.style.display = 'none';
-  if (tabelEl) tabelEl.innerHTML = '<div style="color:#aaa;text-align:center;padding:20px;">Memuat data...</div>';
+  if (tabelEl) tabelEl.innerHTML = '<div class="prk-empty">Memuat data...</div>';
 
   try {
     const data = await fetchGisData();
@@ -2728,38 +2691,95 @@ async function fetchPrkData() {
   return data2;
 }
 
+/* ── Peta dasar ── */
+const PRK_BASEMAPS = {
+  terang: {
+    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+    opt: { subdomains: 'abcd', maxZoom: 19, attribution: '&copy; OpenStreetMap &copy; CARTO' }
+  },
+  jalan: {
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    opt: { subdomains: 'abc', maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }
+  },
+  satelit: {
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    opt: { maxZoom: 18, attribution: 'Citra &copy; Esri' },
+    labels: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png'
+  }
+};
+let prkBaseLayer = null;
+let prkLabelLayer = null;
+let prkLastFiltered = [];
+
 function initPrkMap() {
   if (prkMap) return;
+  // Batas digeser lebih longgar agar peta tidak "terpotong" saat digeser
+  const loose = L.latLngBounds(PRK_BOUNDS).pad(0.6);
   prkMap = L.map('prkMap', {
-    maxBounds: PRK_BOUNDS,
-    maxBoundsViscosity: 1.0,
+    maxBounds: loose,
+    maxBoundsViscosity: 0.8,
     minZoom: 8,
-    maxZoom: 16
+    maxZoom: 17,
+    zoomControl: false,
+    attributionControl: true
   }).setView(PRK_CENTER, 9);
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors',
-    bounds: PRK_BOUNDS
-  }).addTo(prkMap);
-
+  L.control.zoom({ position: 'bottomright' }).addTo(prkMap);
+  L.control.scale({ position: 'bottomright', imperial: false }).addTo(prkMap);
+  prkSetBase('terang');
   prkMap.fitBounds(PRK_BOUNDS);
   prkMarkersLayer = L.layerGroup().addTo(prkMap);
 }
 
-function prkCreateIcon(color, count) {
-  const badge = (count && count > 1)
-    ? `<div style="position:absolute;top:-6px;right:-7px;background:#1a2e22;color:#fff;font-size:9.5px;font-weight:700;min-width:16px;height:16px;line-height:16px;text-align:center;border-radius:50%;border:1.5px solid #fff;padding:0 2px;">${count}</div>`
-    : '';
+function prkSetBase(name) {
+  if (!prkMap || !PRK_BASEMAPS[name]) return;
+  const b = PRK_BASEMAPS[name];
+  if (prkBaseLayer) prkMap.removeLayer(prkBaseLayer);
+  if (prkLabelLayer) { prkMap.removeLayer(prkLabelLayer); prkLabelLayer = null; }
+  prkBaseLayer = L.tileLayer(b.url, b.opt).addTo(prkMap);
+  prkBaseLayer.bringToBack();
+  if (b.labels) prkLabelLayer = L.tileLayer(b.labels, { subdomains:'abcd', maxZoom:19, pane:'overlayPane', opacity:.9 }).addTo(prkMap);
+  document.querySelectorAll('.prk-ov-layers button').forEach(btn => btn.classList.toggle('active', btn.dataset.base === name));
+  document.querySelector('.prk-map-card')?.classList.toggle('is-sat', name === 'satelit');
+}
+
+function prkFitData() {
+  if (!prkMap) return;
+  const pts = Object.values(prkGroupStore).map(g => [g.lat, g.lng]);
+  if (pts.length) prkMap.fitBounds(L.latLngBounds(pts).pad(0.15), { maxZoom: 13 });
+  else prkMap.fitBounds(PRK_BOUNDS);
+}
+
+/* ── Penanda lingkaran: ukuran = jumlah, cincin = komposisi status ── */
+function prkStatusCounts(items) {
+  const c = {};
+  items.forEach(it => { c[it.statusLaporan] = (c[it.statusLaporan] || 0) + 1; });
+  return c;
+}
+
+function prkBubbleIcon(items) {
+  const n = items.length;
+  const size = Math.round(Math.min(58, 24 + Math.sqrt(n) * 7));
+  const counts = prkStatusCounts(items);
+  let acc = 0;
+  const stops = Object.keys(counts).sort().map(k => {
+    const from = acc / n * 360; acc += counts[k];
+    const to = acc / n * 360;
+    const col = PRK_STATUS_COLORS[k] || PRK_DEFAULT_COLOR;
+    return `${col} ${from.toFixed(1)}deg ${to.toFixed(1)}deg`;
+  }).join(',');
+  const main = prkDominantColor(items);
   return L.divIcon({
-    className: 'prk-marker',
-    html: `<div style="position:relative;width:22px;height:22px;">
-      <div style="width:20px;height:20px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${color};border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.4);"></div>
-      ${badge}
-    </div>`,
-    iconSize: [26, 26],
-    iconAnchor: [10, 22]
+    className: 'prk-bubble-wrap',
+    html: `<div class="prk-bubble" style="width:${size}px;height:${size}px;background:conic-gradient(${stops});">
+             <span style="color:${main};font-size:${n >= 100 ? 11 : 12.5}px;">${n}</span>
+           </div>`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+    popupAnchor: [0, -size / 2]
   });
 }
+
+function prkCreateIcon(color, count) { return prkBubbleIcon(new Array(count || 1).fill({ statusLaporan:'' })); }
 
 function prkEsc(s) {
   return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -2769,44 +2789,41 @@ function prkCoordKey(lat, lng) {
   return lat.toFixed(5) + ',' + lng.toFixed(5);
 }
 
-// Warna marker ditentukan oleh status laporan yang paling sering muncul
-// di antara seluruh kasus pada titik (kecamatan) tersebut.
 function prkDominantColor(items) {
-  const counts = {};
-  items.forEach(it => { counts[it.statusLaporan] = (counts[it.statusLaporan] || 0) + 1; });
+  const counts = prkStatusCounts(items);
   let best = null, bestN = -1;
   Object.entries(counts).forEach(([k, v]) => { if (v > bestN) { best = k; bestN = v; } });
   return PRK_STATUS_COLORS[best] || PRK_DEFAULT_COLOR;
 }
 
-// Bangun kerangka popup: header lokasi + placeholder slide + tombol navigasi.
-// Isi slide-nya sendiri dirender belakangan lewat prkRenderSlide() saat popup dibuka,
-// supaya selalu sinkron dengan prkPopupIndex[key] yang sedang aktif.
+function prkCompositionBar(items) {
+  const n = items.length || 1;
+  const counts = prkStatusCounts(items);
+  return `<div class="prk-comp">${Object.keys(counts).sort().map(k =>
+    `<i style="width:${counts[k] / n * 100}%;background:${PRK_STATUS_COLORS[k] || PRK_DEFAULT_COLOR}" title="${prkEsc(PRK_STATUS_LABELS[k] || k)}: ${counts[k]}"></i>`).join('')}</div>
+    <div class="prk-comp-legend">${Object.keys(counts).sort().map(k =>
+    `<span><i style="background:${PRK_STATUS_COLORS[k] || PRK_DEFAULT_COLOR}"></i>${prkEsc(PRK_STATUS_LABELS[k] || k)} <b>${counts[k]}</b></span>`).join('')}</div>`;
+}
+
 function prkBuildPopup(key, group) {
   const kec = group.items[0].kecamatan || '-';
   const kab = group.items[0].kabupaten || '-';
-  const navBtn = (dir, label) => `
-    <button onclick="prkSlideNav('${key}',${dir})"
-      style="border:none;background:#0B3D2E;color:#fff;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;">
-      ${label}
-    </button>`;
   return `
-    <div class="prk-popup" style="font-size:12.5px;min-width:235px;max-width:290px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:700;color:#0B3D2E;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(0,0,0,0.08);">
-        <span>📍 ${prkEsc(kec)}, ${prkEsc(kab)}</span>
-        <span style="font-weight:600;color:#8a9490;font-size:11px;white-space:nowrap;">${group.items.length} kasus</span>
+    <div class="prk-pop">
+      <div class="prk-pop-head">
+        <div><b>${prkEsc(kec)}</b><small>Kab. ${prkEsc(kab.charAt(0) + kab.slice(1).toLowerCase())}</small></div>
+        <span class="prk-pop-count">${group.items.length}<small>perkara</small></span>
       </div>
-      <div id="prk-slide-${key}"></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:6px;border-top:1px solid rgba(0,0,0,0.08);">
-        ${navBtn(-1, '‹ Sebelumnya')}
-        <span id="prk-idx-${key}" style="font-size:11px;color:#8a9490;font-weight:600;"></span>
-        ${navBtn(1, 'Berikutnya ›')}
-      </div>
-    </div>
-  `;
+      ${prkCompositionBar(group.items)}
+      <div id="prk-slide-${key}" class="prk-pop-slide"></div>
+      ${group.items.length > 1 ? `<div class="prk-pop-nav">
+        <button type="button" onclick="prkSlideNav('${key}',-1)" aria-label="Sebelumnya">‹</button>
+        <span id="prk-idx-${key}"></span>
+        <button type="button" onclick="prkSlideNav('${key}',1)" aria-label="Berikutnya">›</button>
+      </div>` : `<span id="prk-idx-${key}" style="display:none"></span>`}
+    </div>`;
 }
 
-// Render 1 slide (1 kasus) sesuai prkPopupIndex[key] ke dalam popup yang sedang terbuka.
 function prkRenderSlide(key) {
   const group = prkGroupStore[key];
   if (!group) return;
@@ -2819,25 +2836,24 @@ function prkRenderSlide(key) {
   const d = group.items[idx];
   const idxEl   = document.getElementById('prk-idx-' + key);
   const slideEl = document.getElementById('prk-slide-' + key);
-  if (idxEl) idxEl.textContent = (idx + 1) + ' / ' + total;
+  if (idxEl) idxEl.textContent = 'Perkara ' + (idx + 1) + ' dari ' + total;
   if (!slideEl || !d) return;
 
   const color = PRK_STATUS_COLORS[d.statusLaporan] || PRK_DEFAULT_COLOR;
   const label = PRK_STATUS_LABELS[d.statusLaporan] || d.statusLaporan;
-
+  const row = (k, v) => v ? `<div class="prk-pop-row"><span>${k}</span><b>${prkEsc(v)}</b></div>` : '';
   slideEl.innerHTML = `
-    <div style="font-weight:700;color:${color};margin-bottom:4px;">${prkEsc(label)}</div>
-    <div style="font-weight:600;margin-bottom:3px;">${prkEsc(d.pidana)}</div>
-    ${d.tersangka ? `<div style="color:#555;margin-bottom:3px;">👤 ${prkEsc(d.tersangka)}</div>` : ''}
-    ${d.lokasi ? `<div style="color:#555;margin-bottom:3px;">📍 ${prkEsc(d.lokasi)}</div>` : ''}
-    ${d.tglKejadian ? `<div style="color:#555;margin-bottom:3px;">📅 ${prkEsc(d.tglKejadian)}</div>` : ''}
-    ${d.noSpdp ? `<div style="margin-top:5px;font-size:11px;color:#8a9490;">${prkEsc(d.noSpdp)}</div>` : ''}
-    ${d.sumber ? `<div style="font-size:11px;color:#8a9490;">${prkEsc(d.sumber)}</div>` : ''}
-    ${d.status ? `<div style="margin-top:5px;font-style:italic;color:#888;font-size:11.5px;">Status: ${prkEsc(d.status)}</div>` : ''}
-  `;
+    <span class="prk-pill" style="--c:${color}">${prkEsc(label)}</span>
+    <div class="prk-pop-title">${prkEsc(d.pidana)}</div>
+    ${row('Tersangka', d.tersangka)}
+    ${row('Lokasi', d.lokasi)}
+    ${row('Kejadian', d.tglKejadian)}
+    ${row('No. SPDP', d.noSpdp)}
+    ${row('Sumber', d.sumber)}
+    ${d.pasal ? row('Pasal', d.pasal.length > 90 ? d.pasal.slice(0, 90) + '…' : d.pasal) : ''}
+    ${d.status && d.status !== d.statusLaporan ? row('Keterangan', d.status) : ''}`;
 }
 
-// Navigasi slide (dipanggil dari tombol ‹ / › di dalam popup)
 function prkSlideNav(key, dir) {
   const group = prkGroupStore[key];
   if (!group) return;
@@ -2855,128 +2871,142 @@ function renderPrkMarkers(data) {
   prkGroupStore = {};
   prkMarkersByKey = {};
 
-  // Kelompokkan seluruh kasus berdasarkan titik koordinat yang sama
-  // (satu kecamatan biasanya memakai satu koordinat yang sama untuk semua kasusnya).
   data.forEach(d => {
     const key = prkCoordKey(d.lat, d.lng);
     if (!prkGroupStore[key]) prkGroupStore[key] = { lat: d.lat, lng: d.lng, items: [] };
     prkGroupStore[key].items.push(d);
   });
 
-  Object.keys(prkGroupStore).forEach(key => {
-    const group = prkGroupStore[key];
-    if (prkPopupIndex[key] == null) prkPopupIndex[key] = 0;
+  // Titik besar digambar dulu agar titik kecil tetap terlihat di atasnya
+  Object.keys(prkGroupStore)
+    .sort((a, b) => prkGroupStore[b].items.length - prkGroupStore[a].items.length)
+    .forEach((key, i) => {
+      const group = prkGroupStore[key];
+      if (prkPopupIndex[key] == null) prkPopupIndex[key] = 0;
+      const kec = group.items[0].kecamatan || '';
+      const marker = L.marker([group.lat, group.lng], { icon: prkBubbleIcon(group.items), zIndexOffset: i, riseOnHover: true })
+        .bindPopup(prkBuildPopup(key, group), { maxWidth: 320, minWidth: 260, className: 'prk-popup-wrap', autoPanPaddingTopLeft: [20, 70], autoPanPaddingBottomRight: [20, 20] })
+        .bindTooltip(`<b>${prkEsc(kec)}</b> · ${group.items.length} perkara`, { direction: 'top', offset: [0, -14], className: 'prk-tip' })
+        .addTo(prkMarkersLayer);
+      marker.on('popupopen', () => prkRenderSlide(key));
+      marker.on('popupclose', () => { prkPopupIndex[key] = 0; });
+      prkMarkersByKey[key] = marker;
+    });
 
-    const color = prkDominantColor(group.items);
-    const icon  = prkCreateIcon(color, group.items.length);
-
-    const marker = L.marker([group.lat, group.lng], { icon })
-      .bindPopup(prkBuildPopup(key, group), { maxWidth: 300 })
-      .addTo(prkMarkersLayer);
-
-    // Render slide saat popup dibuka; reset ke slide pertama saat popup ditutup
-    // (kecuali index sengaja di-set dari klik baris tabel, lihat prkTableItemClick).
-    marker.on('popupopen', () => prkRenderSlide(key));
-    marker.on('popupclose', () => { prkPopupIndex[key] = 0; });
-
-    prkMarkersByKey[key] = marker;
-  });
+  const sub = document.getElementById('prkMapSub');
+  if (sub) sub.textContent = `${data.length} perkara · ${Object.keys(prkGroupStore).length} titik kecamatan`;
 }
 
+/* Legenda di atas peta — klik untuk memfilter status */
 function renderPrkLegend(data) {
   const legendEl = document.getElementById('prkLegend');
   if (!legendEl) return;
-
-  const statusSet = [...new Set(data.map(d => d.statusLaporan))];
-  if (statusSet.length === 0) {
-    legendEl.innerHTML = '<div style="color:#aaa;">Belum ada data</div>';
-    return;
-  }
-
-  legendEl.innerHTML = statusSet.map(s => {
-    const color = PRK_STATUS_COLORS[s] || PRK_DEFAULT_COLOR;
-    const label = PRK_STATUS_LABELS[s] || s;
+  const active = document.getElementById('prkFilterStatus')?.value || '';
+  legendEl.innerHTML = Object.keys(PRK_STATUS_COLORS).map(s => {
     const count = data.filter(d => d.statusLaporan === s).length;
-    return `
-      <div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.04);">
-        <div style="width:12px;height:12px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${color};flex-shrink:0;"></div>
-        <span style="flex:1;color:#1a2e22;">${prkEsc(label)}</span>
-        <span style="color:#8a9490;font-weight:600;">${count}</span>
-      </div>`;
+    return `<button type="button" class="prk-leg ${active === s ? 'active' : ''} ${active && active !== s ? 'dim' : ''}" onclick="prkToggleStatus('${s}')">
+      <i style="background:${PRK_STATUS_COLORS[s]}"></i><span>${prkEsc(PRK_STATUS_LABELS[s])}</span><b>${count}</b></button>`;
   }).join('');
 }
 
+function prkToggleStatus(s) {
+  const sel = document.getElementById('prkFilterStatus');
+  if (!sel) return;
+  sel.value = sel.value === s ? '' : s;
+  applyPrkFilter();
+}
+
+/* Kartu status di atas peta */
+function renderPrkStatusCards(base) {
+  const el = document.getElementById('prkStatusCards');
+  if (!el) return;
+  const active = document.getElementById('prkFilterStatus')?.value || '';
+  const total = base.length || 1;
+  const icons = { 'TAHAP 1':'📄', 'TAHAP 2':'📁', 'PENGEMBALIAN SPDP':'↩️', 'DIHENTIKAN (SP-3)':'⛔' };
+  el.innerHTML = `
+    <button type="button" class="prk-card all ${!active ? 'active' : ''}" onclick="document.getElementById('prkFilterStatus').value='';applyPrkFilter()">
+      <span class="prk-card-label">Total perkara</span>
+      <strong>${base.length}</strong>
+      <small>${new Set(base.map(d => d.kecamatan)).size} kecamatan · ${new Set(base.map(d => d.pidana)).size} jenis pidana</small>
+    </button>` + Object.keys(PRK_STATUS_COLORS).map(s => {
+      const n = base.filter(d => d.statusLaporan === s).length;
+      const pct = n / total * 100;
+      return `<button type="button" class="prk-card ${active === s ? 'active' : ''}" style="--c:${PRK_STATUS_COLORS[s]}" onclick="prkToggleStatus('${s}')">
+        <span class="prk-card-label">${icons[s] || ''} ${prkEsc(PRK_STATUS_LABELS[s])}</span>
+        <strong>${n}</strong>
+        <div class="prk-card-bar"><i style="width:${pct}%"></i></div>
+        <small>${pct.toLocaleString('id-ID', { maximumFractionDigits: 1 })}% dari total</small>
+      </button>`;
+    }).join('');
+}
+
+/* Daftar perkara lengkap di panel samping */
 function renderPrkTable(data) {
   const tabelEl = document.getElementById('prkTabel');
   const countEl = document.getElementById('prkDataCount');
-  if (countEl) countEl.textContent = data.length + ' data';
+  if (countEl) countEl.textContent = data.length;
   prkLastRenderedData = data;
   if (!tabelEl) return;
-
-  if (data.length === 0) {
-    tabelEl.innerHTML = '<div style="color:#aaa;text-align:center;padding:20px;">Tidak ada data untuk filter ini</div>';
-    return;
-  }
-
-  const PRK_LIST_LIMIT = 4;
-  const shown = data.slice(0, PRK_LIST_LIMIT);
-  const sisa  = data.length - shown.length;
-
-  const rows = shown.map((d, i) => {
-    const color = PRK_STATUS_COLORS[d.statusLaporan] || PRK_DEFAULT_COLOR;
-    const label = PRK_STATUS_LABELS[d.statusLaporan] || d.statusLaporan;
-    return `
-      <div onclick="prkTableItemClick(${i})"
-           style="padding:8px 10px;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;transition:background .15s;"
-           onmouseover="this.style.background='rgba(11,61,46,0.04)'"
-           onmouseout="this.style.background=''">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
-          <div style="width:8px;height:8px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${color};flex-shrink:0;"></div>
-          <span style="font-weight:600;color:#1a2e22;font-size:12px;">${prkEsc(d.pidana)}</span>
-        </div>
-        <div style="color:#1a2e22;font-size:11.5px;padding-left:14px;">${prkEsc(d.tersangka) || '-'}</div>
-        <div style="color:#8a9490;font-size:11px;padding-left:14px;">${prkEsc(d.kecamatan)}${d.kecamatan && d.kabupaten ? ', ' : ''}${prkEsc(d.kabupaten)} · <span style="color:${color};">${prkEsc(label)}</span></div>
-      </div>`;
-  }).join('');
-
-  const footer = sisa > 0
-    ? `<div onclick="prkOpenFullList()"
-           style="text-align:center;padding:9px;font-size:12px;font-weight:600;color:#0B3D2E;cursor:pointer;background:rgba(11,61,46,0.04);border-top:1px solid rgba(11,61,46,0.08);"
-           onmouseover="this.style.background='rgba(11,61,46,0.08)'"
-           onmouseout="this.style.background='rgba(11,61,46,0.04)'">
-         Lihat ${sisa} data lainnya ↓
-       </div>`
-    : '';
-
-  tabelEl.innerHTML = rows + footer;
-}
-
-// Modal "Lihat Semua" — dipicu dari tombol footer daftar perkara
-function prkOpenFullList() {
-  const modal   = document.getElementById('kalDayModal');
-  const title   = document.getElementById('kalDayModalTitle');
-  const content = document.getElementById('kalDayModalContent');
-  if (title) title.textContent = 'Semua Data Perkara (' + prkLastRenderedData.length + ')';
-  if (content) {
-    content.innerHTML = prkLastRenderedData.map((d, i) => {
+  if (!data.length) {
+    tabelEl.innerHTML = '<div class="prk-empty">Tidak ada perkara untuk filter ini.</div>';
+  } else {
+    const LIMIT = 300;
+    tabelEl.innerHTML = data.slice(0, LIMIT).map((d, i) => {
       const color = PRK_STATUS_COLORS[d.statusLaporan] || PRK_DEFAULT_COLOR;
       const label = PRK_STATUS_LABELS[d.statusLaporan] || d.statusLaporan;
-      return `
-        <div onclick="document.getElementById('kalDayModal').style.display='none';prkTableItemClick(${i})"
-             style="padding:9px 4px;border-bottom:1px solid rgba(0,0,0,0.06);cursor:pointer;"
-             onmouseover="this.style.background='rgba(11,61,46,0.04)'"
-             onmouseout="this.style.background=''">
-          <div style="font-weight:700;color:#1a2e22;font-size:13px;">${prkEsc(d.pidana)}</div>
-          <div style="font-size:12px;color:#555;">${prkEsc(d.tersangka) || '-'}</div>
-          <div style="font-size:11.5px;color:#8a9490;">${prkEsc(d.kecamatan)}${d.kecamatan && d.kabupaten ? ', ' : ''}${prkEsc(d.kabupaten)}</div>
-          <span style="display:inline-block;margin-top:4px;background:${color}18;color:${color};font-size:10.5px;padding:2px 9px;border-radius:20px;font-weight:600;">${prkEsc(label)}</span>
-        </div>`;
-    }).join('');
+      return `<button type="button" class="prk-item" style="--c:${color}" onclick="prkTableItemClick(${i})">
+        <div class="prk-item-top"><b>${prkEsc(d.pidana)}</b><span class="prk-pill" style="--c:${color}">${prkEsc(label)}</span></div>
+        <div class="prk-item-name">${prkEsc(d.tersangka) || '<i>Tersangka belum tercatat</i>'}</div>
+        <div class="prk-item-meta">📍 ${prkEsc(d.kecamatan)}${d.kabupaten ? ', ' + prkEsc(d.kabupaten) : ''}${d.month && d.year ? ' · ' + PRK_BULAN_NAMA[d.month] + ' ' + d.year : ''}</div>
+      </button>`;
+    }).join('') + (data.length > LIMIT ? `<div class="prk-empty">Menampilkan ${LIMIT} dari ${data.length}. Persempit dengan filter atau pencarian.</div>` : '');
   }
-  if (modal) modal.style.display = 'flex';
+  renderPrkKecList(data);
 }
 
-// Klik baris tabel: pan ke titik + buka popup marker langsung pada slide kasus yang diklik
+function renderPrkKecList(data) {
+  const el = document.getElementById('prkKecList');
+  const cnt = document.getElementById('prkKecCount');
+  const groups = {};
+  data.forEach(d => {
+    const k = (d.kecamatan || '-') + '|' + (d.kabupaten || '');
+    (groups[k] = groups[k] || []).push(d);
+  });
+  const rows = Object.entries(groups).sort((a, b) => b[1].length - a[1].length);
+  if (cnt) cnt.textContent = rows.length;
+  if (!el) return;
+  if (!rows.length) { el.innerHTML = '<div class="prk-empty">Tidak ada data.</div>'; return; }
+  const max = rows[0][1].length;
+  el.innerHTML = rows.map(([k, items], i) => {
+    const [kec, kab] = k.split('|');
+    const counts = prkStatusCounts(items);
+    return `<button type="button" class="prk-kec" onclick="prkFlyToGroup(${items[0].lat},${items[0].lng})">
+      <span class="prk-kec-rank">${i + 1}</span>
+      <div class="prk-kec-main">
+        <div class="prk-kec-top"><b>${prkEsc(kec)}</b><span>${items.length}</span></div>
+        <div class="prk-kec-bar" style="width:${Math.max(items.length / max * 100, 6)}%">${Object.keys(counts).sort().map(s =>
+          `<i style="flex:${counts[s]};background:${PRK_STATUS_COLORS[s] || PRK_DEFAULT_COLOR}"></i>`).join('')}</div>
+        <small>${prkEsc(kab)}</small>
+      </div>
+    </button>`;
+  }).join('');
+}
+
+function prkSideTab(tab) {
+  document.querySelectorAll('.prk-side-tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.getElementById('prkTabel').style.display = tab === 'list' ? '' : 'none';
+  document.getElementById('prkKecList').style.display = tab === 'kec' ? '' : 'none';
+}
+
+function prkFlyToGroup(lat, lng) {
+  const key = prkCoordKey(lat, lng);
+  if (prkMap) prkMap.flyTo([lat, lng], 13, { duration: 0.7 });
+  const marker = prkMarkersByKey[key];
+  if (marker) setTimeout(() => marker.openPopup(), 650);
+}
+
+function prkOpenFullList() { prkSideTab('list'); }
+
 function prkTableItemClick(i) {
   const d = prkLastRenderedData[i];
   if (!d) return;
@@ -2986,11 +3016,10 @@ function prkTableItemClick(i) {
     const idx = group.items.indexOf(d);
     prkPopupIndex[key] = idx >= 0 ? idx : 0;
   }
-  if (prkMap) prkMap.flyTo([d.lat, d.lng], 14, { duration: 0.8 });
+  if (prkMap) prkMap.flyTo([d.lat, d.lng], 13, { duration: 0.7 });
   const marker = prkMarkersByKey[key];
-  if (marker) {
-    setTimeout(() => marker.openPopup(), 700);
-  }
+  if (marker) setTimeout(() => marker.openPopup(), 650);
+  document.querySelectorAll('.prk-item').forEach((el, j) => el.classList.toggle('active', j === i));
 }
 
 function updatePrkStats(data) {
@@ -3000,6 +3029,34 @@ function updatePrkStats(data) {
   if (totalEl)  totalEl.textContent  = data.length;
   if (tahap2El) tahap2El.textContent = data.filter(d => d.statusLaporan === 'TAHAP 2').length;
   if (sp3El)    sp3El.textContent    = data.filter(d => d.statusLaporan === 'DIHENTIKAN (SP-3)').length;
+}
+
+/* Chip filter aktif + reset */
+function renderPrkActive() {
+  const el = document.getElementById('prkActive');
+  if (!el) return;
+  const defs = [
+    ['prkFilterKabupaten', 'Kabupaten'], ['prkFilterStatus', 'Status'], ['prkFilterPidana', 'Pidana'],
+    ['prkFilterBulan', 'Bulan'], ['prkFilterTahun', 'Tahun']
+  ];
+  const chips = defs.map(([id, lbl]) => {
+    const sel = document.getElementById(id);
+    if (!sel || !sel.value) return '';
+    const text = sel.options[sel.selectedIndex]?.text || sel.value;
+    return `<span class="prk-chip">${lbl}: <b>${prkEsc(text)}</b><button type="button" onclick="document.getElementById('${id}').value='';applyPrkFilter()" aria-label="Hapus">×</button></span>`;
+  });
+  const q = document.getElementById('prkSearch')?.value.trim();
+  if (q) chips.push(`<span class="prk-chip">Cari: <b>${prkEsc(q)}</b><button type="button" onclick="document.getElementById('prkSearch').value='';applyPrkFilter()" aria-label="Hapus">×</button></span>`);
+  const list = chips.filter(Boolean);
+  el.innerHTML = list.length ? `<span class="prk-active-label">Filter aktif:</span>${list.join('')}` : '';
+  el.style.display = list.length ? 'flex' : 'none';
+}
+
+function prkResetFilter() {
+  ['prkFilterKabupaten','prkFilterStatus','prkFilterPidana','prkFilterBulan','prkFilterTahun','prkSearch'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  applyPrkFilter();
 }
 
 /* ── Grafik dinamis (Chart.js) ── */
@@ -3065,7 +3122,7 @@ function updatePrkChartKecamatan(data) {
 
 function updatePrkChartPidana(data) {
   const pairs = prkTopCounts(data, 'pidana', 10);
-  prkChartPidana = prkRenderBarChart('prkChartPidana', prkChartPidana, pairs, '#D94A4A');
+  prkChartPidana = prkRenderBarChart('prkChartPidana', prkChartPidana, pairs, '#0B3D2E');
 }
 
 function updatePrkChartStatus(data) {
@@ -3096,7 +3153,11 @@ function updatePrkChartStatus(data) {
       maintainAspectRatio: false,
       cutout: '62%',
       plugins: {
-        legend: { position: 'bottom', labels: { font: { size: 10.5 }, boxWidth: 10, padding: 10 } }
+        legend: { position: 'right', labels: { font: { size: 11.5 }, color: '#3D4D47', boxWidth: 12, padding: 12, usePointStyle: true } },
+        tooltip: { callbacks: { label: ctx => {
+          const tot = ctx.dataset.data.reduce((a, b) => a + b, 0) || 1;
+          return ' ' + ctx.label + ': ' + ctx.parsed + ' (' + Math.round(ctx.parsed / tot * 100) + '%)';
+        } } }
       }
     }
   });
@@ -3188,9 +3249,8 @@ function applyPrkFilter() {
   const tahun  = document.getElementById('prkFilterTahun')?.value || '';
   const search = prkNorm(document.getElementById('prkSearch')?.value || '');
 
-  const filtered = prkAllData.filter(d => {
+  const matchBase = d => {
     if (kab && d.kabupaten !== kab) return false;
-    if (status && d.statusLaporan !== status) return false;
     if (pidana && d.pidana !== pidana) return false;
     if (bulan && String(d.month) !== bulan) return false;
     if (tahun && String(d.year) !== tahun) return false;
@@ -3199,11 +3259,19 @@ function applyPrkFilter() {
       if (!hay.includes(search)) return false;
     }
     return true;
-  });
+  };
+  // "base" = semua filter kecuali status (untuk kartu & legenda status)
+  const base = prkAllData.filter(matchBase);
+  const filtered = status ? base.filter(d => d.statusLaporan === status) : base;
+  prkLastFiltered = filtered;
 
   renderPrkMarkers(filtered);
   renderPrkTable(filtered);
+  renderPrkLegend(base);
+  renderPrkStatusCards(base);
+  renderPrkActive();
   updatePrkCharts(filtered);
+  if (prkMap && filtered.length) prkFitData();
 }
 
 function prkShowError(msg) {
@@ -3227,10 +3295,7 @@ async function loadPrkData() {
 
   if (loadingMap) {
     loadingMap.style.display = 'flex';
-    loadingMap.innerHTML = `
-      <div style="width:36px;height:36px;border:3px solid rgba(11,61,46,0.15);border-top-color:#0B3D2E;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
-      <div style="color:#8a9490;font-size:13px;">Memuat peta dan data perkara...</div>
-    `;
+    loadingMap.innerHTML = '<div class="dipa-spinner"></div><div>Memuat peta dan data perkara...</div>';
   }
   if (mapEl) mapEl.style.display = 'none';
   if (tabelEl) tabelEl.innerHTML = '<div style="color:#aaa;text-align:center;padding:20px;">Memuat data...</div>';
@@ -3248,11 +3313,8 @@ async function loadPrkData() {
     prkPopulatePidanaFilter(data);
     prkPopulateTahunFilter(data);
     prkPopulateExportTahun(data);
-    renderPrkMarkers(data);
-    renderPrkLegend(data);
-    renderPrkTable(data);
     updatePrkStats(data);
-    updatePrkCharts(data);
+    applyPrkFilter();
 
     const updEl = document.getElementById('prkLastUpdate');
     if (updEl) {
