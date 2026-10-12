@@ -1350,6 +1350,58 @@
 </div>
 <!-- /APP SHELL -->
 
+<!-- Modal edit realisasi & anggaran -->
+<div id="angEditModal" class="kal-modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="angEditTitle">
+  <div class="kal-modal-card ang-edit-card">
+    <div class="kal-modal-head">
+      <div>
+        <div class="kal-modal-kicker" id="angEditKicker">Sheet</div>
+        <h3 id="angEditTitle">Edit Kegiatan</h3>
+      </div>
+      <button type="button" class="kal-modal-close" onclick="angCloseEdit()" aria-label="Tutup">×</button>
+    </div>
+    <div class="kal-form">
+      <div class="ang-edit-group">
+        <div class="ang-edit-label">Kegiatan</div>
+        <div class="ang-edit-grid">
+          <div class="kal-field">
+            <label for="aeTarget">Target kegiatan</label>
+            <div class="ang-step"><button type="button" onclick="angStep('aeTarget',-1)">−</button><input id="aeTarget" type="number" min="0" step="1" oninput="angEditPreview()"><button type="button" onclick="angStep('aeTarget',1)">+</button></div>
+          </div>
+          <div class="kal-field">
+            <label for="aeReal">Kegiatan terlaksana</label>
+            <div class="ang-step"><button type="button" onclick="angStep('aeReal',-1)">−</button><input id="aeReal" type="number" min="0" step="1" oninput="angEditPreview(true)"><button type="button" onclick="angStep('aeReal',1)">+</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="ang-edit-group">
+        <div class="ang-edit-label">Anggaran</div>
+        <div class="ang-edit-grid">
+          <div class="kal-field">
+            <label for="aePagu">Pagu anggaran (Rp)</label>
+            <input id="aePagu" type="text" inputmode="numeric" oninput="angMoneyInput(this);angEditPreview(true)">
+          </div>
+          <div class="kal-field">
+            <label for="aeRealAngg">Realisasi anggaran (Rp)</label>
+            <input id="aeRealAngg" type="text" inputmode="numeric" oninput="angMoneyInput(this);document.getElementById('aeAuto').checked=false;angEditPreview()">
+          </div>
+        </div>
+        <label class="kal-check ang-auto"><input type="checkbox" id="aeAuto" onchange="angEditPreview(true)"> Hitung realisasi anggaran otomatis (pagu × terlaksana ÷ target)</label>
+      </div>
+      <div class="ang-edit-preview" id="aePreview"></div>
+      <div class="kal-field">
+        <label for="aeNote">Catatan revisi (opsional)</label>
+        <input id="aeNote" type="text" maxlength="300" placeholder="Contoh: koreksi input, kegiatan 12 Okt sudah terlaksana">
+      </div>
+      <div id="aeStatus" class="kal-form-status" aria-live="polite"></div>
+      <div class="kal-modal-actions">
+        <button type="button" class="kal-btn-ghost" onclick="angCloseEdit()">Batal</button>
+        <button type="button" id="aeSave" class="kal-btn-primary" onclick="angSaveEdit()">Simpan ke Sheet</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Toast reminder rencana kegiatan -->
 <div id="kalToastStack" class="kal-toast-stack" aria-live="polite"></div>
 
@@ -1985,7 +2037,7 @@ function angShell(p) {
           <span><i class="bar"></i>Realisasi anggaran</span>
         </div>
         <div class="ang-head-row" aria-hidden="true">
-          <span>Kegiatan</span><span>Target vs Realisasi Kegiatan</span><span>Realisasi vs Pagu Anggaran</span><span>Pencairan</span>
+          <span>Kegiatan</span><span>Target vs Realisasi Kegiatan</span><span>Realisasi vs Pagu Anggaran</span><span>Pencairan</span><span></span>
         </div>
         <div id="${p}Rows" class="ang-rows"></div>
       </div>
@@ -2044,6 +2096,7 @@ function angRowsHtml(p) {
           <span>${r.sisaAnggaran > 0 ? '· sisa ' + dipaRpShort(r.sisaAnggaran) : '· terserap'}</span></div>
       </div>
       <div class="ang-pct" style="--c:${color}">${dipaPct(r.persenPencairan)}</div>
+      <button type="button" class="ang-edit-btn" title="Edit realisasi & anggaran ${dipaEsc(r.kegiatan)}" onclick="angOpenEdit('${p}', ${r._i})">✏️</button>
     </div>`;
   }).join('');
 }
@@ -2141,6 +2194,122 @@ function angShowError(p, msg) {
   if (loading) {
     loading.style.display = 'flex';
     loading.innerHTML = `<div class="dipa-error">${msg}<button type="button" class="dipa-btn" onclick="${ANG_CFG[p].refresh}">↻ Coba Lagi</button></div>`;
+  }
+}
+
+
+/* ── Edit realisasi & anggaran langsung dari dashboard ── */
+const ANG_SHEET_OF = { cap: 'CAPAIAN KINERJA', dipa: 'DIPA KEJATI 2026' };
+let _angEdit = null;   // { p, idx, row }
+
+function angParseMoney(v) { return Number(String(v || '').replace(/[^0-9]/g, '')) || 0; }
+function angMoneyInput(el) {
+  const n = angParseMoney(el.value);
+  el.value = n ? n.toLocaleString('id-ID') : '';
+}
+function angStep(id, d) {
+  const el = document.getElementById(id);
+  el.value = Math.max(0, (parseInt(el.value, 10) || 0) + d);
+  angEditPreview(id === 'aeReal');
+}
+
+function angOpenEdit(p, idx) {
+  const row = (_angState[p].data || [])[idx];
+  if (!row) return;
+  _angEdit = { p, idx, row };
+  const g = id => document.getElementById(id);
+  g('angEditKicker').textContent = 'Sheet "' + ANG_SHEET_OF[p] + '"' + (row.no ? ' · No ' + row.no : '');
+  g('angEditTitle').textContent = row.kegiatan;
+  g('aeTarget').value = row.target;
+  g('aeReal').value = row.terlaksana;
+  g('aePagu').value = Math.round(row.anggaran).toLocaleString('id-ID');
+  g('aeRealAngg').value = Math.round(row.realisasiAnggaran).toLocaleString('id-ID');
+  g('aeNote').value = '';
+  // Centang otomatis bila data saat ini memang proporsional
+  const prop = row.target > 0 ? Math.round(row.anggaran * Math.min(row.terlaksana, row.target) / row.target) : 0;
+  g('aeAuto').checked = Math.abs(prop - row.realisasiAnggaran) <= 1;
+  g('aeStatus').textContent = ''; g('aeStatus').className = 'kal-form-status';
+  const role = String(projSession().role || '').toLowerCase();
+  if (!['admin','administrator','super admin','superadmin'].includes(role)) {
+    g('aeStatus').className = 'kal-form-status error';
+    g('aeStatus').textContent = 'Hanya administrator yang dapat menyimpan perubahan.';
+  }
+  angEditPreview();
+  g('angEditModal').style.display = 'flex';
+  setTimeout(() => g('aeReal').focus(), 50);
+}
+
+function angCloseEdit() {
+  document.getElementById('angEditModal').style.display = 'none';
+  _angEdit = null;
+}
+
+function angEditValues() {
+  const g = id => document.getElementById(id);
+  const target = Math.max(0, parseInt(g('aeTarget').value, 10) || 0);
+  const terlaksana = Math.max(0, parseInt(g('aeReal').value, 10) || 0);
+  const anggaran = angParseMoney(g('aePagu').value);
+  let realisasiAnggaran = angParseMoney(g('aeRealAngg').value);
+  if (g('aeAuto').checked) {
+    realisasiAnggaran = target > 0 ? Math.round(anggaran * Math.min(terlaksana, target) / target) : 0;
+  }
+  return { target, terlaksana, anggaran, realisasiAnggaran };
+}
+
+function angEditPreview(fromCount) {
+  if (!_angEdit) return;
+  const v = angEditValues();
+  const g = id => document.getElementById(id);
+  if (g('aeAuto').checked) g('aeRealAngg').value = v.realisasiAnggaran.toLocaleString('id-ID');
+  const o = _angEdit.row;
+  const pctKeg = v.target > 0 ? v.terlaksana / v.target * 100 : 0;
+  const pctAng = v.anggaran > 0 ? v.realisasiAnggaran / v.anggaran * 100 : 0;
+  const diff = (a, b, fmt) => a === b ? '<span class="ae-same">tetap</span>' : `<span class="ae-old">${fmt(a)}</span> → <b>${fmt(b)}</b>`;
+  const warn = [];
+  if (v.terlaksana > v.target) warn.push('Kegiatan terlaksana melebihi target.');
+  if (v.realisasiAnggaran > v.anggaran) warn.push('Realisasi anggaran melebihi pagu — tidak dapat disimpan.');
+  g('aePreview').innerHTML = `
+    <div class="ae-row"><span>Kegiatan</span><span>${diff(o.terlaksana + '/' + o.target, v.terlaksana + '/' + v.target, x => x)}</span><b class="ae-pct">${dipaPct(pctKeg)}</b></div>
+    <div class="ae-row"><span>Realisasi anggaran</span><span>${diff(Math.round(o.realisasiAnggaran), v.realisasiAnggaran, dipaRp)}</span><b class="ae-pct">${dipaPct(pctAng)}</b></div>
+    <div class="ae-row"><span>Sisa anggaran</span><span><b>${dipaRp(Math.max(v.anggaran - v.realisasiAnggaran, 0))}</b></span><span></span></div>
+    ${warn.length ? `<div class="ae-warn">⚠ ${warn.join(' ')}</div>` : ''}`;
+  g('aeSave').disabled = v.realisasiAnggaran > v.anggaran;
+}
+
+async function angSaveEdit() {
+  if (!_angEdit) return;
+  const st = document.getElementById('aeStatus');
+  const btn = document.getElementById('aeSave');
+  kalCfgLoad();
+  if (!kalApiUrl()) {
+    st.className = 'kal-form-status error';
+    st.innerHTML = 'Belum terhubung ke Apps Script. Isi URL di <a href="#" onclick="angCloseEdit();navigate(\'kalender\');kalOpenWaSetting();return false;">Kalender Kegiatan → Pengaturan</a>.';
+    return;
+  }
+  const v = angEditValues();
+  const { p, idx, row } = _angEdit;
+  btn.disabled = true; btn.innerHTML = '<span class="proj-btn-spinner"></span> Menyimpan...';
+  st.className = 'kal-form-status'; st.textContent = '';
+  try {
+    const data = await kalApi({
+      action:'updateAnggaranRow', role: projSession().role || '',
+      sheet: ANG_SHEET_OF[p], no: row.no, kegiatan: row.kegiatan,
+      ...v, catatan: document.getElementById('aeNote').value.trim()
+    });
+    // Perbarui tampilan langsung tanpa menunggu cache Google Sheets
+    const fresh = { ...row, ...(data.row || v) };
+    _angState[p].data[idx] = fresh;
+    renderAnggaran(p, _angState[p].data);
+    if (p === 'cap') renderDashboard(_angState.cap.data);
+    st.className = 'kal-form-status success';
+    st.textContent = '✓ Tersimpan ke sheet ' + ANG_SHEET_OF[p] + '.' +
+      ((data.skippedFormula || []).length ? ' Kolom berumus tidak diubah: ' + data.skippedFormula.join(', ') + '.' : '');
+    setTimeout(angCloseEdit, (data.skippedFormula || []).length ? 2500 : 900);
+  } catch (err) {
+    st.className = 'kal-form-status error';
+    st.textContent = err.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Simpan ke Sheet';
   }
 }
 
@@ -4928,13 +5097,13 @@ async function kalInit(){
   document.addEventListener('click', e => {
     if (!e.target.closest('#notifPanel') && !e.target.closest('#notifBtn')) kalCloseNotifPanel();
   });
-  ['kalModal','kalDetailModal','kalWaModal'].forEach(id => {
+  ['kalModal','kalDetailModal','kalWaModal','angEditModal'].forEach(id => {
     const m = document.getElementById(id);
     if (m) m.addEventListener('mousedown', e => { if (e.target === m) m.style.display = 'none'; });
   });
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
-    ['kalModal','kalDetailModal','kalWaModal'].forEach(id => { const m = document.getElementById(id); if (m) m.style.display = 'none'; });
+    ['kalModal','kalDetailModal','kalWaModal','angEditModal'].forEach(id => { const m = document.getElementById(id); if (m) m.style.display = 'none'; });
     kalCloseNotifPanel();
   });
 }
