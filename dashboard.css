@@ -1990,11 +1990,4 @@ body.proj-modal-open{overflow:hidden;}
 .ae-pct{text-align:right;color:var(--g800);}
 .ae-warn{margin-top:4px;color:#8A5A00;font-size:12px;}
 @media(max-width:900px){
-  .ang-row{grid-template-columns:1fr auto auto;}
-  .ang-pct{grid-column:2;grid-row:1;}
-  .ang-edit-btn{grid-column:3;grid-row:1;opacity:1;}
-}
-@media(max-width:520px){.ang-edit-grid{grid-template-columns:1fr;}.ae-row{grid-template-columns:1fr auto;}.ae-row .ae-pct{display:none;}}
-.dipa-btn-xl{background:#1D6F42;border-color:#1D6F42;}
-.dipa-btn-xl:hover{background:#185C37;}
-.dipa-btn:disabled{opacity:.7;cursor:wait;}
+  .ang-row{grid-template-columns:1fr auto au
