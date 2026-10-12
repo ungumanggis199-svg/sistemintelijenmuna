@@ -1978,6 +1978,7 @@ function angShell(p) {
       </div>
       <div class="dipa-actions">
         <span class="panel-tag" id="${p}Updated">—</span>
+        <button type="button" class="dipa-btn dipa-btn-xl" id="${p}XlBtn" onclick="angExportExcel('${p}')" title="Unduh progres, rincian anggaran & grafik ke Excel">⬇ Excel</button>
         <button type="button" class="dipa-btn" onclick="${c.refresh}">↻ Refresh</button>
         <a href="${ANG_SHEET_URL}" target="_blank" rel="noopener" class="see-all-link">Buka Sheet ↗</a>
       </div>
@@ -2310,6 +2311,378 @@ async function angSaveEdit() {
     st.textContent = err.message;
   } finally {
     btn.disabled = false; btn.textContent = 'Simpan ke Sheet';
+  }
+}
+
+/* =====================================================
+   EKSPOR EXCEL — Progres, Rincian Anggaran & Grafik
+   Tabel dibuat dengan ExcelJS; grafik Excel asli (bisa diedit)
+   disisipkan ke file lewat JSZip.
+   ===================================================== */
+const XL_LIBS = [
+  'https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'
+];
+function xlLoadScript(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`)) return resolve();
+    const s = document.createElement('script');
+    s.src = src; s.onload = resolve;
+    s.onerror = () => reject(new Error('Gagal memuat pustaka Excel. Periksa koneksi internet.'));
+    document.head.appendChild(s);
+  });
+}
+async function xlEnsureLibs() {
+  if (!window.ExcelJS) await xlLoadScript(XL_LIBS[0]);
+  if (!window.JSZip) await xlLoadScript(XL_LIBS[1]);
+}
+
+function xlEsc(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ---------- XML grafik (DrawingML) ---------- */
+function xlStrCache(vals) {
+  return `<c:strCache><c:ptCount val="${vals.length}"/>${vals.map((v, i) => `<c:pt idx="${i}"><c:v>${xlEsc(v)}</c:v></c:pt>`).join('')}</c:strCache>`;
+}
+function xlNumCache(vals, fmt) {
+  return `<c:numCache><c:formatCode>${xlEsc(fmt || 'General')}</c:formatCode><c:ptCount val="${vals.length}"/>${vals.map((v, i) => `<c:pt idx="${i}"><c:v>${Number(v) || 0}</c:v></c:pt>`).join('')}</c:numCache>`;
+}
+function xlSeries(i, s, cat) {
+  return `<c:ser><c:idx val="${i}"/><c:order val="${i}"/>
+    <c:tx><c:strRef><c:f>${xlEsc(s.nameRef)}</c:f>${xlStrCache([s.name])}</c:strRef></c:tx>
+    <c:spPr><a:solidFill><a:srgbClr val="${s.color}"/></a:solidFill></c:spPr>
+    <c:invertIfNegative val="0"/>
+    ${s.labels ? `<c:dLbls><c:numFmt formatCode="${xlEsc(s.labelFmt || 'General')}" sourceLinked="0"/><c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr><c:txPr><a:bodyPr/><a:lstStyle/><a:p><a:pPr><a:defRPr sz="800" b="1"><a:solidFill><a:srgbClr val="1B241F"/></a:solidFill></a:defRPr></a:pPr><a:endParaRPr lang="id-ID"/></a:p></c:txPr><c:showLegendKey val="0"/><c:showVal val="1"/><c:showCatName val="0"/><c:showSerName val="0"/><c:showPercent val="0"/><c:showBubbleSize val="0"/></c:dLbls>` : ''}
+    <c:cat><c:strRef><c:f>${xlEsc(cat.ref)}</c:f>${xlStrCache(cat.vals)}</c:strRef></c:cat>
+    <c:val><c:numRef><c:f>${xlEsc(s.ref)}</c:f>${xlNumCache(s.vals, s.fmt)}</c:numRef></c:val>
+  </c:ser>`;
+}
+function xlTxt(sz, color, bold) {
+  return `<c:txPr><a:bodyPr/><a:lstStyle/><a:p><a:pPr><a:defRPr sz="${sz}"${bold ? ' b="1"' : ''}><a:solidFill><a:srgbClr val="${color}"/></a:solidFill><a:latin typeface="Calibri"/></a:defRPr></a:pPr><a:endParaRPr lang="id-ID"/></a:p></c:txPr>`;
+}
+function xlChartXml({ title, series, cat, stacked, axisFmt }) {
+  const grouping = stacked ? 'stacked' : 'clustered';
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<c:chartSpace xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<c:roundedCorners val="0"/>
+<c:chart>
+  <c:title><c:tx><c:rich><a:bodyPr/><a:lstStyle/><a:p><a:pPr><a:defRPr sz="1200" b="1"/></a:pPr><a:r><a:rPr lang="id-ID" sz="1200" b="1"><a:solidFill><a:srgbClr val="0B3D2E"/></a:solidFill></a:rPr><a:t>${xlEsc(title)}</a:t></a:r></a:p></c:rich></c:tx><c:overlay val="0"/></c:title>
+  <c:autoTitleDeleted val="0"/>
+  <c:plotArea><c:layout/>
+    <c:barChart><c:barDir val="col"/><c:grouping val="${grouping}"/><c:varyColors val="0"/>
+      ${series.map((s, i) => xlSeries(i, s, cat)).join('')}
+      <c:gapWidth val="${stacked ? 60 : 80}"/>${stacked ? '<c:overlap val="100"/>' : '<c:overlap val="-10"/>'}
+      <c:axId val="5001"/><c:axId val="5002"/>
+    </c:barChart>
+    <c:catAx><c:axId val="5001"/><c:scaling><c:orientation val="minMax"/></c:scaling><c:delete val="0"/><c:axPos val="b"/>
+      <c:numFmt formatCode="General" sourceLinked="0"/><c:majorTickMark val="none"/><c:minorTickMark val="none"/><c:tickLblPos val="nextTo"/>
+      <c:spPr><a:ln w="9525"><a:solidFill><a:srgbClr val="BFC5C1"/></a:solidFill></a:ln></c:spPr>
+      ${xlTxt(800, '3D4D47')}
+      <c:crossAx val="5002"/><c:crosses val="autoZero"/><c:auto val="1"/><c:lblAlgn val="ctr"/><c:lblOffset val="100"/><c:noMultiLvlLbl val="0"/></c:catAx>
+    <c:valAx><c:axId val="5002"/><c:scaling><c:orientation val="minMax"/></c:scaling><c:delete val="0"/><c:axPos val="l"/>
+      <c:majorGridlines><c:spPr><a:ln w="6350"><a:solidFill><a:srgbClr val="E6E9E7"/></a:solidFill></a:ln></c:spPr></c:majorGridlines>
+      <c:numFmt formatCode="${xlEsc(axisFmt || 'General')}" sourceLinked="0"/><c:majorTickMark val="none"/><c:minorTickMark val="none"/><c:tickLblPos val="nextTo"/>
+      <c:spPr><a:ln><a:noFill/></a:ln></c:spPr>
+      ${xlTxt(800, '5B6660')}
+      <c:crossAx val="5001"/><c:crosses val="autoZero"/><c:crossBetween val="between"/></c:valAx>
+    <c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr>
+  </c:plotArea>
+  <c:legend><c:legendPos val="t"/><c:overlay val="0"/>${xlTxt(900, '3D4D47')}</c:legend>
+  <c:plotVisOnly val="1"/><c:dispBlanksAs val="gap"/>
+</c:chart>
+<c:spPr><a:solidFill><a:srgbClr val="FFFFFF"/></a:solidFill><a:ln w="9525"><a:solidFill><a:srgbClr val="E2DFD5"/></a:solidFill></a:ln></c:spPr>
+</c:chartSpace>`;
+}
+function xlDrawingXml(anchors) {
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xdr:wsDr xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+${anchors.map((an, i) => `<xdr:twoCellAnchor editAs="oneCell">
+  <xdr:from><xdr:col>${an.c1}</xdr:col><xdr:colOff>0</xdr:colOff><xdr:row>${an.r1}</xdr:row><xdr:rowOff>0</xdr:rowOff></xdr:from>
+  <xdr:to><xdr:col>${an.c2}</xdr:col><xdr:colOff>0</xdr:colOff><xdr:row>${an.r2}</xdr:row><xdr:rowOff>0</xdr:rowOff></xdr:to>
+  <xdr:graphicFrame macro=""><xdr:nvGraphicFramePr><xdr:cNvPr id="${i + 2}" name="Grafik ${i + 1}"/><xdr:cNvGraphicFramePr/></xdr:nvGraphicFramePr>
+    <xdr:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/></xdr:xfrm>
+    <a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/chart"><c:chart xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" r:id="rIdC${i + 1}"/></a:graphicData></a:graphic>
+  </xdr:graphicFrame><xdr:clientData/>
+</xdr:twoCellAnchor>`).join('\n')}
+</xdr:wsDr>`;
+}
+
+/* Sisipkan grafik ke worksheet pertama (sheet1.xml) hasil ExcelJS */
+async function xlInjectCharts(buffer, charts, anchors) {
+  const zip = await JSZip.loadAsync(buffer);
+  const sheetPath = 'xl/worksheets/sheet1.xml';
+  const relsPath = 'xl/worksheets/_rels/sheet1.xml.rels';
+  let sheetXml = await zip.file(sheetPath).async('string');
+  if (/<drawing\s/.test(sheetXml)) throw new Error('Sheet ringkasan sudah memiliki drawing.');
+
+  charts.forEach((xml, i) => zip.file(`xl/charts/chart${i + 1}.xml`, xml));
+  zip.file('xl/drawings/drawing1.xml', xlDrawingXml(anchors));
+  zip.file('xl/drawings/_rels/drawing1.xml.rels',
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${charts.map((_, i) =>
+      `<Relationship Id="rIdC${i + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart" Target="../charts/chart${i + 1}.xml"/>`).join('')}</Relationships>`);
+
+  const drawRel = '<Relationship Id="rIdDrw1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing" Target="../drawings/drawing1.xml"/>';
+  if (zip.file(relsPath)) {
+    const rels = await zip.file(relsPath).async('string');
+    zip.file(relsPath, rels.replace('</Relationships>', drawRel + '</Relationships>'));
+  } else {
+    zip.file(relsPath, `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${drawRel}</Relationships>`);
+  }
+
+  if (!/xmlns:r=/.test(sheetXml.slice(0, 600))) {
+    sheetXml = sheetXml.replace('<worksheet ', '<worksheet xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" ');
+  }
+  // <drawing> wajib sebelum legacyDrawing/tableParts/extLst sesuai skema
+  const tag = '<drawing r:id="rIdDrw1"/>';
+  const m = sheetXml.match(/<(legacyDrawing|legacyDrawingHF|picture|oleObjects|controls|webPublishItems|tableParts|extLst)[\s>]/);
+  sheetXml = m ? sheetXml.replace(m[0], tag + m[0]) : sheetXml.replace('</worksheet>', tag + '</worksheet>');
+  zip.file(sheetPath, sheetXml);
+
+  let ct = await zip.file('[Content_Types].xml').async('string');
+  const overrides = charts.map((_, i) =>
+    `<Override PartName="/xl/charts/chart${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.drawingml.chart+xml"/>`).join('') +
+    '<Override PartName="/xl/drawings/drawing1.xml" ContentType="application/vnd.openxmlformats-officedocument.drawing+xml"/>';
+  ct = ct.replace('</Types>', overrides + '</Types>');
+  zip.file('[Content_Types].xml', ct);
+  return zip.generateAsync({ type:'blob', mimeType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+}
+
+/* ---------- Susun workbook ---------- */
+async function angExportExcel(p) {
+  const data = (_angState[p] && _angState[p].data) || [];
+  if (!data.length) { alert('Data belum dimuat.'); return; }
+  const btn = document.getElementById(p + 'XlBtn');
+  const label = btn ? btn.innerHTML : '';
+  if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Menyiapkan...'; }
+  try {
+    await xlEnsureLibs();
+    const sheetName = ANG_SHEET_OF[p];
+    const now = new Date();
+    const stamp = now.toLocaleString('id-ID', { day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' });
+    const n = data.length;
+
+    const G800 = 'FF0B3D2E', G50 = 'FFEBF6EF', LINE = 'FFE2DFD5', INK3 = 'FF5B6660';
+    const RP = '"Rp" #,##0';
+    const PCT = '0.0%';
+    const thin = { style:'thin', color:{ argb: LINE } };
+    const border = { top: thin, bottom: thin, left: thin, right: thin };
+
+    const wb = new ExcelJS.Workbook();
+    wb.creator = 'Dashboard Intelijen Kejari Muna';
+    wb.created = now;
+
+    // ===== Sheet 1: Ringkasan & Grafik (harus dibuat pertama — grafik disisipkan ke sheet1) =====
+    const ws1 = wb.addWorksheet('Ringkasan dan Grafik', { views:[{ showGridLines:false }], properties:{ tabColor:{ argb: G800 } } });
+    // ===== Sheet 2: Progres Kegiatan =====
+    const ws2 = wb.addWorksheet('Progres Kegiatan', { views:[{ state:'frozen', ySplit:4, showGridLines:false }] });
+    // ===== Sheet 3: Rincian Anggaran =====
+    const ws3 = wb.addWorksheet('Rincian Anggaran', { views:[{ state:'frozen', ySplit:4, showGridLines:false }] });
+
+    const titleBlock = (ws, title, lastCol) => {
+      ws.mergeCells(1, 1, 1, lastCol);
+      ws.getCell(1, 1).value = title;
+      ws.getCell(1, 1).font = { name:'Calibri', size:15, bold:true, color:{ argb:'FFFFFFFF' } };
+      ws.getCell(1, 1).fill = { type:'pattern', pattern:'solid', fgColor:{ argb: G800 } };
+      ws.getCell(1, 1).alignment = { vertical:'middle', indent:1 };
+      ws.getRow(1).height = 30;
+      ws.mergeCells(2, 1, 2, lastCol);
+      ws.getCell(2, 1).value = `Sumber: sheet "${sheetName}" · Kejaksaan Negeri Muna · Diunduh ${stamp}`;
+      ws.getCell(2, 1).font = { size:10, italic:true, color:{ argb: INK3 } };
+      ws.getCell(2, 1).alignment = { indent:1 };
+    };
+    const headerRow = (ws, rowNo, labels) => {
+      const row = ws.getRow(rowNo);
+      labels.forEach((l, i) => {
+        const c = row.getCell(i + 1);
+        c.value = l;
+        c.font = { bold:true, color:{ argb:'FFFFFFFF' }, size:10.5 };
+        c.fill = { type:'pattern', pattern:'solid', fgColor:{ argb: G800 } };
+        c.alignment = { vertical:'middle', horizontal:'center', wrapText:true };
+        c.border = border;
+      });
+      row.height = 32;
+    };
+
+    /* --- Sheet 2: Progres Target & Realisasi per Kegiatan --- */
+    const H2 = ['No','Kegiatan','Status','Target Kegiatan','Realisasi Kegiatan','Sisa Kegiatan','Capaian Kegiatan',
+                'Pagu Anggaran','Realisasi Anggaran','Sisa Anggaran','% Pencairan'];
+    titleBlock(ws2, 'Progres Target & Realisasi per Kegiatan — ' + sheetName, H2.length);
+    headerRow(ws2, 4, H2);
+    const first = 5, last = first + n - 1;
+    data.forEach((r, i) => {
+      const rn = first + i;
+      const capai = r.target > 0 ? r.terlaksana / r.target : 0;
+      const status = r.target > 0 && r.terlaksana >= r.target ? 'Tercapai' : (r.terlaksana > 0 ? 'Berjalan' : 'Belum terlaksana');
+      const row = ws2.getRow(rn);
+      row.values = [
+        r.no || i + 1, r.kegiatan,
+        { formula:`IF(AND(D${rn}>0,E${rn}>=D${rn}),"Tercapai",IF(E${rn}>0,"Berjalan","Belum terlaksana"))`, result: status },
+        r.target, r.terlaksana,
+        { formula:`MAX(D${rn}-E${rn},0)`, result: Math.max(r.target - r.terlaksana, 0) },
+        { formula:`IF(D${rn}>0,E${rn}/D${rn},0)`, result: capai },
+        Math.round(r.anggaran), Math.round(r.realisasiAnggaran),
+        { formula:`MAX(H${rn}-I${rn},0)`, result: Math.max(Math.round(r.anggaran - r.realisasiAnggaran), 0) },
+        { formula:`IF(H${rn}>0,I${rn}/H${rn},0)`, result: r.anggaran > 0 ? r.realisasiAnggaran / r.anggaran : 0 }
+      ];
+      row.eachCell({ includeEmpty:true }, (c, col) => {
+        c.border = border;
+        c.alignment = { vertical:'middle', horizontal: col === 2 ? 'left' : (col >= 8 && col <= 10 ? 'right' : 'center'), wrapText: col === 2 };
+        if (i % 2) c.fill = { type:'pattern', pattern:'solid', fgColor:{ argb:'FFFAFBF9' } };
+      });
+      row.getCell(2).font = { bold:true };
+      [7, 11].forEach(c => row.getCell(c).numFmt = PCT);
+      [8, 9, 10].forEach(c => row.getCell(c).numFmt = RP);
+      row.height = 20;
+    });
+    const tr2 = last + 1;
+    ws2.getRow(tr2).values = ['', 'TOTAL', '',
+      { formula:`SUM(D${first}:D${last})`, result: data.reduce((s, r) => s + r.target, 0) },
+      { formula:`SUM(E${first}:E${last})`, result: data.reduce((s, r) => s + r.terlaksana, 0) },
+      { formula:`SUM(F${first}:F${last})` },
+      { formula:`IF(D${tr2}>0,E${tr2}/D${tr2},0)` },
+      { formula:`SUM(H${first}:H${last})`, result: Math.round(data.reduce((s, r) => s + r.anggaran, 0)) },
+      { formula:`SUM(I${first}:I${last})`, result: Math.round(data.reduce((s, r) => s + r.realisasiAnggaran, 0)) },
+      { formula:`SUM(J${first}:J${last})` },
+      { formula:`IF(H${tr2}>0,I${tr2}/H${tr2},0)` }];
+    ws2.getRow(tr2).eachCell({ includeEmpty:true }, (c, col) => {
+      c.font = { bold:true, color:{ argb: G800 } };
+      c.fill = { type:'pattern', pattern:'solid', fgColor:{ argb: G50 } };
+      c.border = { ...border, top:{ style:'medium', color:{ argb: G800 } } };
+      c.alignment = { horizontal: col === 2 ? 'left' : (col >= 8 && col <= 10 ? 'right' : 'center') };
+    });
+    [7, 11].forEach(c => ws2.getRow(tr2).getCell(c).numFmt = PCT);
+    [8, 9, 10].forEach(c => ws2.getRow(tr2).getCell(c).numFmt = RP);
+    ws2.columns = [{ width:6 }, { width:30 }, { width:17 }, { width:11 }, { width:11 }, { width:10 }, { width:13 },
+                   { width:17 }, { width:18 }, { width:17 }, { width:12 }];
+    // Warna status & bilah data
+    ws2.addConditionalFormatting({ ref:`C${first}:C${last}`, rules:[
+      { type:'containsText', operator:'containsText', text:'Tercapai', style:{ font:{ color:{ argb:'FF1E6B4C' }, bold:true }, fill:{ type:'pattern', pattern:'solid', bgColor:{ argb:'FFE3F4EA' } } } },
+      { type:'containsText', operator:'containsText', text:'Berjalan', style:{ font:{ color:{ argb:'FF7A5A12' }, bold:true }, fill:{ type:'pattern', pattern:'solid', bgColor:{ argb:'FFFBF6E9' } } } },
+      { type:'containsText', operator:'containsText', text:'Belum', style:{ font:{ color:{ argb:'FFA23232' }, bold:true }, fill:{ type:'pattern', pattern:'solid', bgColor:{ argb:'FFFCEAEA' } } } }
+    ]});
+    ws2.addConditionalFormatting({ ref:`G${first}:G${last}`, rules:[{ type:'dataBar', minLength:0, maxLength:100, cfvo:[{ type:'num', value:0 }, { type:'num', value:1 }], color:{ argb:'FF9ED9BC' }, gradient:false }] });
+    ws2.addConditionalFormatting({ ref:`K${first}:K${last}`, rules:[{ type:'dataBar', minLength:0, maxLength:100, cfvo:[{ type:'num', value:0 }, { type:'num', value:1 }], color:{ argb:'FF9ED9BC' }, gradient:false }] });
+
+    /* --- Sheet 3: Tabel rincian anggaran --- */
+    const H3 = ['No','Kegiatan','Target','Realisasi','Capaian','Anggaran','Realisasi Anggaran','Sisa Anggaran','Pencairan'];
+    titleBlock(ws3, 'Rincian Anggaran per Kegiatan — ' + sheetName, H3.length);
+    headerRow(ws3, 4, H3);
+    data.forEach((r, i) => {
+      const rn = first + i;
+      const row = ws3.getRow(rn);
+      row.values = [r.no || i + 1, r.kegiatan, r.target, r.terlaksana,
+        { formula:`IF(C${rn}>0,D${rn}/C${rn},0)`, result: r.target > 0 ? r.terlaksana / r.target : 0 },
+        Math.round(r.anggaran), Math.round(r.realisasiAnggaran),
+        { formula:`MAX(F${rn}-G${rn},0)`, result: Math.max(Math.round(r.anggaran - r.realisasiAnggaran), 0) },
+        { formula:`IF(F${rn}>0,G${rn}/F${rn},0)`, result: r.anggaran > 0 ? r.realisasiAnggaran / r.anggaran : 0 }];
+      row.eachCell({ includeEmpty:true }, (c, col) => {
+        c.border = border;
+        c.alignment = { vertical:'middle', horizontal: col === 2 ? 'left' : (col >= 6 && col <= 8 ? 'right' : 'center') };
+        if (i % 2) c.fill = { type:'pattern', pattern:'solid', fgColor:{ argb:'FFFAFBF9' } };
+      });
+      row.getCell(2).font = { bold:true };
+      [5, 9].forEach(c => row.getCell(c).numFmt = PCT);
+      [6, 7, 8].forEach(c => row.getCell(c).numFmt = RP);
+    });
+    ws3.getRow(tr2).values = ['', 'TOTAL', { formula:`SUM(C${first}:C${last})` }, { formula:`SUM(D${first}:D${last})` },
+      { formula:`IF(C${tr2}>0,D${tr2}/C${tr2},0)` }, { formula:`SUM(F${first}:F${last})` }, { formula:`SUM(G${first}:G${last})` },
+      { formula:`SUM(H${first}:H${last})` }, { formula:`IF(F${tr2}>0,G${tr2}/F${tr2},0)` }];
+    ws3.getRow(tr2).eachCell({ includeEmpty:true }, (c, col) => {
+      c.font = { bold:true, color:{ argb: G800 } };
+      c.fill = { type:'pattern', pattern:'solid', fgColor:{ argb: G50 } };
+      c.border = { ...border, top:{ style:'medium', color:{ argb: G800 } } };
+      c.alignment = { horizontal: col === 2 ? 'left' : (col >= 6 && col <= 8 ? 'right' : 'center') };
+    });
+    [5, 9].forEach(c => ws3.getRow(tr2).getCell(c).numFmt = PCT);
+    [6, 7, 8].forEach(c => ws3.getRow(tr2).getCell(c).numFmt = RP);
+    ws3.columns = [{ width:6 }, { width:32 }, { width:10 }, { width:11 }, { width:11 }, { width:18 }, { width:19 }, { width:18 }, { width:12 }];
+    ws3.addConditionalFormatting({ ref:`I${first}:I${last}`, rules:[{ type:'dataBar', minLength:0, maxLength:100, cfvo:[{ type:'num', value:0 }, { type:'num', value:1 }], color:{ argb:'FF9ED9BC' }, gradient:false }] });
+
+    /* --- Sheet 1: ringkasan angka (rumus mengacu ke sheet Progres) --- */
+    titleBlock(ws1, 'Laporan Progres Kegiatan & Anggaran — ' + sheetName, 14);
+    const P = "'Progres Kegiatan'!";
+    const tot = {
+      target: data.reduce((s, r) => s + r.target, 0), real: data.reduce((s, r) => s + r.terlaksana, 0),
+      pagu: Math.round(data.reduce((s, r) => s + r.anggaran, 0)), ra: Math.round(data.reduce((s, r) => s + r.realisasiAnggaran, 0))
+    };
+    const kpis = [
+      ['Jumlah kegiatan', { formula:`COUNTA(${P}B${first}:B${last})`, result:n }, '0'],
+      ['Target kegiatan', { formula:`${P}D${tr2}`, result:tot.target }, '0'],
+      ['Kegiatan terlaksana', { formula:`${P}E${tr2}`, result:tot.real }, '0'],
+      ['Capaian kegiatan', { formula:`IF(${P}D${tr2}>0,${P}E${tr2}/${P}D${tr2},0)`, result: tot.target ? tot.real / tot.target : 0 }, PCT],
+      ['Pagu anggaran', { formula:`${P}H${tr2}`, result:tot.pagu }, RP],
+      ['Realisasi anggaran', { formula:`${P}I${tr2}`, result:tot.ra }, RP],
+      ['Sisa anggaran', { formula:`${P}J${tr2}`, result:Math.max(tot.pagu - tot.ra, 0) }, RP],
+      ['Persentase pencairan', { formula:`IF(${P}H${tr2}>0,${P}I${tr2}/${P}H${tr2},0)`, result: tot.pagu ? tot.ra / tot.pagu : 0 }, PCT],
+      ['Kegiatan tercapai', { formula:`COUNTIF(${P}C${first}:C${last},"Tercapai")`, result: data.filter(r => r.target > 0 && r.terlaksana >= r.target).length }, '0'],
+      ['Kegiatan belum terlaksana', { formula:`COUNTIF(${P}C${first}:C${last},"Belum terlaksana")`, result: data.filter(r => r.terlaksana <= 0).length }, '0']
+    ];
+    ws1.getCell('B4').value = 'RINGKASAN';
+    ws1.getCell('B4').font = { bold:true, size:10, color:{ argb:'FF0F5040' } };
+    kpis.forEach(([k, v, fmt], i) => {
+      const r = 5 + i;
+      const a = ws1.getCell(r, 2), b = ws1.getCell(r, 3);
+      a.value = k; b.value = v; b.numFmt = fmt;
+      a.font = { color:{ argb: INK3 } }; b.font = { bold:true, size:12, color:{ argb: G800 } };
+      b.alignment = { horizontal:'right' };
+      [a, b].forEach(c => { c.border = { bottom: thin }; c.fill = { type:'pattern', pattern:'solid', fgColor:{ argb: i % 2 ? 'FFFFFFFF' : 'FFFAFBF9' } }; });
+    });
+    ws1.getCell(16, 2).value = 'Grafik di samping terhubung ke sheet "Progres Kegiatan" — ubah angka di sana, grafik ikut berubah.';
+    ws1.getCell(16, 2).font = { italic:true, size:9, color:{ argb: INK3 } };
+    ws1.mergeCells(16, 2, 18, 3);
+    ws1.getCell(16, 2).alignment = { wrapText:true, vertical:'top' };
+    ws1.columns = [{ width:2 }, { width:26 }, { width:20 }, { width:2 }, ...Array(10).fill({ width:11 })];
+
+    // Font seragam & pengaturan cetak (lanskap, muat 1 halaman lebar)
+    wb.eachSheet(ws => {
+      ws.eachRow({ includeEmpty:false }, row => row.eachCell({ includeEmpty:true }, c => {
+        c.font = Object.assign({ name:'Calibri', size:10.5 }, c.font || {}, { name:'Calibri' });
+      }));
+      ws.pageSetup = { paperSize:9, orientation:'landscape', fitToPage:true, fitToWidth:1, fitToHeight:0,
+                       margins:{ left:0.4, right:0.4, top:0.5, bottom:0.5, header:0.3, footer:0.3 } };
+      ws.headerFooter = { oddFooter:'&L&8Dashboard Intelijen Kejari Muna&R&8Halaman &P dari &N' };
+    });
+
+    const buffer = await wb.xlsx.writeBuffer();
+
+    /* --- Grafik native --- */
+    const cats = data.map(r => r.kegiatan);
+    const cat = { ref:`${P}$B$${first}:$B$${last}`, vals: cats };
+    const sr = (col, name, vals, color, extra = {}) => ({ nameRef:`${P}$${col}$4`, name, ref:`${P}$${col}$${first}:$${col}$${last}`, vals, color, ...extra });
+    const charts = [
+      xlChartXml({ title:'Target vs Realisasi Kegiatan', cat, series:[
+        sr('D', 'Target Kegiatan', data.map(r => r.target), 'E4C77A', { labels:true }),
+        sr('E', 'Realisasi Kegiatan', data.map(r => r.terlaksana), '2E9A6B', { labels:true })
+      ]}),
+      xlChartXml({ title:'Realisasi vs Sisa Anggaran (Rp)', cat, stacked:true, axisFmt:'#,##0,,"jt"', series:[
+        sr('I', 'Realisasi Anggaran', data.map(r => Math.round(r.realisasiAnggaran)), '0B3D2E', { fmt: RP }),
+        sr('J', 'Sisa Anggaran', data.map(r => Math.max(Math.round(r.anggaran - r.realisasiAnggaran), 0)), 'C9D9CF', { fmt: RP })
+      ]}),
+      xlChartXml({ title:'Capaian Kegiatan vs Pencairan Anggaran (%)', cat, axisFmt:'0%', series:[
+        sr('G', 'Capaian Kegiatan', data.map(r => r.target > 0 ? r.terlaksana / r.target : 0), '2E9A6B', { fmt: PCT, labels:true, labelFmt:'0%' }),
+        sr('K', '% Pencairan', data.map(r => r.anggaran > 0 ? r.realisasiAnggaran / r.anggaran : 0), '0B3D2E', { fmt: PCT, labels:true, labelFmt:'0%' })
+      ]})
+    ];
+    // Posisi grafik (kolom E–N), baris 0-based
+    const anchors = [
+      { c1:4, r1:3, c2:14, r2:22 },
+      { c1:4, r1:23, c2:14, r2:42 },
+      { c1:4, r1:43, c2:14, r2:62 }
+    ];
+    const blob = await xlInjectCharts(buffer, charts, anchors);
+
+    const fname = `Laporan_${sheetName.replace(/\s+/g, '_')}_${projIsoToday()}.xlsx`;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = fname;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+  } catch (err) {
+    console.error(err);
+    alert('Gagal membuat file Excel: ' + err.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = label; }
   }
 }
 
